@@ -27,8 +27,7 @@
   },
   "scripts": {
     "build": "node scripts/build.mjs",
-    "typecheck": "tsc -p tsconfig.build.json --noEmit",
-    "prepack": "npm run build"
+    "typecheck": "tsc -p tsconfig.build.json --noEmit"
   },
   "peerDependencies": {
     "react": "^19.0.0",
