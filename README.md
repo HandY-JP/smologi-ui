@@ -1,4 +1,4 @@
-# @handy/smologi-ui
+# @handy-jp/smologi-ui
 
 スモロジ系列アプリ（**Logistic**=smologi / **Seller**=amazon-app / **ポータル**=handy-internal-app /
 **B2B**=smologi-b2b）で共有する UI 部品とデザイントークン。
@@ -16,80 +16,30 @@
 
 ## 導入（消費側のアプリ）
 
-### 0. 名前について（`@handy` と `@handy-jp`）
+npm レジストリには出していない。**git 参照で入れる**（リポジトリは public なので
+トークンも `.npmrc` も要らない）。`dist/` はコミットしてあるので、入れた側でのビルドも不要。
 
-**コードから import する名前は `@handy/smologi-ui`**（設計どおり）。
-ただし GitHub Packages は「npm のスコープ ＝ リポジトリ所有者」でないと publish を受け付けないため、
-**公開名は `@handy-jp/smologi-ui`** になっている。アプリ側は npm の別名指定でこの差を吸収する:
+### 1. 依存に足す
+
+```sh
+npm i "github:HandY-JP/smologi-ui#v0.1.0"
+```
+
+`package.json` にはこう入る:
 
 ```json
 "dependencies": {
-  "@handy/smologi-ui": "npm:@handy-jp/smologi-ui@^0.1.0"
+  "@handy-jp/smologi-ui": "github:HandY-JP/smologi-ui#v0.1.0"
 }
 ```
 
-こうすると `node_modules/@handy/smologi-ui` に入るので、import も Tailwind の `content` も
-CSS の `@import` も、設計書のまま `@handy/…` で書ける。
+**バージョンは必ずタグで固定する**（`#v0.1.0`）。ブランチ名（`#main`）を指すと
+`npm i` の実行タイミングでビルドが変わり、Vercel の本番と手元がずれる。
+上げるときは `#v0.1.1` に書き換えて `npm i` し、`package-lock.json` ごとコミットする。
 
-### 1. `.npmrc` をアプリのリポジトリ直下に置く
+Vercel 側の設定は**何も要らない**（public リポジトリの git 参照なので環境変数もトークンも不要）。
 
-```ini
-@handy-jp:registry=https://npm.pkg.github.com
-//npm.pkg.github.com/:_authToken=${NPM_TOKEN}
-```
-
-レジストリを引くのは**公開名のスコープ**（`@handy-jp`）なので、ここは `@handy` ではない。
-**この 2 行だけ**をコミットする。トークンの実値は絶対に書かない（`${NPM_TOKEN}` は
-npm が環境変数から展開する）。このリポジトリ自身には `.npmrc` を置いていない。
-
-### 2. `NPM_TOKEN`（read:packages の PAT）を作る — ユーザー作業
-
-GitHub Packages は匿名で読めないので、**private パッケージを読むだけのトークン**が要る。
-
-classic PAT（確実に動く方）:
-
-1. GitHub → 右上のアイコン → **Settings** → 左下 **Developer settings**
-2. **Personal access tokens → Tokens (classic)** → **Generate new token (classic)**
-3. Note に `smologi-ui read:packages`、Expiration は**無期限にしない**（1 年など）
-4. スコープは **`read:packages` だけ**にチェック（`repo` は不要）
-5. Generate → 表示された `ghp_...` を控える（再表示されない）
-
-Fine-grained PAT を使う場合: Resource owner = **HandY-JP**、Repository access =
-`HandY-JP/smologi-ui`、Permissions → Repository permissions → **Packages: Read-only**。
-
-> 期限切れると**4 アプリのビルドが全部落ちる**。期限を smologi の `docs/` かカレンダーに書いて、
-> 切れる前に差し替えること（差し替えは Vercel 4 プロジェクトの環境変数だけ）。
-
-### 3. Vercel の環境変数に入れる — ユーザー作業
-
-対象プロジェクト: `handy-projects/smologi` / `handy-projects/amazon-app` /
-ポータル（handy-internal-app）/ smologi-b2b。
-
-1. Vercel → 該当プロジェクト → **Settings** → **Environment Variables**
-2. Key `NPM_TOKEN`、Value = 上で作った PAT
-3. Environments は **Production / Preview / Development の 3 つとも**チェック
-4. Save → 次のデプロイから効く（既存デプロイの再ビルドが要るなら Redeploy）
-
-CLI でやるなら（プロジェクトを link 済みのディレクトリで）:
-
-```sh
-vercel env add NPM_TOKEN production
-vercel env add NPM_TOKEN preview
-vercel env add NPM_TOKEN development
-```
-
-手元の開発では `~/.npmrc`（**アプリのリポジトリではなく自分のホーム**）に同じ 2 行を
-実トークン付きで書くか、`export NPM_TOKEN=ghp_...` をシェルの設定に入れる。
-
-### 4. インストール
-
-```sh
-npm i @handy/smologi-ui@npm:@handy-jp/smologi-ui@^0.1.0
-```
-
-（2 回目からは `package.json` に別名指定が残るので `npm i` だけでよい）
-
-### 5. Tailwind に dist を見せる
+### 2. Tailwind に dist を見せる
 
 クラス名はパッケージの中にあるので、`tailwind.config.ts` の `content` に足す。
 足し忘れると**スタイルが当たらない**（部品は出るが見た目が素になる）。
@@ -98,20 +48,20 @@ npm i @handy/smologi-ui@npm:@handy-jp/smologi-ui@^0.1.0
 content: [
   './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   './src/components/**/*.{js,ts,jsx,tsx,mdx}',
-  './node_modules/@handy/smologi-ui/dist/**/*.js',   // ← これ
+  './node_modules/@handy-jp/smologi-ui/dist/**/*.js',   // ← これ
 ],
 ```
 
-### 6. `globals.css`
+### 3. `globals.css`
 
 ```css
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import '@handy/smologi-ui/tokens/seller.css';   /* logistic | seller | portal | research */
-@import '@handy/smologi-ui/styles.css';          /* 部品が要るカスタム CSS */
-@import '@handy/smologi-ui/dark-compat.css';     /* html.theme-dark の互換層（任意） */
+@import '@handy-jp/smologi-ui/tokens/seller.css';   /* logistic | seller | portal | research */
+@import '@handy-jp/smologi-ui/styles.css';          /* 部品が要るカスタム CSS */
+@import '@handy-jp/smologi-ui/dark-compat.css';     /* html.theme-dark の互換層（任意） */
 ```
 
 `styles.css` と `dark-compat.css` は `@tailwind utilities` の**あと**に置くこと
@@ -120,43 +70,41 @@ content: [
 ダークモードの切り替えは `document.documentElement.classList.toggle('theme-dark')`。
 アプリ側の ThemeProvider が行う（**パッケージは DOM を触らない**）。
 
-### 7. ローカルで直しながら試す
+### 4. ローカルで直しながら試す
 
-公開しないで試すときは、smologi-ui 側で
+公開しないで試すときは、アプリの `package.json` で
 
-```sh
-npm run build && npm link
+```json
+"@handy-jp/smologi-ui": "file:../smologi-ui"
 ```
 
-アプリ側で
-
-```sh
-npm link @handy/smologi-ui
-```
-
-`npm link` が嫌なら `package.json` に `"@handy/smologi-ui": "file:../smologi-ui"` を書く
-（この場合も `npm run build` してから `npm i` する。`dist/` が無いと解決できない）。
-どちらも**コミットしない**こと。
+に差し替えて `npm i`（smologi-ui 側で `npm run build` してから。`dist/` が無いと解決できない）。
+`npm link` でもよい。どちらも**コミットしない**こと。
 
 ---
 
-## 公開（このリポジトリ）
+## リリース（このリポジトリ）
 
-**タグを打つだけ。** `.github/workflows/publish.yml` が GitHub Actions で
-`GITHUB_TOKEN`（`packages: write`）を使って GitHub Packages へ publish する。
-手元からの `npm publish` は使わない（個人トークンが要らないようにしてある）。
+配布は git 参照なので、**`dist/` をコミットしたうえでタグを打つ**のが 1 リリース。
+消費側ではビルドが走らない（`prepare` を置いていない）ので、`dist/` が古いまま
+タグを打つと**古いコードが配られる**。順番を守ること。
 
 ```sh
 # 1. version を上げる
 npm version patch --no-git-tag-version   # or minor / major
-git commit -am "chore: v0.1.1"
 
-# 2. タグを push（= 公開）
+# 2. ビルドして dist / tokens ごとコミット
+npm run build
+git add -A
+git commit -m "chore: v0.1.1 リリース"
+
+# 3. タグを打って push
 git tag v0.1.1
-git push && git push --tags
+git push origin main
+git push origin v0.1.1
 ```
 
-タグ名（`v0.1.1`）と `package.json` の `version` が違うと publish は止まる。
+その後、各アプリの `package.json` の `#v0.1.0` を `#v0.1.1` に書き換えて `npm i`。
 
 ---
 
@@ -188,7 +136,7 @@ git push && git push --tags
 
 ```tsx
 'use client';
-import { FloatingGlassDock, TopToolCapsule, ProcessSegment } from '@handy/smologi-ui';
+import { FloatingGlassDock, TopToolCapsule, ProcessSegment } from '@handy-jp/smologi-ui';
 
 <FloatingGlassDock
   tools={[
@@ -215,7 +163,7 @@ import { FloatingGlassDock, TopToolCapsule, ProcessSegment } from '@handy/smolog
 検索ピルは `TopbarSearchDock`。差し込み先のスロット ID はアプリごとに違うので、起動時に登録する:
 
 ```ts
-import { configureTopbarDockSlots } from '@handy/smologi-ui';
+import { configureTopbarDockSlots } from '@handy-jp/smologi-ui';
 configureTopbarDockSlots(['amazon-topbar-dock']);   // Seller の場合
 ```
 
@@ -225,7 +173,7 @@ configureTopbarDockSlots(['amazon-topbar-dock']);   // Seller の場合
 import {
   ADMIN_FLAT_LIST, ADMIN_FLAT_TABLE, ADMIN_FLAT_TABLE_HEAD, ADMIN_FLAT_PAGE,
   StickySectionHeader, ListFooter, GroupSelectCheckbox, BulkActionPill,
-} from '@handy/smologi-ui';
+} from '@handy-jp/smologi-ui';
 
 <div className={ADMIN_FLAT_PAGE}>
   <div className={ADMIN_FLAT_LIST}>
@@ -257,7 +205,7 @@ import {
 ### 絞り込み
 
 ```tsx
-import { FilterPopover, SearchFilterBar, FilterSection, FilterChipToggle } from '@handy/smologi-ui';
+import { FilterPopover, SearchFilterBar, FilterSection, FilterChipToggle } from '@handy-jp/smologi-ui';
 
 <SearchFilterBar value={q} onChange={setQ} placeholder="商品名・コード・JAN">
   <FilterPopover label="状態" activeCount={statuses.length}>
@@ -275,7 +223,7 @@ import { FilterPopover, SearchFilterBar, FilterSection, FilterChipToggle } from 
 ### 設定画面
 
 ```tsx
-import { SettingsPage, SettingsSection, SettingsRow, SettingsToggle } from '@handy/smologi-ui';
+import { SettingsPage, SettingsSection, SettingsRow, SettingsToggle } from '@handy-jp/smologi-ui';
 
 <SettingsPage>
   <SettingsSection title="出荷" description="…" searchText="出荷 送り状 ヤマト">
@@ -290,7 +238,7 @@ import { SettingsPage, SettingsSection, SettingsRow, SettingsToggle } from '@han
 ### モーダル
 
 ```tsx
-import { Modal, LargeModal, ConfirmDialog } from '@handy/smologi-ui';
+import { Modal, LargeModal, ConfirmDialog } from '@handy-jp/smologi-ui';
 
 <Modal open={open} onClose={close} title="原価を改定">…</Modal>
 <LargeModal open={open} onClose={close} title="出荷詳細">…</LargeModal>
@@ -415,7 +363,13 @@ npm pack --dry-run # 同梱物の確認
 `node_modules` があれば tsup、無ければ esbuild を直接叩く（`scripts/build.mjs`）。
 後者は npm が使えない環境でもビルドを通すための逃がし口で、
 `SMOLOGI_UI_FALLBACK_MODULES`（既定 `../smologi/node_modules`）から esbuild と tsc を借りる。
-CI（`.github/workflows/ci.yml`）は `npm install` するので tsup 側を通る。
+どちらの経路でも出力は同じ（相対 import への `.js` 付与まで含めて後段で揃えている）。
+
+**`dist/` と `tokens/` はコミットする**（git 参照で配るため。`.gitignore` に入れないこと）。
+`package.json` に `prepare` は置いていない — 消費側でビルドを走らせないための意図的な選択で、
+そのぶん「dist を作り直してからタグを打つ」のがリリース手順になる（上の「リリース」節）。
+GitHub Actions のワークフロー（CI / publish）は `ci/workflows` ブランチに置いてあるだけで
+`main` には入れていない（git 参照配布では publish が要らないため）。
 
 Storybook は入れない。使用例はこの README に置き、見た目の確認は
 各アプリのプレビューデプロイで行う。
