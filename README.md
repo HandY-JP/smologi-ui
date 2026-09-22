@@ -16,13 +16,29 @@
 
 ## 導入（消費側のアプリ）
 
+### 0. 名前について（`@handy` と `@handy-jp`）
+
+**コードから import する名前は `@handy/smologi-ui`**（設計どおり）。
+ただし GitHub Packages は「npm のスコープ ＝ リポジトリ所有者」でないと publish を受け付けないため、
+**公開名は `@handy-jp/smologi-ui`** になっている。アプリ側は npm の別名指定でこの差を吸収する:
+
+```json
+"dependencies": {
+  "@handy/smologi-ui": "npm:@handy-jp/smologi-ui@^0.1.0"
+}
+```
+
+こうすると `node_modules/@handy/smologi-ui` に入るので、import も Tailwind の `content` も
+CSS の `@import` も、設計書のまま `@handy/…` で書ける。
+
 ### 1. `.npmrc` をアプリのリポジトリ直下に置く
 
 ```ini
-@handy:registry=https://npm.pkg.github.com
+@handy-jp:registry=https://npm.pkg.github.com
 //npm.pkg.github.com/:_authToken=${NPM_TOKEN}
 ```
 
+レジストリを引くのは**公開名のスコープ**（`@handy-jp`）なので、ここは `@handy` ではない。
 **この 2 行だけ**をコミットする。トークンの実値は絶対に書かない（`${NPM_TOKEN}` は
 npm が環境変数から展開する）。このリポジトリ自身には `.npmrc` を置いていない。
 
@@ -68,8 +84,10 @@ vercel env add NPM_TOKEN development
 ### 4. インストール
 
 ```sh
-npm i @handy/smologi-ui
+npm i @handy/smologi-ui@npm:@handy-jp/smologi-ui@^0.1.0
 ```
+
+（2 回目からは `package.json` に別名指定が残るので `npm i` だけでよい）
 
 ### 5. Tailwind に dist を見せる
 
