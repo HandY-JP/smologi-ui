@@ -1,0 +1,23 @@
+/* @handy/smologi-ui — トークンの契約（このファイル自体は読み込まない。仕様のメモ）
+ *
+ * 部品が参照する CSS 変数はこの 13 個だけ。アプリは tokens/*.css のどれか 1 つを
+ * `:root` へ流し込む（または独自プリセットを同じ名前で定義する）。
+ *
+ *   --sb-bg            サイドバー／ドックの面色
+ *   --sb-border        同・枠線
+ *   --sb-hover         同・ホバー面
+ *   --sb-text          同・本文
+ *   --sb-label         同・補助ラベル
+ *   --sb-heading       同・見出し
+ *   --sb-accent-bg     アクセント（塗り）
+ *   --accent-hover     アクセント（ホバー塗り）
+ *   --accent-ring      アクセント 15% 透過。Tailwind v3 は var() 相手の `/15` 修飾子を
+ *                      黙って捨てるので、透過値はトークン側で持つ必要がある
+ *   --accent-subtle    アクセントの淡い面（選択行・現在タブ）
+ *   --accent-light     --accent-subtle の旧名。既存参照のための互換エイリアス
+ *   --accent-on        アクセント塗りの上に乗る文字色
+ *   --page-bg          本文の地色
+ *
+ * 部品側のグレー・罫線・ガラスの透過はテーマ非依存（Tailwind の gray / 白黒の alpha）で
+ * 書いてあり、ダーク時は styles/dark-compat.css が受ける。
+ */

@@ -1,0 +1,31 @@
+/* Seller（amazon-app・橙）。現行 amazon-app の :root を 13 変数へ揃えたもの。 */
+:root {
+  --sb-bg: #f9f1e8;
+  --sb-border: #ebe3da;
+  --sb-hover: #f3e8db;
+  --sb-text: #231f1c;
+  --sb-label: #6b625b;
+  --sb-heading: #1a1614;
+  --sb-accent-bg: #ea580c;
+  --accent-hover: #c2410c;
+  --accent-ring: rgba(234, 88, 12, 0.15);
+  --accent-subtle: #fff7ed;
+  --accent-light: #fff7ed;
+  --accent-on: #ffffff;
+  --page-bg: #f9f1e8;
+}
+html.theme-dark {
+  --sb-bg: #171a21;
+  --sb-border: #2b2f38;
+  --sb-hover: #21252e;
+  --sb-text: #d8d3cd;
+  --sb-label: #9a938b;
+  --sb-heading: #f4f1ed;
+  --sb-accent-bg: #f97316;
+  --accent-hover: #ea580c;
+  --accent-ring: rgba(249, 115, 22, 0.22);
+  --accent-subtle: #2a1c10;
+  --accent-light: #2a1c10;
+  --accent-on: #1a1614;
+  --page-bg: #0f1115;
+}

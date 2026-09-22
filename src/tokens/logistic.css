@@ -1,0 +1,31 @@
+/* Logistic（スモロジ本体・青）。smologi の THEMES.light と同値。 */
+:root {
+  --sb-bg: #f6f7fb;
+  --sb-border: #e7ebf0;
+  --sb-hover: #e9edf4;
+  --sb-text: #334155;
+  --sb-label: #64748b;
+  --sb-heading: #0f172a;
+  --sb-accent-bg: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-ring: rgba(37, 99, 235, 0.15);
+  --accent-subtle: #eff6ff;
+  --accent-light: #eff6ff;
+  --accent-on: #ffffff;
+  --page-bg: #f6f7fb;
+}
+html.theme-dark {
+  --sb-bg: #0f172a;
+  --sb-border: #24334d;
+  --sb-hover: #1e293b;
+  --sb-text: #c2cddd;
+  --sb-label: #8b9bb0;
+  --sb-heading: #f1f5f9;
+  --sb-accent-bg: #3b82f6;
+  --accent-hover: #2563eb;
+  --accent-ring: rgba(59, 130, 246, 0.22);
+  --accent-subtle: #10233c;
+  --accent-light: #10233c;
+  --accent-on: #ffffff;
+  --page-bg: #0f1115;
+}

@@ -1,0 +1,198 @@
+'use client';
+
+import {
+  useEffect, useRef, useState,
+  type CSSProperties, type FocusEvent, type KeyboardEvent, type ReactNode, type Ref,
+} from 'react';
+import { CollapsedFilterTriggerProvider, FilterChipsHostProvider } from './FilterPopover';
+
+export interface SearchFilterBarProps {
+  value: string;
+  onValueChange: (value: string) => void;
+  onSearch: () => void;
+  /**
+   * 入力が空になった瞬間に呼ぶ（`type="search"` のブラウザ標準の × を押した／文字を全部消した）。
+   * Enter で確定する画面（適用済み検索を別 state に持つ画面）は必ず渡すこと。渡さないと
+   * 「× で文字は消えたのに一覧は絞られたまま」になる。詳しくは TopbarSearchDock の同名 prop を参照。
+   */
+  onCleared?: () => void;
+  placeholder: string;
+  filterControl?: ReactNode;
+  countLabel?: string;
+  disabled?: boolean;
+  loading?: boolean;
+  dirty?: boolean;
+  className?: string;
+  inputAriaLabel?: string;
+  inputRef?: Ref<HTMLInputElement>;
+  accentColor?: string;
+  accentLightColor?: string;
+  /**
+   * 検索欄を畳んで素のアイコン（虫メガネ＋じょうご）だけにする（既定 false = 常時展開）。
+   * 畳んだ状態はピルの枠・背景・リングを出さず、ホバーで薄い背景が付くだけにする。
+   * アイコンを押すと開いて即入力でき、空のままフォーカスを外す（または Esc）と畳む。
+   * 検索語が入っている間は畳まない（何で絞られているか分からなくなるため）。
+   */
+  collapsible?: boolean;
+}
+
+const SEARCH_ICON_PATH = 'm21 21-4.35-4.35M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z';
+
+export function SearchFilterBar({
+  value,
+  onValueChange,
+  onSearch,
+  onCleared,
+  placeholder,
+  filterControl,
+  countLabel,
+  disabled = false,
+  loading = false,
+  dirty = false,
+  className = '',
+  inputAriaLabel = '検索',
+  inputRef,
+  accentColor = 'var(--sb-accent-bg)',
+  accentLightColor = 'var(--accent-subtle)',
+  collapsible = false,
+}: SearchFilterBarProps) {
+  const [expanded, setExpanded] = useState(false);
+  const searchBoxRef = useRef<HTMLDivElement | null>(null);
+  // 検索語が入っている間は畳まない。絞り込みチップと違って、畳むと手掛かりが残らない。
+  const collapsed = collapsible && !expanded && value.length === 0;
+
+  // 開いた直後にフォーカスを入れる（アイコンを押してそのまま打てるように）。
+  // inputRef は呼び出し側が使うことがあるので奪わず、開いた検索欄を DOM から拾う。
+  useEffect(() => {
+    if (expanded) searchBoxRef.current?.querySelector('input')?.focus();
+  }, [expanded]);
+
+  const runSearch = () => {
+    if (!disabled && !loading) onSearch();
+  };
+  const collapseIfEmpty = () => {
+    if (collapsible && value.length === 0) setExpanded(false);
+  };
+  // 同じ検索バーの中（絞り込みボタンなど）へフォーカスが移っただけなら畳まない。
+  const onInputBlur = (event: FocusEvent<HTMLInputElement>) => {
+    const next = event.relatedTarget as Node | null;
+    if (next && searchBoxRef.current?.contains(next)) return;
+    collapseIfEmpty();
+  };
+  // 検索欄は受注フォームなど別の <form> の中に置かれることがある。
+  // ここを <form> にすると DOM 上フォームの入れ子になり、Enter の暗黙送信が
+  // 親フォーム（受注の保存）を走らせて画面ごと閉じてしまう事故が起きた。
+  // ランドマークは role="search" の <div> で表し、Enter は自前で処理して
+  // 既定動作（暗黙送信）を必ず打ち消す。
+  const onInputKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    // Esc は「空のまま開いてしまった検索欄を閉じる」だけ。入力済みなら閉じない。
+    if (event.key === 'Escape') {
+      if (event.nativeEvent.isComposing) return;
+      if (collapsible && value.length === 0) {
+        event.preventDefault();
+        event.currentTarget.blur();
+        setExpanded(false);
+      }
+      return;
+    }
+    if (event.key !== 'Enter') return;
+    // IME 変換確定の Enter は検索実行にしない（変換候補を確定しただけ）。
+    if (event.nativeEvent.isComposing) return;
+    event.preventDefault();
+    event.stopPropagation();
+    runSearch();
+  };
+  const style = {
+    '--search-accent': accentColor,
+    '--search-accent-light': accentLightColor,
+  } as CSSProperties;
+  // 適用中の絞り込みチップは検索バーの下段（basis-full の行）に出す。
+  // FilterPopover が portal で流し込むので、画面側は何も書かなくてよい。
+  const [chipsHost, setChipsHost] = useState<HTMLDivElement | null>(null);
+
+  return (
+    <div className={`flex min-w-0 flex-1 flex-wrap items-center gap-2 ${className}`} style={style}>
+      <FilterChipsHostProvider host={chipsHost}>
+      <CollapsedFilterTriggerProvider collapsed={collapsed}>
+      {/* 高さ（h-11）は畳んでも変えない。枠だけを外すので、開閉で行の高さがガタつかない。 */}
+      <div
+        ref={searchBoxRef}
+        role="search"
+        className={`relative flex h-11 items-center transition-colors ${
+          collapsed
+            ? 'shrink-0 gap-0.5'
+            // themed-search-pill: ダークで input の一括指定（背景 #0f172a）がピルの丸い面に
+            // 四角く乗るのを防ぐフック（globals.css）。面はこのピル側だけが持つ。
+            : `themed-search-pill min-w-[20rem] flex-1 rounded-full border bg-gray-50 focus-within:bg-white focus-within:ring-2 ${
+                dirty
+                  ? 'border-amber-400 focus-within:border-amber-500 focus-within:ring-amber-500/15'
+                  // ring は var() に透過修飾子（/15）が効かない（Tailwind v3 がユーティリティごと
+                  // 捨てるため、既定の青いリングが出てしまう）。透過済みの --accent-ring を使う。
+                  // themed-search-box: 平常時の枠は、ダークだけ入力欄と同じ濃さ（#334155）に落とす。
+                  // border-gray-300（ダーク #475569）のままだと隣の入力欄より一段明るく浮くため。
+                  : 'themed-search-box border-gray-300 focus-within:border-[var(--search-accent)] focus-within:ring-[var(--accent-ring)]'
+              }`
+        }`}
+      >
+        <button
+          type="button"
+          onClick={() => { if (collapsed) setExpanded(true); else runSearch(); }}
+          disabled={disabled || loading}
+          aria-expanded={collapsible ? !collapsed : undefined}
+          aria-label={loading ? '検索中' : collapsed ? inputAriaLabel : dirty ? '変更した条件で再検索' : '検索'}
+          title={loading ? '検索中' : collapsed ? inputAriaLabel : dirty ? '変更した条件で再検索' : '検索'}
+          className={`flex shrink-0 items-center justify-center transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
+            collapsed
+              // 畳んだ状態は枠なしの ghost ボタン。ホバーで薄い背景を出して押せると分かるようにする。
+              ? 'h-9 w-9 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--search-accent)]'
+              : `h-full w-11 rounded-l-full ${
+                  dirty ? 'text-amber-600' : 'text-gray-400 hover:text-[var(--search-accent)]'
+                }`
+          }`}
+        >
+          {loading ? (
+            <span className="h-[18px] w-[18px] animate-spin rounded-full border-2 border-current border-t-transparent" aria-hidden />
+          ) : (
+            <svg className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden>
+              <path strokeLinecap="round" strokeLinejoin="round" d={SEARCH_ICON_PATH} />
+            </svg>
+          )}
+        </button>
+        {!collapsed && (
+          <input
+            ref={inputRef}
+            type="search"
+            inputMode="text"
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="none"
+            spellCheck={false}
+            lang="ja"
+            aria-label={inputAriaLabel}
+            value={value}
+            onChange={(event) => {
+              const next = event.target.value.replace(/\r?\n/g, ' ');
+              onValueChange(next);
+              // 空になったらその場で「空の検索」を適用する（ブラウザ標準の × は change しか起こさない）。
+              if (next.length === 0 && value.length > 0) onCleared?.();
+            }}
+            onKeyDown={onInputKeyDown}
+            onBlur={collapsible ? onInputBlur : undefined}
+            placeholder={placeholder}
+            className="h-full min-w-0 flex-1 border-0 bg-transparent pr-2 text-sm text-gray-900 outline-none placeholder:text-gray-400"
+          />
+        )}
+        {filterControl}
+      </div>
+      </CollapsedFilterTriggerProvider>
+      {countLabel ? (
+        <span className="w-24 shrink-0 whitespace-nowrap text-right text-xs tabular-nums text-gray-500">
+          {countLabel}
+        </span>
+      ) : null}
+      {/* チップが無いときは行ごと消す（basis-full の空要素で gap が空くのを防ぐ） */}
+      <div ref={setChipsHost} className="min-w-0 basis-full empty:hidden" />
+      </FilterChipsHostProvider>
+    </div>
+  );
+}
