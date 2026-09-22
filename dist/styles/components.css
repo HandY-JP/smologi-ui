@@ -1,0 +1,761 @@
+/* @handy/smologi-ui — 部品が必要とするカスタム CSS。
+ *
+ * Tailwind ユーティリティだけでは書けないもの（backdrop-filter の複合指定・多重 box-shadow・
+ * 疑似要素グラデーション・スクロールバー・:has() セレクタ）だけを集めている。
+ * 色はすべて CSS 変数（tokens/*.css）を参照するか、テーマ非依存のグレー／透過で書く。
+ *
+ * 使い方（アプリ側の globals.css）:
+ *   @tailwind base; @tailwind components; @tailwind utilities;
+ *   @import '@handy/smologi-ui/tokens/seller.css';
+ *   @import '@handy/smologi-ui/styles.css';
+ *
+ * 出自: smologi src/app/globals.css（main = 1b2259b2 / 2026-09-23 第3バッチ反映後）の
+ * 以下の範囲をそのまま移設したもの。取り直すときは同じアンカー行で切ること。
+ *   L806-816   トースト／ツールチップのアニメーション
+ *   L986-996   コマンドパレットのアニメーション
+ *   L1037-1090  sticky ページャの下余白・ガラス帯
+ *   L1608-2268  トップバー再設計（道具バー・工程セグメント・浮遊ガラス）／一括操作ピル／
+ *              細いスクロールバー／第2行スロット／sticky 見出し／列見出し／セクションジャンプ
+ */
+
+@keyframes toast-enter {
+  from { opacity: 0; transform: translateY(8px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.toast-enter { animation: toast-enter 220ms ease-out forwards; }
+
+@keyframes tooltip-fade {
+  from { opacity: 0; transform: translateY(2px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.tooltip-fade { animation: tooltip-fade 140ms ease-out forwards; }
+
+
+@keyframes cmdk-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.cmdk-overlay { animation: cmdk-fade 160ms ease-out forwards; }
+
+@keyframes cmdk-pop {
+  from { opacity: 0; transform: translateY(-8px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.cmdk-panel { animation: cmdk-pop 200ms cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+
+/* 縦スクロールする <main> の下端余白。padding-bottom で取ると、その中の
+   `position: sticky; bottom: 0`（商品マスタ一覧のページャなど）が padding の分だけ
+   画面下端から浮いてしまう（sticky の基準矩形はスクロールコンテナのパディング分
+   縮められるため、下に行が覗く）。余白は擬似要素のスペーサーで取り、
+   スクロールポートの下端＝ビューポート下端に貼り付けられるようにする。
+   スクロール高・見た目は padding-bottom と同じ 2rem。 */
+.app-main-bottom-space::after {
+  content: '';
+  display: block;
+  height: 2rem;
+}
+@media print {
+  .app-main-bottom-space::after { display: none; }
+}
+
+/* 一覧下端に浮かせるガラスピル（StickyPagerBar）。面の色は data-tone（既定 'default' /
+   商品マスタ編集モードなどの 'amber'）で切り替える。className で Tailwind の bg-* を
+   渡す方式はやめた（ダーク上書きと生成順で競合し、amber面がダーク/reduced-transparency
+   で消えるバグがあったため）。ここに配色を一本化する。
+   商品マスタの列見出しピル（sticky top-0 のガラスピル）でも同じクラス・data-tone を使う。 */
+.app-sticky-glass {
+  background-color: rgba(255, 255, 255, 0.8);
+  border-color: rgba(229, 231, 235, 0.8); /* gray-200/80 */
+}
+html.theme-dark .app-sticky-glass {
+  background-color: rgba(15, 23, 42, 0.72);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+.app-sticky-glass[data-tone='amber'] {
+  background-color: rgba(255, 251, 235, 0.85); /* amber-50/85 */
+  border-color: rgba(253, 230, 138, 0.8); /* amber-200/80 */
+}
+html.theme-dark .app-sticky-glass[data-tone='amber'] {
+  background-color: rgba(60, 45, 20, 0.78);
+  border-color: rgba(180, 131, 45, 0.4);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+@media (prefers-reduced-transparency: reduce) {
+  .app-sticky-glass {
+    backdrop-filter: none;
+    background-color: #fff;
+  }
+  html.theme-dark .app-sticky-glass {
+    background-color: #0f172a;
+  }
+  .app-sticky-glass[data-tone='amber'] {
+    background-color: #fffbeb; /* amber-50, opaque */
+  }
+  html.theme-dark .app-sticky-glass[data-tone='amber'] {
+    background-color: #2f2410;
+  }
+}
+
+
+/* ===== 管理画面トップバー再設計（2026-09） =====
+   入荷・出荷ページの新トップバー（道具バー・工程セグメント・畳み時の浮遊ガラス3カプセル）で使う
+   カスタムCSS。数値はモック（scratchpad mock-inbounds-v7.html / mock-shipments-v7.html）に合わせている。
+   Tailwind の任意値だけでは backdrop-filter の複合指定・多重 box-shadow・疑似要素グラデーションの
+   組み合わせが読みにくくなるため、ここへ集約する（他のカスタムクラスと同じ方針）。 */
+
+/* --- 通常時の道具バー（amazon-app の .amazon-tool-capsule と同系統。色は青系に置換） --- */
+.sb-tool-capsule {
+  isolation: isolate;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.42);
+  -webkit-backdrop-filter: blur(18px) saturate(1.5);
+  backdrop-filter: blur(18px) saturate(1.5);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.75),
+    0 0 0 1px rgba(40, 28, 16, 0.10),
+    0 10px 30px -18px rgba(40, 28, 16, 0.35);
+}
+html.theme-dark .sb-tool-capsule {
+  background: rgba(15, 23, 42, 0.55);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 0 0 1px rgba(0, 0, 0, 0.3),
+    0 10px 30px -18px rgba(0, 0, 0, 0.5);
+}
+.sb-tool-rail { position: relative; display: flex; align-items: center; height: 42px; padding: 0 4px; }
+.sb-tool-sep { flex-shrink: 0; width: 1px; height: 20px; margin: 0 3px; background: rgba(40, 28, 16, 0.10); }
+html.theme-dark .sb-tool-sep { background: rgba(255, 255, 255, 0.14); }
+.sb-tool-btn {
+  position: relative; z-index: 1; width: 40px; height: 34px; border: 0; border-radius: 999px;
+  background: transparent; display: flex; align-items: center; justify-content: center;
+  color: rgba(43, 38, 33, 0.6); cursor: pointer; flex-shrink: 0;
+}
+.sb-tool-btn:hover:not(:disabled) { background: rgba(255, 255, 255, 0.55); color: #2b2621; }
+.sb-tool-btn:disabled { cursor: not-allowed; opacity: 0.45; }
+html.theme-dark .sb-tool-btn { color: rgba(226, 232, 240, 0.65); }
+html.theme-dark .sb-tool-btn:hover:not(:disabled) { background: rgba(255, 255, 255, 0.12); color: #f1f5f9; }
+.sb-tool-btn svg { width: 17px; height: 17px; stroke-width: 1.6; flex-shrink: 0; }
+.sb-tool-btn.primary { background: var(--sb-accent-bg, #2563eb); color: #fff; box-shadow: 0 4px 10px -3px rgba(37, 99, 235, 0.55); }
+.sb-tool-btn.primary:hover:not(:disabled) { background: var(--accent-hover, #1d4ed8); color: #fff; }
+.sb-tool-btn.primary svg { width: 18px; height: 18px; stroke-width: 2; }
+/* 帯の右端の「▾」ハンドル（押すと全ツールの縦一覧が開く。2026-09-22 ユーザー決定「案A」）。
+   道具そのものではないので、道具ボタンより一回り細く・薄くして主張させない。 */
+.sb-tool-btn.sb-tool-caret { width: 22px; color: rgba(43, 38, 33, 0.42); }
+.sb-glass-btn.sb-tool-caret { width: 20px; color: rgba(43, 38, 33, 0.45); }
+.sb-tool-btn.sb-tool-caret svg, .sb-glass-btn.sb-tool-caret svg { width: 13px; height: 13px; }
+html.theme-dark .sb-tool-btn.sb-tool-caret, html.theme-dark .sb-glass-btn.sb-tool-caret { color: rgba(226, 232, 240, 0.5); }
+/* 道具バーのツールチップ。2026-09-15 から body へ portal（TopToolCapsule.tsx の ToolTooltip）して
+   position:fixed で置く。祖先の重ね順・overflow に潰されないよう z-index は 60
+   （ドロップダウンと同じ。浮遊カプセル 40・sticky 見出し 38 より上）。
+   表示・非表示は JS（ホバー中／キーボードフォーカス中）が担当するので、ここでは常に不透明。
+   left はトリガーの中心（画面端では補正済み）なので translateX(-50%) で中央寄せする。 */
+.sb-tool-tooltip {
+  position: fixed; z-index: 60; transform: translateX(-50%);
+  padding: 3px 7px; border-radius: 6px; background: #2b2621; color: #fbf9f6;
+  font-size: 10px; font-weight: 500; line-height: 1.4; white-space: nowrap; pointer-events: none;
+}
+
+/* --- 道具バーの状態表現（2026-09-15 ユーザー決定で刷新） ---
+   進行中 = アイコン自体が縦に往復（回る輪は廃止。「違和感がある」という指摘）。
+            進捗％が分かるときはボタン下辺に 2px の進捗バーを足す（輪・円弧は出さない）。
+   完了   = アイコンが 400ms だけチェックに変わってポップ（scale 1→1.15→1）、その後は
+            従来どおり右上の青い点＋件数バッジ。
+   失敗   = アイコンが横に3回小さく揺れ（±2px・300ms）、赤い点＋ツールチップ（従来どおり）。
+   prefers-reduced-motion: reduce では動きを止め、色・点・進捗バーだけで表現する。 */
+.sb-tool-icon { display: inline-flex; align-items: center; justify-content: center; }
+.sb-tool-btn.is-progress, .sb-glass-btn.is-progress { opacity: 0.6; cursor: progress; }
+.sb-tool-btn.is-progress .sb-tool-icon, .sb-glass-btn.is-progress .sb-tool-icon { animation: sb-tool-bob 1s ease-in-out infinite; }
+/* PDF・印刷系は「紙が上下する」ぶん振れ幅を小さく（2px）する。 */
+.sb-tool-btn.is-progress.paper .sb-tool-icon, .sb-glass-btn.is-progress.paper .sb-tool-icon { animation: sb-tool-bob-paper 1s ease-in-out infinite; }
+@keyframes sb-tool-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(3px); }
+}
+@keyframes sb-tool-bob-paper {
+  0%, 100% { transform: translateY(-2px); }
+  50% { transform: translateY(2px); }
+}
+/* 進捗バー（％が取れるときだけ）。ボタンの下辺いっぱいに敷く。 */
+.sb-tool-progress {
+  position: absolute; left: 6px; right: 6px; bottom: 3px; height: 2px; border-radius: 999px;
+  background: rgba(17, 24, 39, 0.10); pointer-events: none; overflow: hidden;
+}
+.sb-tool-progress > i {
+  display: block; height: 100%; border-radius: 999px;
+  background: var(--sb-accent-bg, #2563eb); transition: width 300ms ease;
+}
+html.theme-dark .sb-tool-progress { background: rgba(255, 255, 255, 0.16); }
+/* 完了の一瞬（チェック）。 */
+.sb-tool-btn .sb-tool-icon.is-check, .sb-glass-btn .sb-tool-icon.is-check { color: var(--sb-accent-bg, #2563eb); animation: sb-tool-pop 400ms ease-out; }
+@keyframes sb-tool-pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+/* 失敗の揺れ（3往復・300ms）。 */
+.sb-tool-btn.is-failed .sb-tool-icon, .sb-glass-btn.is-failed .sb-tool-icon { animation: sb-tool-shake 300ms ease-in-out; }
+@keyframes sb-tool-shake {
+  0%, 100% { transform: translateX(0); }
+  16% { transform: translateX(-2px); }
+  33% { transform: translateX(2px); }
+  50% { transform: translateX(-2px); }
+  66% { transform: translateX(2px); }
+  83% { transform: translateX(-2px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sb-tool-icon { animation: none !important; }
+  .sb-tool-progress > i { transition: none; }
+}
+.sb-tool-dot {
+  position: absolute; top: -1px; right: -1px; min-width: 15px; height: 15px; padding: 0 3px;
+  border-radius: 999px; display: flex; align-items: center; justify-content: center;
+  font-size: 9px; font-weight: 700; line-height: 1; color: #fff;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9);
+}
+html.theme-dark .sb-tool-dot { box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.9); }
+.sb-tool-dot.done { background: var(--sb-accent-bg, #2563eb); animation: sb-tool-pulse-once 400ms ease-out; }
+.sb-tool-dot.failed { background: #ef4444; }
+@keyframes sb-tool-pulse-once {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.55); }
+  100% { transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sb-tool-dot.done { animation: none; }
+}
+
+/* --- 工程セグメント（通常時: AdminTopBarFlow 相当のタブ列＋滞留はローズのピル） --- */
+.sb-stage-tab {
+  position: relative; display: flex; align-items: center; gap: 6px;
+  border: 0; background: transparent; border-radius: 6px; padding: 6px 10px;
+  font-size: 15px; font-weight: 600; color: #4b5563; cursor: pointer; white-space: nowrap; height: 30px;
+}
+.sb-stage-tab:hover { background: rgba(0, 0, 0, 0.04); }
+.sb-stage-tab.current { background: var(--accent-subtle); color: var(--sb-accent-bg, #2563eb); }
+.sb-stage-tab.danger { color: #be123c; background: #fff1f2; }
+.sb-stage-tab.danger.current { background: #e11d48; color: #fff; }
+html.theme-dark .sb-stage-tab { color: #cbd5e1; }
+html.theme-dark .sb-stage-tab:hover { background: rgba(255, 255, 255, 0.08); }
+/* 選択中の工程。ライトは「淡いアクセント面＋アクセント文字」だが、ダークの
+   --accent-subtle（#1e3a8a）に --sb-accent-bg（#3b82f6）を乗せると 2.7:1 しかなく、
+   文字が面に沈む。面はアクセントの薄塗り、文字は同系の明るい色へ振り分ける。 */
+html.theme-dark .sb-stage-tab.current:not(.danger) {
+  background: rgba(59, 130, 246, 0.22);
+  color: #bfdbfe;
+}
+html.theme-dark .sb-stage-tab.danger { background: rgba(225, 29, 72, 0.16); color: #fda4af; }
+/* 滞留（danger）の選択中。`html.theme-dark .sb-stage-tab.danger`（0,3,1）が
+   `.sb-stage-tab.danger.current`（0,3,0）に勝ってしまい、ダークでは滞留タブを選んでも
+   非選択と同じ見た目のままだった。選択中はライトと同じ「塗り＋白文字」に戻す。 */
+html.theme-dark .sb-stage-tab.danger.current { background: #e11d48; color: #fff; }
+.sb-stage-badge {
+  display: inline-flex; min-width: 18px; align-items: center; justify-content: center;
+  border-radius: 999px; padding: 0 4px; font-size: 10px; font-weight: 700; line-height: 16px;
+  background: #f3f4f6; color: #4b5563; font-variant-numeric: tabular-nums;
+}
+.sb-stage-tab.current .sb-stage-badge { background: var(--sb-accent-bg, #2563eb); color: #fff; }
+.sb-stage-tab.danger .sb-stage-badge { background: #f43f5e; color: #fff; }
+.sb-stage-tab.danger.current .sb-stage-badge { background: rgba(255, 255, 255, 0.26); color: #fff; }
+html.theme-dark .sb-stage-badge { background: #334155; color: #cbd5e1; }
+
+/* --- 出荷グループのチップ（工程行と同じ行・出荷作業中のときだけ）。
+   モックの .rg-chip に合わせ、背景は透明＋チップ間の1px区切り線（選択中だけ塗る）。 --- */
+.sb-group-chip {
+  display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px;
+  border: 0; border-right: 1px solid rgba(0, 0, 0, 0.08); background: transparent; font-size: 12.5px;
+  font-weight: 600; color: #374151; white-space: nowrap; cursor: pointer;
+}
+.sb-group-chip:last-child { border-right: 0; }
+.sb-group-chip:hover { background: rgba(0, 0, 0, 0.05); }
+.sb-group-chip.active { background: #111827; color: #fff; border-radius: 999px; border-right-color: transparent; }
+html.theme-dark .sb-group-chip { color: #cbd5e1; border-right-color: rgba(255, 255, 255, 0.1); }
+html.theme-dark .sb-group-chip:hover { background: rgba(255, 255, 255, 0.08); }
+/* 選択中チップはジャンプナビ（.sb-section-jump.on）と同じ扱い＝半透明の白。
+   反転した「ほぼ白いチップ」はダークの地で眩しく、同じ帯に並ぶ他のチップより手前に
+   飛び出して見えるため（2026-09-23）。 */
+html.theme-dark .sb-group-chip.active { background: rgba(255, 255, 255, 0.16); color: #f1f5f9; }
+html.theme-dark .sb-group-chip.active b { background: rgba(255, 255, 255, 0.24); color: #f1f5f9; }
+.sb-group-chip b {
+  display: inline-flex; min-width: 16px; align-items: center; justify-content: center;
+  border-radius: 999px; padding: 0 4px; font-size: 10px; font-weight: 700; line-height: 15px;
+  background: rgba(17, 24, 39, 0.08); color: #4b5563; font-variant-numeric: tabular-nums;
+}
+.sb-group-chip.active b { background: rgba(255, 255, 255, 0.24); color: #fff; }
+.sb-group-chip-more { color: var(--sb-accent-bg, #2563eb); background: rgba(37, 99, 235, 0.10); }
+/* ダークの地（#1e293b 前後）では、アクセント青（#3b82f6）に 10% の青塗りだと 3:1 程度しか
+   出ず 10px の太字が沈む。面を少し濃く・文字を一段明るくする。 */
+html.theme-dark .sb-group-chip-more { color: #93c5fd; background: rgba(59, 130, 246, 0.18); }
+
+/* --- 下段右端の履歴リンク --- */
+
+/* ===== 畳み時: リキッドガラスの浮遊カプセル（FloatingGlassDock） ===== */
+/* left は --sidebar-width（SidebarFooter.tsx が折りたたみ等で書き換える CSS 変数）ぶん
+   オフセットする。position:fixed は viewport 基準なので、サイドバーを引かないと
+   gf-left がサイドバーの上に乗ってしまう（Opus レビュー指摘）。
+   変数の変化にはそのまま追従する（JS 側での再計算は不要）。
+   2026-09-14 最終決定で中央カプセル（gf-center）は廃止＝右カプセル（gf-right）に
+   絞り込みチップ・工程セグメント・検索をまとめた（通常時と同じ「右側グループ」の並び）。 */
+/* 2026-09-15 本番崩れ修正: left の基準は --sidebar-width（永続幅）ではなく
+   --sidebar-visual-width（ピーク＝ホバー一時展開中は展開幅になる）にする。ピーク中は
+   サイドバー（z-50）がこの層（z-40）の上に重なるため、永続幅基準のままだと道具バーが
+   サイドバーの裏に隠れて「ついて来ていない」ように見えていた。
+   さらに、サイドバーを畳んでいるときは左上に開閉ドック（▶）が残るので、その専有幅
+   （--sidebar-dock-inset）も足して重なりを防ぐ。 */
+.sb-glass-layer {
+  position: fixed; top: 12px; right: 0; z-index: 40; pointer-events: none;
+  left: calc(var(--sidebar-visual-width, var(--sidebar-width, 0px)) + var(--sidebar-dock-inset, 0px));
+  transition: left 80ms ease;
+}
+/* 2026-09-22 ユーザー決定「通常時と畳み時で部品のサイズを変えない」: 通常時の第1行（h-16）と
+   同じく、各カプセルは共通の行の中で上下中央に揃える。行の高さは一番背の高い部品（検索ピル
+   ＝通常時の h-11 と同じ 44px）に合わせる。これで道具バー 42px・工程 40px・検索 44px という
+   通常時の寸法をそのまま持ち込んでも、カプセル同士の中心線がズレない。 */
+.sb-glass-float {
+  /* gap は通常時の第1行の右側グループ（Tailwind gap-3 = 12px）と同じにする
+     ＝畳んでも工程カプセルと検索ピルの間隔が変わらない（2026-09-22）。 */
+  position: absolute; top: 0; display: flex; align-items: center; gap: 12px; min-height: 44px;
+  opacity: 0; transform: translateY(-8px); pointer-events: none; transition: opacity 180ms ease, transform 180ms ease;
+}
+.sb-glass-float.is-visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.sb-glass-float.gf-left { left: 24px; }
+.sb-glass-float.gf-right { right: 24px; }
+/* 道具バーだけは通常時（.sb-tool-rail = 42px）と同じ高さにする。中身（TopToolCapsule）は
+   クラス名を共有しているため、ここで畳み時の外枠（.sb-glass）側だけを 42px に上書きする。 */
+.sb-glass-float.gf-left .sb-glass { height: 42px; }
+
+.sb-glass {
+  position: relative; display: inline-flex; align-items: center; height: 40px; border-radius: 999px;
+  background: rgba(255, 255, 255, 0.60);
+  -webkit-backdrop-filter: blur(18px) saturate(1.6);
+  backdrop-filter: blur(18px) saturate(1.6);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.70),
+    0 0 0 1px rgba(0, 0, 0, 0.06),
+    0 10px 30px -14px rgba(0, 0, 0, 0.25);
+}
+.sb-glass::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0.14) 40%, rgba(255, 255, 255, 0) 74%);
+}
+.sb-glass > * { position: relative; z-index: 1; }
+/* 本番バグ修正（2026-09-22）: 上の `.sb-glass > *` は、畳み時の絞り込みカプセル
+   （.sb-glass-chips）の直下に置いている「計測専用レイヤー」まで position:relative に戻して
+   しまう。Tailwind の `fixed` は @layer utilities の中＝レイヤー無しのこのルールに負けるため、
+   画面外へ逃がしたはずの計測レイヤーが通常フローへ復帰し、カプセルの幅を丸ごと食っていた
+   （症状: 工程カプセルと検索ピルの間に空の白いカプセルが伸び、可視チップが右端へ押し出される）。
+   計測レイヤーだけは必ず fixed（＝フローから外す）に戻す。 */
+.sb-glass > .sb-measure-layer { position: fixed; }
+html.theme-dark .sb-glass {
+  background: rgba(15, 23, 42, 0.55);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 0 0 1px rgba(0, 0, 0, 0.35),
+    0 10px 30px -14px rgba(0, 0, 0, 0.6);
+}
+html.theme-dark .sb-glass::before {
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.03) 40%, rgba(255, 255, 255, 0) 74%);
+}
+
+/* バグ修正（本番崩れ・2026-09-15）: このクラスは padding/gap だけで display を持っておらず、
+   畳み時の道具バー（TopToolCapsule variant="compact" の中身）が block のまま**縦積み**になり、
+   カプセル（高さ40px）から溢れて左上でアイコンがぐちゃぐちゃに重なっていた
+   （.sb-glass-center で直したのと同じ穴。親の .sb-glass は inline-flex だが、その中の
+   このレールが block だと子の <span class="flex"> がブロックとして縦に並ぶ）。 */
+.sb-glass-tools { display: flex; align-items: center; padding: 0 5px; gap: 1px; }
+.sb-glass-btn {
+  width: 34px; height: 30px; border: 0; border-radius: 999px; background: transparent;
+  display: flex; align-items: center; justify-content: center; color: rgba(43, 38, 33, 0.62);
+  cursor: pointer; flex-shrink: 0; position: relative;
+}
+.sb-glass-btn:hover:not(:disabled) { background: rgba(255, 255, 255, 0.62); color: #2b2621; }
+.sb-glass-btn:disabled { cursor: not-allowed; opacity: 0.45; }
+.sb-glass-btn svg { width: 17px; height: 17px; stroke-width: 1.7; }
+.sb-glass-btn.primary { background: var(--sb-accent-bg, #2563eb); color: #fff; box-shadow: 0 4px 10px -3px rgba(37, 99, 235, 0.55); }
+.sb-glass-btn.primary svg { stroke-width: 2; }
+/* ON/OFF トグル（商品マスタの「編集モード」）が ON のとき。primary（青）と区別してアンバーで点灯する。 */
+.sb-tool-btn.is-active, .sb-glass-btn.is-active { background: #f59e0b; color: #fff; }
+.sb-tool-btn.is-active:hover:not(:disabled), .sb-glass-btn.is-active:hover:not(:disabled) { background: #d97706; color: #fff; }
+html.theme-dark .sb-glass-btn { color: rgba(226, 232, 240, 0.7); }
+html.theme-dark .sb-glass-btn:hover:not(:disabled) { background: rgba(255, 255, 255, 0.14); color: #f1f5f9; }
+.sb-glass-sep { width: 1px; height: 18px; flex-shrink: 0; background: rgba(40, 28, 16, 0.13); margin: 0 3px; }
+html.theme-dark .sb-glass-sep { background: rgba(255, 255, 255, 0.16); }
+
+/* バグ修正（本番崩れ・2026-09-14）: このクラスは padding/gap だけで display が無かったため、
+   通常時（variant="center"、.sb-glass 無しで単体使用）は素の div=block のままになり、
+   中の各工程ピル（span.flex.items-center、Tailwind の flex はブロックレベル）が横に並ばず
+   縦積みになっていた（畳み時の compact は .sb-glass と併用するため .sb-glass 側の
+   display:inline-flex に隠れて症状が出ていなかった）。レイアウトを明示する。 */
+/* 寸法はモック v8 の .tabs / .g-center（1440px 用の詰めた値）に合わせてある。 */
+.sb-glass-center { display: inline-flex; align-items: center; height: 40px; padding: 0 5px; gap: 1px; }
+.sb-glass-lead {
+  display: inline-flex; align-items: center; flex-shrink: 0; padding: 0 8px 0 7px;
+  color: #6b7280; font-size: 11px; font-weight: 700; white-space: nowrap;
+}
+.sb-glass-lead::after { content: ''; width: 1px; height: 16px; margin-left: 8px; background: rgba(40, 28, 16, 0.13); }
+html.theme-dark .sb-glass-lead { color: #94a3b8; }
+html.theme-dark .sb-glass-lead::after { background: rgba(255, 255, 255, 0.16); }
+.sb-glass-stage {
+  display: inline-flex; align-items: center; gap: 5px; height: 30px; flex-shrink: 0; padding: 0 10px;
+  border: 0; border-radius: 999px; background: transparent; color: #374151; font-size: 12px;
+  font-weight: 700; white-space: nowrap; cursor: pointer;
+}
+/* 本番崩れ修正（2026-09-14）: 畳み時、道具バーのカプセルと重なりそうな狭い幅で使う詰め表示
+   （件数バッジは JSX 側で省略済み。ここではパディング・文字間を詰めるだけ）。 */
+.sb-glass-stage.dense { gap: 0; padding: 0 8px; }
+.sb-glass-center.dense { gap: 0; }
+.sb-glass-stage:hover { background: rgba(255, 255, 255, 0.62); }
+.sb-glass-stage.on { background: var(--sb-accent-bg, #2563eb); color: #fff; box-shadow: 0 4px 10px -4px rgba(37, 99, 235, 0.6); }
+.sb-glass-stage.danger { color: #be123c; }
+.sb-glass-stage.danger.on { background: #e11d48; color: #fff; box-shadow: 0 4px 10px -4px rgba(225, 29, 72, 0.6); }
+html.theme-dark .sb-glass-stage { color: #e2e8f0; }
+html.theme-dark .sb-glass-stage:hover { background: rgba(255, 255, 255, 0.14); }
+.sb-glass-stage b, .sb-glass-search .sb-group-chip b {
+  display: inline-flex; min-width: 16px; align-items: center; justify-content: center; border-radius: 999px;
+  padding: 0 4px; font-size: 10px; font-weight: 700; line-height: 15px; background: rgba(17, 24, 39, 0.08);
+  color: #4b5563; font-variant-numeric: tabular-nums;
+}
+.sb-glass-stage.on b { background: rgba(255, 255, 255, 0.26); color: #fff; }
+
+/* 工程セグメントのカプセル末尾に置く「履歴」（2026-09-22 ユーザー決定で第2行から移設）。
+   土台は工程ピル（.sb-glass-stage）と同じで、塗りつぶし無し・薄いグレー文字にして工程と
+   区別する（アイコンは付けない＝テキストのみ）。ホバーで少し濃く。
+   履歴タブを表示中は .on が付き、工程の選択状態とまったく同じ見た目になる。 */
+.sb-glass-history { color: #9ca3af; font-weight: 600; text-decoration: none; }
+.sb-glass-history:hover { color: #374151; }
+.sb-glass-history.on:hover { color: #fff; }
+/* ガラス帯の上の「履歴」。#64748b はガラス（rgba(15,23,42,.55)）に対して 3:1 を切って沈む。
+   他の控えめ文字（.sb-section-jump 等）と同じ階調へ揃える。 */
+html.theme-dark .sb-glass-history { color: #94a3b8; }
+html.theme-dark .sb-glass-history:hover { color: #f1f5f9; }
+
+/* 商品マスタ（管理）の保存ビューセグメント末尾の「▾」（保存・名前変更・削除）。
+   工程セグメントのピル（.sb-glass-stage）と同じ土台を使い、幅だけ詰める。 */
+.sb-views-caret { padding: 0 6px; color: #6b7280; }
+.sb-views-caret.is-open { background: rgba(255, 255, 255, 0.62); color: #2b2621; }
+html.theme-dark .sb-views-caret { color: #94a3b8; }
+html.theme-dark .sb-views-caret.is-open { background: rgba(255, 255, 255, 0.14); color: #e2e8f0; }
+.sb-views-caret-dot {
+  position: absolute; top: 3px; right: 2px; width: 6px; height: 6px; border-radius: 999px;
+  background: #f59e0b;
+}
+.sb-views-caret { position: relative; }
+
+/* 幅・高さとも通常時の検索ピル（TopbarSearchDock の h-11 ＋ clamp(440px,42vw,520px) / 実測
+   pillWidthPx）に揃える（2026-09-22 ユーザー決定）。width は FloatingGlassDock が inline style で
+   上書きする（実測値が無いとき・狭くて入り切らないときだけ、ここの 320px へ落ちる）。 */
+.sb-glass-search { width: 320px; height: 44px; padding: 0 5px 0 12px; gap: 2px; }
+.sb-glass-cust {
+  display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0; cursor: pointer;
+  font-size: 13px; font-weight: 600; color: #374151; max-width: 108px;
+}
+.sb-glass-cust span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+html.theme-dark .sb-glass-cust { color: #e2e8f0; }
+.sb-glass-div { width: 1px; height: 18px; flex-shrink: 0; background: rgba(40, 28, 16, 0.15); margin: 0 8px; }
+html.theme-dark .sb-glass-div { background: rgba(255, 255, 255, 0.16); }
+.sb-glass-search input {
+  flex: 1; min-width: 0; border: 0; background: transparent; outline: none; font-size: 13px;
+  color: #111827; padding: 0 4px;
+}
+/* 面はガラスのカプセル側が持つ。background は上で transparent にしてあるが、ダークの
+   フォーム一括指定（`html.theme-dark input[type="text"]`＝詳細度 0,2,2）の方が強く、
+   丸いカプセルの中に四角い濃紺の箱（#0f172a）が乗っていた。ここで同詳細度・後勝ちで
+   透過へ戻す（左端のお客様セレクタ＝SearchableSelect の inline input も同じ）。 */
+html.theme-dark .sb-glass-search input,
+html.theme-dark .sb-glass-search select { background: transparent; }
+html.theme-dark .sb-glass-search input { color: #f1f5f9; }
+.sb-glass-search input::placeholder { color: #9ca3af; }
+/* プレースホルダーも「ガラスの上で読める」階調を明示する。共通指定
+   （`html.theme-dark input::placeholder`＝詳細度 0,1,3）の方が上の 1 行（0,1,2）より強く、
+   半透明のガラス越しでは #6c7c93 がほとんど沈んでいた。 */
+html.theme-dark .sb-glass input::placeholder { color: #8b9ab0; }
+
+/* max-width: 固定の予算を与える（Opus レビュー指摘: 中身の幅から利用可能幅を測っていたため
+   自己参照になり、チップが際限なく縮み続けるバグがあった。幅を外から確定させて計測を安定させる）。 */
+.sb-glass-chips { padding: 0 5px; gap: 2px; max-width: min(220px, 22vw); overflow: hidden; }
+.sb-glass-chips .sb-group-chip, .sb-glass-chips .sb-filter-mini-chip {
+  height: 20px; padding: 0 3px 0 7px; font-size: 10px; background: rgba(255, 255, 255, 0.55); border-right: 0;
+}
+html.theme-dark .sb-glass-chips .sb-group-chip, html.theme-dark .sb-glass-chips .sb-filter-mini-chip { background: rgba(255, 255, 255, 0.12); }
+
+/* 工程ピル間の「›」区切り（AdminTopBarFlow と同じ視覚言語）。 */
+/* 工程の区切り（モック v8 の .tab-arrow。1440px では 12px・#c3c8d0）。 */
+.sb-glass-chevron { margin: 0; color: #c3c8d0; font-size: 12px; font-weight: 700; line-height: 1; }
+html.theme-dark .sb-glass-chevron { color: #64748b; }
+
+/* ===== 画面下中央・一括操作ピル（入荷「選択時の一括操作バー」／出荷 依頼中・作業中の選択ピル） =====
+   決定（2026-09-14）: 反転ガラス。ライト＝濃紺ガラス＋白文字、ダーク＝白ガラス＋濃い文字。
+   上段・下段のリキッドガラス（.sb-glass）と blur 値・質感を揃える。 */
+.sb-bulk-bar {
+  background: rgba(15, 23, 42, 0.72); color: #fff;
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  backdrop-filter: blur(18px) saturate(1.4);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12), 0 18px 44px -16px rgba(0, 0, 0, 0.55);
+}
+html.theme-dark .sb-bulk-bar {
+  background: rgba(255, 255, 255, 0.85); color: #0f172a;
+  box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.10), 0 18px 44px -16px rgba(0, 0, 0, 0.60);
+}
+.sb-bulk-btn {
+  white-space: nowrap; border-radius: 999px; padding: 0.375rem 1rem; font-size: 0.875rem; font-weight: 600;
+  background: rgba(255, 255, 255, 0.14); color: #fff; transition: background-color 120ms ease;
+}
+.sb-bulk-btn:hover:not(:disabled) { background: rgba(255, 255, 255, 0.24); }
+.sb-bulk-btn:disabled { cursor: not-allowed; opacity: 0.5; }
+html.theme-dark .sb-bulk-btn { background: rgba(15, 23, 42, 0.08); color: #0f172a; }
+html.theme-dark .sb-bulk-btn:hover:not(:disabled) { background: rgba(15, 23, 42, 0.16); }
+.sb-bulk-btn.danger { background: rgba(244, 63, 94, 0.26); color: #fecdd3; }
+.sb-bulk-btn.danger:hover:not(:disabled) { background: rgba(244, 63, 94, 0.40); }
+html.theme-dark .sb-bulk-btn.danger { background: rgba(225, 29, 72, 0.14); color: #9f1239; }
+html.theme-dark .sb-bulk-btn.danger:hover:not(:disabled) { background: rgba(225, 29, 72, 0.22); }
+.sb-bulk-hint { white-space: nowrap; font-size: 0.75rem; color: rgba(255, 255, 255, 0.7); }
+html.theme-dark .sb-bulk-hint { color: rgba(15, 23, 42, 0.6); }
+.sb-bulk-clear { white-space: nowrap; font-size: 0.875rem; color: rgba(255, 255, 255, 0.7); transition: color 120ms ease; }
+.sb-bulk-clear:hover { color: #fff; }
+html.theme-dark .sb-bulk-clear { color: rgba(15, 23, 42, 0.6); }
+html.theme-dark .sb-bulk-clear:hover { color: #0f172a; }
+
+/* 一括操作ピルの置き場（BulkActionPill）。position:fixed は viewport 基準なので、
+   そのまま left:50% で中央寄せするとサイドバーの上に乗ってしまう（浮遊ガラス
+   .sb-glass-layer と同じ問題）。同じ流儀でサイドバーぶんだけ左を空け、その中で中央に置く。 */
+.sb-bulk-layer {
+  position: fixed; bottom: 16px; right: 0; z-index: 40;
+  left: calc(var(--sidebar-visual-width, var(--sidebar-width, 0px)) + var(--sidebar-dock-inset, 0px));
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  padding: 0 16px; pointer-events: none; transition: left 80ms ease;
+}
+.sb-bulk-layer > * { pointer-events: auto; max-width: 100%; }
+
+/* 一括操作ピルの主操作（2026-09-22 ユーザー決定: 「次にやること」だけアクセント塗り、
+   ほかはゴースト＝.sb-bulk-btn のまま）。反転ガラスの上に置くため、ライト・ダークとも
+   アクセント色（--sb-accent-bg）をそのまま使い、文字は白で固定する。 */
+.sb-bulk-primary {
+  white-space: nowrap; border-radius: 999px; padding: 0.375rem 1rem; font-size: 0.875rem; font-weight: 700;
+  background: var(--sb-accent-bg); color: #fff; transition: background-color 120ms ease, opacity 120ms ease;
+}
+.sb-bulk-primary:hover:not(:disabled) { background: var(--accent-hover); }
+.sb-bulk-primary:disabled { cursor: not-allowed; opacity: 0.5; }
+/* スプリットボタン（実処理＋▾）。左右を繋いで1つの塊に見せる。 */
+.sb-bulk-split-main { border-top-right-radius: 0; border-bottom-right-radius: 0; padding-right: 0.75rem; }
+.sb-bulk-split-caret {
+  display: inline-flex; align-items: center; justify-content: center;
+  border-top-left-radius: 0; border-bottom-left-radius: 0;
+  padding-left: 0.5rem; padding-right: 0.625rem; margin-left: 1px;
+}
+/* 選択の中身（CSV未出力 3 など）。残っている作業は少し強く出す。 */
+.sb-bulk-stat { color: rgba(255, 255, 255, 0.72); font-size: 0.8125rem; }
+.sb-bulk-stat.warn { color: #fde68a; font-weight: 600; }
+.sb-bulk-stat-sep { color: rgba(255, 255, 255, 0.35); }
+html.theme-dark .sb-bulk-stat { color: rgba(15, 23, 42, 0.62); }
+html.theme-dark .sb-bulk-stat.warn { color: #b45309; }
+html.theme-dark .sb-bulk-stat-sep { color: rgba(15, 23, 42, 0.32); }
+
+/* 本番崩れ修正（2026-09-14・Opus 実物レビュー）: #app-main-content の pt-8（32px）は
+   全 admin ページ共通（layout.tsx）。トップバー第2行（ADMIN_TOPBAR_PAGE_ROW_SLOT_ID）を
+   使うページ（入荷・出荷）は、第2行自体が視覚的な区切りを作るため、そのぶん本文側の余白を
+   16px まで詰める（コーディネーター実測指摘）。他ページは第2行が空のまま（:empty）なので
+   このセレクタに一致せず、pt-8 のまま無関係。
+   AdminTopBar（<header>）は layout.tsx で `<div className="print:hidden">` に包まれており
+   #app-main-content の直前の兄弟はその div なので、`header + ...` ではなく `*:has(header ...)`
+   （包む div の種類に依存しない）で拾う。 */
+*:has(> header #admin-topbar-page-row:not(:empty)) + #app-main-content,
+*:has(> header #customer-topbar-page-row:not(:empty)) + #app-main-content { padding-top: 1rem; }
+
+/* 一覧の上余白を 12px に詰める（2026-09-22 ユーザー決定・新トップバーの 4 画面だけ）。
+   共通レイアウト（#app-main-content の pt-8＝32px、第2行があるときは直上のルールで 16px）は
+   そのまま＝旧デザインの画面には影響しない。padding は親（#app-main-content）にあるので、
+   opt-in したページ側の最外要素に負のマージンを当てて相殺する:
+     第2行なし 32px → -20px（-1.25rem）で 12px
+     第2行あり 16px →  -4px（-0.25rem）で 12px
+   ＝どちらの状態でも「トップバー（または第2行のチップ）と一覧の間」が 12px で揃う。
+   ページ側で `-mt-5` を直書きすると第2行ありのとき -4px になって重なるため、この 2 本で受ける。 */
+#app-main-content .admin-page-tight-top { margin-top: -1.25rem; }
+*:has(> header #admin-topbar-page-row:not(:empty)) + #app-main-content .admin-page-tight-top,
+*:has(> header #customer-topbar-page-row:not(:empty)) + #app-main-content .admin-page-tight-top { margin-top: -0.25rem; }
+
+/* ===== 8px・半透明グレーの細いスクロールバー（一覧の縦横スクロール向け） ===== */
+.sb-thin-scrollbar { scrollbar-width: thin; scrollbar-color: rgba(100, 116, 139, 0.45) transparent; }
+.sb-thin-scrollbar::-webkit-scrollbar { width: 8px; height: 8px; }
+.sb-thin-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.sb-thin-scrollbar::-webkit-scrollbar-thumb { background-color: rgba(100, 116, 139, 0.45); border-radius: 999px; }
+.sb-thin-scrollbar::-webkit-scrollbar-thumb:hover { background-color: rgba(100, 116, 139, 0.7); }
+html.theme-dark .sb-thin-scrollbar { scrollbar-color: rgba(148, 163, 184, 0.4) transparent; }
+html.theme-dark .sb-thin-scrollbar::-webkit-scrollbar-thumb { background-color: rgba(148, 163, 184, 0.4); }
+html.theme-dark .sb-thin-scrollbar::-webkit-scrollbar-thumb:hover { background-color: rgba(148, 163, 184, 0.65); }
+
+/* #app-main（ChromeMain）自体の縦スクロールバーにも同じ細さ・半透明グレーを適用する
+   （Opus レビュー指摘: 一覧の中だけでなく、実際のページスクローラーにも要る）。 */
+#app-main { scrollbar-width: thin; scrollbar-color: rgba(100, 116, 139, 0.45) transparent; }
+#app-main::-webkit-scrollbar { width: 8px; height: 8px; }
+#app-main::-webkit-scrollbar-track { background: transparent; }
+#app-main::-webkit-scrollbar-thumb { background-color: rgba(100, 116, 139, 0.45); border-radius: 999px; }
+#app-main::-webkit-scrollbar-thumb:hover { background-color: rgba(100, 116, 139, 0.7); }
+html.theme-dark #app-main { scrollbar-color: rgba(148, 163, 184, 0.4) transparent; }
+html.theme-dark #app-main::-webkit-scrollbar-thumb { background-color: rgba(148, 163, 184, 0.4); }
+html.theme-dark #app-main::-webkit-scrollbar-thumb:hover { background-color: rgba(148, 163, 184, 0.65); }
+
+/* ===== トップバー2段目（工程セグメント等）の差し込みスロット。空のときは高さ0で畳む。 ===== */
+/* 2026-09-14 決定: 第2行の高さは中身（ページが portal する要素の h-8/h-11）に委ねる。
+   グループ/絞り込みチップが無く履歴リンクだけのときは 32px（h-8）、チップがあれば 44px（h-11）。
+   ここでは「完全に空（このスロットを使わないページ）」のときだけ 0 に潰す。 */
+#admin-topbar-page-row:empty,
+#customer-topbar-page-row:empty { height: 0; padding: 0; overflow: hidden; }
+
+/* ===== 一覧の日付／グループ sticky 見出し（StickySectionHeader、2026-09-14 追加決定） ===== */
+/* 通常時は不透明のまま（既存の見た目を踏襲）。追従中（.sb-sticky-inner-fixed）だけガラスへ切り替える。 */
+/* position:sticky ではなく .sb-sticky-inner-fixed（stuck 中のみ JS が付ける）で position:fixed に
+   切り替える。理由（overflow-x-auto / overflow-clip な祖先が sticky の基準を奪ってしまう罠）は
+   StickySectionHeader.tsx のコメント参照。通常時は position 指定なし（table 内の通常のブロック）。 */
+/* 通常時はモック v8 の `tbody tr.group-row td` と同じ「セル全面の薄いグレー帯」
+   （padding 7px 16px 相当・背景 #f9fafb・下線 1px #f1f2f4）。丸い内側ピルは廃止
+   （2026-09-15 モック合わせ）。高さはセル側の 32px 固定（StickySectionHeader が inline で指定）＋
+   上下の余白ぶんを inner の height で受けているので、padding は左右だけを持たせる。 */
+.sb-sticky-cell {
+  position: relative; z-index: 10; padding: 0 16px !important;
+  background: #f9fafb; border-bottom: 1px solid #f1f2f4;
+  transition: background-color 120ms ease, border-bottom-color 120ms ease;
+}
+/* 追従（ガラス帯）中は、帯が body 直下へ portal されてセルの中身が空になるので、
+   セル自身の帯（グレー＋下線）は消す（モックの tr.is-stuck td と同じ）。 */
+.sb-sticky-row.is-stuck .sb-sticky-cell { background: transparent; border-bottom-color: transparent; }
+html.theme-dark .sb-sticky-cell { background: #1e293b; border-bottom-color: rgba(255, 255, 255, 0.06); }
+html.theme-dark .sb-sticky-row.is-stuck .sb-sticky-cell { background: transparent; border-bottom-color: transparent; }
+.sb-sticky-inner { display: flex; align-items: center; height: 32px; }
+/* stuck 中: position:fixed（left/width/top は StickySectionHeader.tsx が実測して inline style で渡す）。
+   margin は fixed 化で意味が変わってしまう（left/width と二重に効いて右端が8px+8pxずれる）ため 0 にする。 */
+/* stuck 中だけガラス帯（上部の浮遊カプセルと同じガラス値）に切り替える。
+   内側リム・外側1pxの縁・影に加え、上辺のハイライト（::before の縦グラデ）も付ける
+   （.sb-glass と同じ質感に揃える。2026-09-15 追加）。
+   z-index は浮遊カプセル（.sb-glass-layer = 40）より下・一覧より上の 38。この要素は body 直下へ
+   portal されるので、一覧側の stacking context（.sb-sticky-cell / 行セルの z-index:10）に
+   閉じ込められない（2026-09-15 バグ修正③）。 */
+.sb-sticky-inner.sb-sticky-inner-fixed {
+  position: fixed; z-index: 38; margin: 0;
+  /* 帯は一覧の左右8px内側に出し、中身はそこからさらに8px（＝一覧の端から16px）内側。
+     通常時（セルの padding 16px）と文字の位置が変わらないようにするため（モック合わせ）。 */
+  padding: 0 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.60);
+  -webkit-backdrop-filter: blur(18px) saturate(1.6);
+  backdrop-filter: blur(18px) saturate(1.6);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.70),
+    0 0 0 1px rgba(0, 0, 0, 0.06),
+    0 10px 30px -14px rgba(0, 0, 0, 0.25);
+}
+.sb-sticky-inner.sb-sticky-inner-fixed::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0.14) 40%, rgba(255, 255, 255, 0) 74%);
+}
+.sb-sticky-inner.sb-sticky-inner-fixed > * { position: relative; z-index: 1; }
+html.theme-dark .sb-sticky-inner.sb-sticky-inner-fixed {
+  background: rgba(15, 23, 42, 0.55);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 0 0 1px rgba(0, 0, 0, 0.35),
+    0 10px 30px -14px rgba(0, 0, 0, 0.6);
+}
+html.theme-dark .sb-sticky-inner.sb-sticky-inner-fixed::before {
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.03) 40%, rgba(255, 255, 255, 0) 74%);
+}
+
+/* ===== 一覧の列見出し（商品マスタ・管理、2026-09-22 ユーザー決定） =====
+   商品マスタは列が多く見出しが要る（入荷のように thead を撤去できない）。見た目は入荷の流儀に
+   合わせ、通常時は「面色なし・下罫線 1px」の素の見出し行にしておき、追従中（.is-stuck）だけ
+   日付帯（.sb-sticky-inner-fixed）と同じガラス帯へ切り替える。
+   入荷の日付帯と違い、この見出しはデータ表と列位置を 1px 単位で合わせる必要があるため、
+   追従中も左右 8px のインセットは付けない（帯は一覧の幅いっぱい）。ガラスの値だけを写す。
+   ここの値を変えるときは .sb-sticky-inner.sb-sticky-inner-fixed と揃えること。 */
+.sb-colhead {
+  background: transparent;
+  border-bottom: 1px solid #f1f2f4;
+  transition: background-color 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+}
+html.theme-dark .sb-colhead { border-bottom-color: rgba(255, 255, 255, 0.06); }
+.sb-colhead.is-stuck {
+  position: relative;
+  border-bottom-color: transparent;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.60);
+  -webkit-backdrop-filter: blur(18px) saturate(1.6);
+  backdrop-filter: blur(18px) saturate(1.6);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.70),
+    0 0 0 1px rgba(0, 0, 0, 0.06),
+    0 10px 30px -14px rgba(0, 0, 0, 0.25);
+}
+.sb-colhead.is-stuck::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0.14) 40%, rgba(255, 255, 255, 0) 74%);
+}
+.sb-colhead.is-stuck > * { position: relative; z-index: 1; }
+html.theme-dark .sb-colhead.is-stuck {
+  background: rgba(15, 23, 42, 0.55);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 0 0 1px rgba(0, 0, 0, 0.35),
+    0 10px 30px -14px rgba(0, 0, 0, 0.6);
+}
+html.theme-dark .sb-colhead.is-stuck::before {
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.03) 40%, rgba(255, 255, 255, 0) 74%);
+}
+/* 編集モード（amber 面）のときだけ、ガラスの地色を淡いアンバーにする（面の意味を保つ）。 */
+.sb-colhead.is-stuck[data-tone='amber'] { background: rgba(255, 251, 235, 0.72); }
+html.theme-dark .sb-colhead.is-stuck[data-tone='amber'] { background: rgba(60, 45, 20, 0.70); }
+/* 透明度を下げる設定では不透明にする（.app-sticky-glass と同じ扱い）。 */
+@media (prefers-reduced-transparency: reduce) {
+  .sb-colhead.is-stuck { backdrop-filter: none; -webkit-backdrop-filter: none; background: #fff; }
+  html.theme-dark .sb-colhead.is-stuck { background: #0f172a; }
+  .sb-colhead.is-stuck[data-tone='amber'] { background: #fffbeb; }
+  html.theme-dark .sb-colhead.is-stuck[data-tone='amber'] { background: #2f2410; }
+}
+
+/* 見出し右端の「グループへ移動」一覧（SectionJumpNav、モック v8 の .grow-nav/.gnav）。
+   追従（ガラス）中も通常時も同じものを出す。折り返さず、入り切らない分は「＋n ▾」に畳む。 */
+.sb-section-jump-nav {
+  display: flex; align-items: center; justify-content: flex-end; gap: 3px;
+  flex: 1 1 auto; min-width: 0; overflow: hidden; white-space: nowrap;
+}
+.sb-section-jump {
+  display: inline-flex; align-items: center; gap: 4px; height: 20px; flex-shrink: 0; padding: 0 8px;
+  border: 0; border-radius: 10px; background: transparent; color: #6b7280;
+  font-size: 11px; font-weight: 700; white-space: nowrap; cursor: pointer;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+.sb-section-jump:hover { background: rgba(17, 24, 39, 0.06); color: #374151; }
+.sb-section-jump-label { max-width: 10rem; overflow: hidden; text-overflow: ellipsis; }
+.sb-section-jump-dot { width: 5px; height: 5px; flex-shrink: 0; border-radius: 999px; }
+.sb-section-jump b {
+  min-width: 13px; padding: 0 3px; border-radius: 999px; background: rgba(17, 24, 39, 0.08);
+  color: #4b5563; font-size: 9.5px; font-weight: 700; line-height: 14px; text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+/* 現在のセクション（見出し自身のグループ）。 */
+.sb-section-jump.on { background: #111827; color: #fff; }
+.sb-section-jump.on .sb-section-jump-dot { background: #fff; }
+.sb-section-jump.on b { background: rgba(255, 255, 255, 0.22); color: #fff; }
+/* ダークは「明暗を反転した黒チップ」にしない（2026-09-23 ユーザー指摘「白抜きで眩しい」）。
+   ライトの `.on` は暗い地＋白文字だが、それをそのまま反転すると暗いガラス帯の上に
+   ほぼ白いチップが乗り、帯の中で一点だけ発光しているように見える。
+   ダークの塗りは「半透明の白」か「アクセント色の薄塗り」の2種類だけ、という方針に合わせ、
+   ここは半透明の白＋明るい文字にする（＝チップの主張は保ったまま眩しさだけ落とす）。
+   非選択チップの文字は、ガラス帯（rgba(15,23,42,.55)）の上で選択中と見分けがつく程度に
+   持ち上げる（#94a3b8 は帯の地に対してやや沈んでいた）。 */
+html.theme-dark .sb-section-jump { color: #a3b1c4; }
+html.theme-dark .sb-section-jump:hover { background: rgba(255, 255, 255, 0.1); color: #f1f5f9; }
+html.theme-dark .sb-section-jump b { background: rgba(255, 255, 255, 0.14); color: #cbd5e1; }
+html.theme-dark .sb-section-jump.on { background: rgba(255, 255, 255, 0.14); color: #f1f5f9; }
+html.theme-dark .sb-section-jump.on .sb-section-jump-dot { background: #f1f5f9; }
+html.theme-dark .sb-section-jump.on b { background: rgba(255, 255, 255, 0.24); color: #f1f5f9; }
+
+/* 見出し右端の「次のグループ ▸」「次の日付 ▸」ジャンプ導線。 */
+.sb-section-next {
+  display: inline-flex; align-items: center; gap: 2px; border: 0; background: transparent;
+  border-radius: 999px; padding: 3px 8px; font-size: 11px; font-weight: 600; color: #9ca3af;
+  white-space: nowrap; cursor: pointer; transition: background-color 120ms ease, color 120ms ease;
+}
+.sb-section-next:hover { background: rgba(0, 0, 0, 0.06); color: #4b5563; }
+/* 「次のグループ ▸」も同じ理由で一段明るく（ガラス帯・見出し帯どちらの地でも読める階調）。 */
+html.theme-dark .sb-section-next { color: #94a3b8; }
+html.theme-dark .sb-section-next:hover { background: rgba(255, 255, 255, 0.1); color: #f1f5f9; }

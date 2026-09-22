@@ -1,0 +1,31 @@
+/* Research（smologi-research-extension・ゴールド）。拡張のインラインパネル向け。 */
+:root {
+  --sb-bg: #fbf7ec;
+  --sb-border: #ece1c8;
+  --sb-hover: #f5eeda;
+  --sb-text: #3f3722;
+  --sb-label: #7b6f4e;
+  --sb-heading: #241f10;
+  --sb-accent-bg: #b7791f;
+  --accent-hover: #975a16;
+  --accent-ring: rgba(183, 121, 31, 0.15);
+  --accent-subtle: #fffaf0;
+  --accent-light: #fffaf0;
+  --accent-on: #ffffff;
+  --page-bg: #fbf7ec;
+}
+html.theme-dark {
+  --sb-bg: #1b1710;
+  --sb-border: #352c1c;
+  --sb-hover: #251f14;
+  --sb-text: #ded3bb;
+  --sb-label: #a3957a;
+  --sb-heading: #f6f1e4;
+  --sb-accent-bg: #d69e2e;
+  --accent-hover: #b7791f;
+  --accent-ring: rgba(214, 158, 46, 0.22);
+  --accent-subtle: #2a2110;
+  --accent-light: #2a2110;
+  --accent-on: #1b1710;
+  --page-bg: #0f1115;
+}

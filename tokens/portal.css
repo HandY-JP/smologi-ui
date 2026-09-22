@@ -1,0 +1,33 @@
+/* ポータル（handy-internal-app・スレート）。
+ * 2026-09 のブランド色決定（ポータル=スレート）に合わせた値。現行の水色 :root
+ * （--sb-accent-bg: #0b63f6）から置き換わるため、載せ替えは PortalTopBar と同じ PR で行う。 */
+:root {
+  --sb-bg: #f1f5f9;
+  --sb-border: #dde3ea;
+  --sb-hover: #e2e8f0;
+  --sb-text: #334155;
+  --sb-label: #64748b;
+  --sb-heading: #0f172a;
+  --sb-accent-bg: #475569;
+  --accent-hover: #334155;
+  --accent-ring: rgba(71, 85, 105, 0.15);
+  --accent-subtle: #f1f5f9;
+  --accent-light: #f1f5f9;
+  --accent-on: #ffffff;
+  --page-bg: #f8fafc;
+}
+html.theme-dark {
+  --sb-bg: #161c26;
+  --sb-border: #2a3648;
+  --sb-hover: #1e2836;
+  --sb-text: #c2cddd;
+  --sb-label: #8b9bb0;
+  --sb-heading: #f1f5f9;
+  --sb-accent-bg: #94a3b8;
+  --accent-hover: #cbd5e1;
+  --accent-ring: rgba(148, 163, 184, 0.22);
+  --accent-subtle: #1e2836;
+  --accent-light: #1e2836;
+  --accent-on: #0f172a;
+  --page-bg: #0f1115;
+}
