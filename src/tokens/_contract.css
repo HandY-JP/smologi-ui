@@ -26,9 +26,10 @@
  *   --sb-glass-blur      backdrop-filter の値。全アプリ・ライト/ダーク共通で
  *                        blur(12px) saturate(1.5)。反転ガラスの一括操作ピル
  *                        （.sb-bulk-bar）もこれを参照する
- *   --sb-glass-bg        ガラスの面色（ライト rgba(255,255,255,.85) / ダーク rgba(…,.72)）
+ *   --sb-glass-bg        ガラスの面色（ライト rgba(255,255,255,0)＝塗らない。blur と内側ハイライトだけで
+ *                        ガラスに見せる「上質ピル」レシピ（v0.1.5、ユーザー決定）/ ダーク rgba(…,.72)）
  *   --sb-glass-bg-opaque prefers-reduced-transparency: reduce のときの不透明な面色
- *   --sb-glass-border    ガラスの縁 1px の色
+ *   --sb-glass-border    ガラスの縁 1px の色（ライトは transparent＝縁なし。内側ハイライトが縁の役目）
  *   --sb-glass-shadow    内側ハイライト＋外側の落ち影（縁の 1px は含めない。
  *                        縁を実体の border で持たない部品は .sb-glass-surface-ringed が
  *                        `0 0 0 1px var(--sb-glass-border)` を足す）
