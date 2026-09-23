@@ -1,0 +1,62 @@
+/* B2B（smologi-b2b・青）。smologi-b2b の globals.css が既に持っている値と同値にしてある
+ * （載せ替えで既存の買い手画面・売り手画面の色が変わらないようにするため）。
+ *
+ * ★ B2B だけダークの発火クラスが2つある。
+ *   smologi-b2b は 2026-08-30 から `html.dark` でダークにしており、アプリ側の CSS 変数
+ *   （--neutral-* の反転ランプ・--surface）も `html.dark` に紐付いている。
+ *   一方このパッケージの部品 CSS（styles/components.css）は系列共通の `html.theme-dark` で
+ *   書かれている。どちらか片方に寄せると必ずもう一方が壊れるので、
+ *   **このプリセットだけ両方のクラスを受ける**（smologi-b2b 側は ThemeToggle が
+ *   `dark` と `theme-dark` を同時に付け外しする）。
+ *
+ * なお smologi-b2b は `dark-compat.css` を読み込まないこと。
+ * B2B は Tailwind の gray を `--neutral-*` の反転ランプへ差し替えるやり方でダークにしており、
+ * dark-compat.css（生の gray ユーティリティを暗転させる層）を重ねると二重反転になる。
+ */
+:root {
+  --sb-bg: #ffffff;
+  --sb-border: #d9dfeb;
+  --sb-hover: #eff6ff;
+  --sb-text: #334155;
+  --sb-label: #64748b;
+  --sb-heading: #0f172a;
+  --sb-accent-bg: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-ring: rgba(37, 99, 235, 0.15);
+  --accent-subtle: #eff6ff;
+  --accent-light: #eff6ff;
+  --accent-on: #ffffff;
+  --page-bg: #f3f5fa;
+  /* ガラス（2026-09-23 ユーザー決定: 納品プラン作成の下部ガラスピル基準に統一）。
+     blur/saturate は部品側（.sb-glass-surface）が持つ固定値。B2B は寒色。 */
+  --sb-glass-blur: blur(12px) saturate(1.5);
+  --sb-glass-bg: rgba(255, 255, 255, 0.85);
+  --sb-glass-bg-opaque: #ffffff;
+  --sb-glass-border: rgba(15, 23, 42, 0.10);
+  --sb-glass-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.65),
+    inset 0 -1px 0 rgba(15, 23, 42, 0.06),
+    0 8px 24px rgba(15, 23, 42, 0.12);
+}
+html.theme-dark,
+html.dark {
+  --sb-bg: #131b24;
+  --sb-border: #243043;
+  --sb-hover: #182330;
+  --sb-text: #c2cddd;
+  --sb-label: #8b9bb0;
+  --sb-heading: #f7fafc;
+  --sb-accent-bg: #3b82f6;
+  --accent-hover: #2563eb;
+  --accent-ring: rgba(59, 130, 246, 0.22);
+  --accent-subtle: #10233c;
+  --accent-light: #10233c;
+  --accent-on: #ffffff;
+  --page-bg: #0d141d;
+  --sb-glass-bg: rgba(19, 27, 36, 0.72);
+  --sb-glass-bg-opaque: #131b24;
+  --sb-glass-border: rgba(255, 255, 255, 0.08);
+  --sb-glass-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 8px 24px rgba(0, 0, 0, 0.40);
+}
