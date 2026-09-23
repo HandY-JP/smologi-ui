@@ -1,5 +1,6 @@
-/* B2B（smologi-b2b・青）。smologi-b2b の globals.css が既に持っている値と同値にしてある
- * （載せ替えで既存の買い手画面・売り手画面の色が変わらないようにするため）。
+/* B2B（smologi-b2b・バイオレット）。2026-09-23 ユーザー決定: B2B のテーマ色が
+ * スモロジ管理画面の青（#2563eb）と同じで区別がつかないため、B2B はバイオレットへ（v0.1.6）。
+ * smologi-b2b の globals.css 側も同じ値に揃える。
  *
  * ★ B2B だけダークの発火クラスが2つある。
  *   smologi-b2b は 2026-08-30 から `html.dark` でダークにしており、アプリ側の CSS 変数
@@ -15,18 +16,18 @@
  */
 :root {
   --sb-bg: #ffffff;
-  --sb-border: #d9dfeb;
-  --sb-hover: #eff6ff;
+  --sb-border: #e2ddf0;
+  --sb-hover: #f7f5fc;
   --sb-text: #334155;
   --sb-label: #64748b;
   --sb-heading: #0f172a;
-  --sb-accent-bg: #2563eb;
-  --accent-hover: #1d4ed8;
-  --accent-ring: rgba(37, 99, 235, 0.15);
-  --accent-subtle: #eff6ff;
-  --accent-light: #eff6ff;
+  --sb-accent-bg: #7c3aed;
+  --accent-hover: #6d28d9;
+  --accent-ring: rgba(124, 58, 237, 0.15);
+  --accent-subtle: #f5f3ff;
+  --accent-light: #f5f3ff;
   --accent-on: #ffffff;
-  --page-bg: #f3f5fa;
+  --page-bg: #f6f4fb;
   /* ガラス（2026-09-23 ユーザー決定: 納品プラン作成の下部ガラスピル基準に統一。
      v0.1.5: ライトは面を塗らない「透明＋blur＋内側ハイライト＋落ち影」の上質レシピ。縁も持たない）。
      blur/saturate は部品側（.sb-glass-surface）が持つ固定値。B2B は寒色。 */
@@ -41,21 +42,21 @@
 }
 html.theme-dark,
 html.dark {
-  --sb-bg: #131b24;
-  --sb-border: #243043;
-  --sb-hover: #182330;
+  --sb-bg: #141221;
+  --sb-border: #2a2540;
+  --sb-hover: #1b1730;
   --sb-text: #c2cddd;
   --sb-label: #8b9bb0;
   --sb-heading: #f7fafc;
-  --sb-accent-bg: #3b82f6;
-  --accent-hover: #2563eb;
-  --accent-ring: rgba(59, 130, 246, 0.22);
-  --accent-subtle: #10233c;
-  --accent-light: #10233c;
+  --sb-accent-bg: #8b5cf6;
+  --accent-hover: #7c3aed;
+  --accent-ring: rgba(139, 92, 246, 0.22);
+  --accent-subtle: #251b3d;
+  --accent-light: #251b3d;
   --accent-on: #ffffff;
-  --page-bg: #0d141d;
-  --sb-glass-bg: rgba(19, 27, 36, 0.72);
-  --sb-glass-bg-opaque: #131b24;
+  --page-bg: #0f0d18;
+  --sb-glass-bg: rgba(20, 18, 33, 0.72);
+  --sb-glass-bg-opaque: #141221;
   --sb-glass-border: rgba(255, 255, 255, 0.08);
   --sb-glass-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.08),
