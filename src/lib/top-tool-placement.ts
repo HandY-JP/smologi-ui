@@ -1,8 +1,13 @@
 // 道具バー（TopToolCapsule）の「帯に出す道具」を決める規則。
 //
 // 2026-09-22 ユーザー決定（案A）: 帯にワンクリックで出す道具は
-//   「新規（primary の ＋）」＋「一覧を最新にする（key='refresh'）」＋あと最大3個 ＝ 既定 5 個まで。
+//   「新規（primary の ＋）」＋「更新（key='refresh'）」＋あと最大3個 ＝ 既定 5 個まで。
 // それ以外の道具は帯に出さず、帯の右端の「▾」で開く縦一覧パネルからだけ実行する。
+//
+// 2026-09-23 ユーザー決定: 画面ごとに「更新」の位置がバラバラだったのを統一する。
+//   帯の並びは常に「＋新規（primary）」→「更新（key='refresh'）」→ その他（最大3）。
+//   画面側の toolItems 定義順に依存せず、orderToolItems が並べ替える（▾ 一覧も同じ並び）。
+//   primary が無い画面（設定など）は更新が先頭。
 //
 // 純粋な関数としてここに置くのは、規則そのものをテストできるようにするため
 // （コンポーネント側は .tsx で、このリポジトリの vitest は node 環境の *.test.ts しか拾わない）。
@@ -14,6 +19,18 @@ export interface TopToolPlacementInput {
   key: string;
   placement?: TopToolPlacement;
   primary?: boolean;
+}
+
+/**
+ * 画面の toolItems 定義順に関係なく、表示順を
+ * 「＋新規（primary）」→「更新（key='refresh'）」→ その他（元の並びのまま）に揃える。
+ * 帯（バー）にも ▾ 一覧にも同じ関数を通す。primary・refresh が無ければそのまま素通りする。
+ */
+export function orderToolItems<T extends TopToolPlacementInput>(items: T[]): T[] {
+  const primaryItems = items.filter((item) => item.primary);
+  const refreshItems = items.filter((item) => !item.primary && item.key === 'refresh');
+  const rest = items.filter((item) => !item.primary && item.key !== 'refresh');
+  return [...primaryItems, ...refreshItems, ...rest];
 }
 
 /** 帯に必ず残す道具（新規の ＋ と 更新）。 */

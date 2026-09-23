@@ -11,8 +11,14 @@ export interface ProcessStage {
     /**
      * ピルに付けるツールチップ。ラベルを詰めて表示する用途（商品マスタの保存ビューは
      * 8文字までに切り詰める）でフル名称を補うために使う。
+     * disabled のときは「なぜ押せないか」をここに書く（請求の「お客様を選ぶと開けます」）。
      */
     title?: string;
+    /**
+     * いまは選べない工程（請求の「締め」「内訳」はお客様を選ぶまで開けない）。
+     * 消さずに disabled にして、理由は title のツールチップで出す（位置が動かないように）。
+     */
+    disabled?: boolean;
 }
 export interface FilterChipItem {
     id: string;
@@ -35,7 +41,7 @@ export declare function FilterChipRow({ chips }: {
 }): import("react").JSX.Element | null;
 export declare function ProcessSegment({ ariaLabel, leadLabel, stages, currentStage, onSelectStage, historyHref, historyLabel, onHistoryClick, historyActive, variant, dataTour, trailing, segmentTrailing, dense, }: {
     ariaLabel: string;
-    /** 畳み時（compact）だけ左に出す接頭ラベル（「入荷」「出荷」）。通常時は AdminTopBarFlow 同様タブ自体が語るので出さない。 */
+    /** 畳み時（compact）だけ左に出す接頭ラベル（「入荷」「出荷」）。通常時はタブ自体が語るので出さない（旧 AdminTopBarFlow は撤去済み）。 */
     leadLabel?: string;
     stages: ProcessStage[];
     currentStage: string;

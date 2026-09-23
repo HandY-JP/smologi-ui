@@ -1,3 +1,9 @@
+function orderToolItems(items) {
+  const primaryItems = items.filter((item) => item.primary);
+  const refreshItems = items.filter((item) => !item.primary && item.key === "refresh");
+  const rest = items.filter((item) => !item.primary && item.key !== "refresh");
+  return [...primaryItems, ...refreshItems, ...rest];
+}
 function isAlwaysOnBar(item) {
   return !!item.primary || item.key === "refresh";
 }
@@ -19,6 +25,7 @@ function overflowedBarItems(items, barKeys) {
   return items.filter((item) => (item.placement ?? "bar") === "bar" && !barKeys.has(item.key));
 }
 export {
+  orderToolItems,
   overflowedBarItems,
   selectBarItemKeys
 };

@@ -25,8 +25,14 @@ export interface ProcessStage {
   /**
    * ピルに付けるツールチップ。ラベルを詰めて表示する用途（商品マスタの保存ビューは
    * 8文字までに切り詰める）でフル名称を補うために使う。
+   * disabled のときは「なぜ押せないか」をここに書く（請求の「お客様を選ぶと開けます」）。
    */
   title?: string;
+  /**
+   * いまは選べない工程（請求の「締め」「内訳」はお客様を選ぶまで開けない）。
+   * 消さずに disabled にして、理由は title のツールチップで出す（位置が動かないように）。
+   */
+  disabled?: boolean;
 }
 
 export interface FilterChipItem {
@@ -150,7 +156,7 @@ export function ProcessSegment({
   dense = false,
 }: {
   ariaLabel: string;
-  /** 畳み時（compact）だけ左に出す接頭ラベル（「入荷」「出荷」）。通常時は AdminTopBarFlow 同様タブ自体が語るので出さない。 */
+  /** 畳み時（compact）だけ左に出す接頭ラベル（「入荷」「出荷」）。通常時はタブ自体が語るので出さない（旧 AdminTopBarFlow は撤去済み）。 */
   leadLabel?: string;
   stages: ProcessStage[];
   currentStage: string;
@@ -179,8 +185,8 @@ export function ProcessSegment({
   // stages 部分の中身（ラベル＋件数バッジ）は center（通常時・第1行中央）と compact（畳み時・
   // 浮遊ガラス）で完全に同じマークアップ（sb-glass-stage）を使う。違いは外枠に glass を
   // 足すかどうかだけ＝スクロールで畳んだときにピルの形・幅が変わらず連続して見える。
-  // 工程間は AdminTopBarFlow と同じ「›」区切り（Opus レビュー指摘: 区切り無しだと工程の
-  // 進行順が読み取りづらい）。先頭の前には出さない。
+  // 工程間は「›」区切り（旧 AdminTopBarFlow と同じ書式・撤去済み。Opus レビュー指摘:
+  // 区切り無しだと工程の進行順が読み取りづらい）。先頭の前には出さない。
   const stagePills = (
     <>
       {leadLabel && <span className="sb-glass-lead">{leadLabel}</span>}
@@ -191,8 +197,9 @@ export function ProcessSegment({
             type="button"
             onClick={() => onSelectStage(s.key)}
             aria-current={currentStage === s.key ? 'step' : undefined}
+            disabled={s.disabled}
             title={s.title}
-            className={`sb-glass-stage${currentStage === s.key ? ' on' : ''}${s.tone === 'danger' ? ' danger' : ''}${dense ? ' dense' : ''}`}
+            className={`sb-glass-stage${currentStage === s.key ? ' on' : ''}${s.tone === 'danger' ? ' danger' : ''}${dense ? ' dense' : ''}${s.disabled ? ' is-disabled' : ''}`}
           >
             {s.label}
             {!dense && s.count != null && <b>{s.count > 999 ? '999+' : s.count}</b>}

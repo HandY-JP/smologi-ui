@@ -457,6 +457,8 @@ html.theme-dark .sb-glass-lead::after { background: rgba(255, 255, 255, 0.16); }
 .sb-glass-stage.dense { gap: 0; padding: 0 8px; }
 .sb-glass-center.dense { gap: 0; }
 .sb-glass-stage:hover { background: rgba(255, 255, 255, 0.62); }
+.sb-glass-stage.is-disabled { opacity: 0.38; cursor: default; }
+.sb-glass-stage.is-disabled:hover { background: transparent; }
 .sb-glass-stage.on { background: var(--sb-accent-bg, #2563eb); color: #fff; box-shadow: 0 4px 10px -4px rgba(37, 99, 235, 0.6); }
 .sb-glass-stage.danger { color: #be123c; }
 .sb-glass-stage.danger.on { background: #e11d48; color: #fff; box-shadow: 0 4px 10px -4px rgba(225, 29, 72, 0.6); }

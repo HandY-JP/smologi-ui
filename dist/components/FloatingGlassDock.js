@@ -62,6 +62,10 @@ function MiniFilterChips({ chips }) {
 function FloatingGlassDock({
   visible,
   tools,
+  /** 道具カプセル末尾の「▾」（全ツール一覧）を出すか。設定モードは項目が少ないので出さない。 */
+  toolsListPanel = true,
+  /** 道具の「▾」一覧の末尾に出す「関連する設定」。通常時（TopToolCapsule）と同じものを渡す。 */
+  toolsSettingsLinks,
   toolsAriaLabel,
   processAriaLabel,
   leadLabel,
@@ -82,7 +86,9 @@ function FloatingGlassDock({
    *  じょうごトリガーになる）。呼び出し側の renderXxxFilter(true) をそのまま渡せばよい。 */
   filterControl,
   filterChips = [],
-  processTrailing
+  processTrailing,
+  showProcess = true,
+  showSearch = true
 }) {
   const [hasBeenVisible, setHasBeenVisible] = useState(false);
   useEffect(() => {
@@ -130,16 +136,18 @@ function FloatingGlassDock({
   }, [visible, collapsedTier, stages, filterChips, leadLabel, desiredPillPx, historyLabel, historyActive]);
   if (typeof document === "undefined" || !hasBeenVisible) return null;
   const dock = /* @__PURE__ */ jsxs("div", { className: "sb-glass-layer", "aria-hidden": !visible, children: [
-    /* @__PURE__ */ jsx("div", { ref: glassLeftRef, className: `sb-glass-float gf-left${visible ? " is-visible" : ""}`, children: /* @__PURE__ */ jsx(
+    (tools.length > 0 || (toolsSettingsLinks?.length ?? 0) > 0) && /* @__PURE__ */ jsx("div", { ref: glassLeftRef, className: `sb-glass-float gf-left${visible ? " is-visible" : ""}`, children: /* @__PURE__ */ jsx(
       TopToolCapsule,
       {
         ariaLabel: toolsAriaLabel,
         items: tools,
-        variant: "compact"
+        settingsLinks: toolsSettingsLinks,
+        variant: "compact",
+        listPanel: toolsListPanel
       }
     ) }),
     /* @__PURE__ */ jsxs("div", { ref: glassRightRef, className: `sb-glass-float gf-right${visible ? " is-visible" : ""}`, children: [
-      /* @__PURE__ */ jsx(
+      showProcess && /* @__PURE__ */ jsx(
         ProcessSegment,
         {
           ariaLabel: processAriaLabel,
@@ -155,8 +163,8 @@ function FloatingGlassDock({
           segmentTrailing: processTrailing
         }
       ),
-      collapsedTier < 2 && /* @__PURE__ */ jsx(MiniFilterChips, { chips: filterChips }),
-      /* @__PURE__ */ jsxs("div", { className: "sb-glass sb-glass-search", style: { width: desiredPillPx }, children: [
+      showSearch && collapsedTier < 2 && /* @__PURE__ */ jsx(MiniFilterChips, { chips: filterChips }),
+      showSearch && /* @__PURE__ */ jsxs("div", { className: "sb-glass sb-glass-search", style: { width: desiredPillPx }, children: [
         leading && /* @__PURE__ */ jsxs(Fragment, { children: [
           leading,
           /* @__PURE__ */ jsx("span", { className: "sb-glass-div", "aria-hidden": true })
@@ -167,10 +175,10 @@ function FloatingGlassDock({
           {
             ref: searchInputRef,
             type: "text",
-            value: searchValue,
-            onChange: (e) => onSearchChange(e.target.value),
+            value: searchValue ?? "",
+            onChange: (e) => onSearchChange?.(e.target.value),
             onKeyDown: (e) => {
-              if (e.key === "Enter") onSearchSubmit();
+              if (e.key === "Enter") onSearchSubmit?.();
             },
             placeholder: searchPlaceholder,
             "aria-label": searchAriaLabel ?? searchPlaceholder
