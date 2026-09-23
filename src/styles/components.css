@@ -59,19 +59,64 @@
   .app-main-bottom-space::after { display: none; }
 }
 
+/* ===== 共通のガラス面（2026-09-23 ユーザー決定） =====
+   基準は納品プラン作成の下部ガラスピル（旧 .amazon-inbound-new-glass）。
+   系列アプリの浮遊カプセル・検索ピル・道具バーカプセル・追従ピル（日付帯・列見出し帯）は
+   すべてこの 1 レシピに寄せる。色温度だけ tokens/*.css の --sb-glass-* で切り替える
+   （Seller/Research＝暖色、Logistic/ポータル＝寒色）。
+   例外は一括操作ピル（.sb-bulk-bar）で、あちらは smologi #574/#598 の決定どおり
+   ライト・ダークとも「暗い反転ガラス」のまま。共有するのは blur（--sb-glass-blur）だけ。
+
+   最終値（ライト・Seller）:
+     background        rgba(255, 255, 255, 0.85)
+     backdrop-filter   var(--sb-glass-blur) = blur(12px) saturate(1.5)（全アプリ共通）
+     border            1px rgba(60, 40, 20, 0.12)        ← Logistic は rgba(15, 23, 42, 0.10)
+     box-shadow        inset 0 1px 0 rgba(255, 255, 255, 0.65),
+                       inset 0 -1px 0 rgba(60, 40, 20, 0.06),
+                       0 8px 24px rgba(60, 40, 20, 0.12)  ← Logistic は影も寒色
+   ダーク:
+     background        rgba(23, 26, 33, 0.72)             ← Logistic は rgba(15, 23, 42, 0.72)
+     border            1px rgba(255, 255, 255, 0.08)
+     box-shadow        inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 8px 24px rgba(0, 0, 0, 0.40)
+   prefers-reduced-transparency: reduce では不透明（#fff / #171a21・#0f172a）。
+
+   2 つあるのは「縁を実体の border で持つか、影のリングで持つか」の違いだけ:
+     .sb-glass-surface         … border ユーティリティ（Tailwind の `border`）と併用する面
+     .sb-glass-surface-ringed  … border を持たない丸ピル。リングを box-shadow で足す
+   （リングを常に足すと、border を持つ側で縁が 2px になるため分けてある） */
+.sb-glass-surface,
+.sb-glass-surface-ringed {
+  background: var(--sb-glass-bg, rgba(255, 255, 255, 0.85));
+  border-color: var(--sb-glass-border, rgba(15, 23, 42, 0.10));
+  -webkit-backdrop-filter: var(--sb-glass-blur, blur(12px) saturate(1.5));
+  backdrop-filter: var(--sb-glass-blur, blur(12px) saturate(1.5));
+}
+.sb-glass-surface { box-shadow: var(--sb-glass-shadow); }
+.sb-glass-surface-ringed {
+  box-shadow: var(--sb-glass-shadow), 0 0 0 1px var(--sb-glass-border, rgba(15, 23, 42, 0.10));
+}
+@media (prefers-reduced-transparency: reduce) {
+  .sb-glass-surface,
+  .sb-glass-surface-ringed {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: var(--sb-glass-bg-opaque, #fff);
+  }
+}
+
 /* 一覧下端に浮かせるガラスピル（StickyPagerBar）。面の色は data-tone（既定 'default' /
    商品マスタ編集モードなどの 'amber'）で切り替える。className で Tailwind の bg-* を
    渡す方式はやめた（ダーク上書きと生成順で競合し、amber面がダーク/reduced-transparency
    で消えるバグがあったため）。ここに配色を一本化する。
    商品マスタの列見出しピル（sticky top-0 のガラスピル）でも同じクラス・data-tone を使う。 */
+/* 2026-09-23: 面・縁・影は共通レシピ（.sb-glass-surface）へ統一した。data-tone='amber'
+   のときだけ面色を差し替える（意味のある面色なのでレシピの外に残す）。 */
 .app-sticky-glass {
-  background-color: rgba(255, 255, 255, 0.8);
-  border-color: rgba(229, 231, 235, 0.8); /* gray-200/80 */
-}
-html.theme-dark .app-sticky-glass {
-  background-color: rgba(15, 23, 42, 0.72);
-  border-color: rgba(255, 255, 255, 0.08);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  background: var(--sb-glass-bg, rgba(255, 255, 255, 0.85));
+  border-color: var(--sb-glass-border, rgba(15, 23, 42, 0.10));
+  -webkit-backdrop-filter: var(--sb-glass-blur, blur(12px) saturate(1.5));
+  backdrop-filter: var(--sb-glass-blur, blur(12px) saturate(1.5));
+  box-shadow: var(--sb-glass-shadow);
 }
 .app-sticky-glass[data-tone='amber'] {
   background-color: rgba(255, 251, 235, 0.85); /* amber-50/85 */
@@ -84,11 +129,9 @@ html.theme-dark .app-sticky-glass[data-tone='amber'] {
 }
 @media (prefers-reduced-transparency: reduce) {
   .app-sticky-glass {
+    -webkit-backdrop-filter: none;
     backdrop-filter: none;
-    background-color: #fff;
-  }
-  html.theme-dark .app-sticky-glass {
-    background-color: #0f172a;
+    background: var(--sb-glass-bg-opaque, #fff);
   }
   .app-sticky-glass[data-tone='amber'] {
     background-color: #fffbeb; /* amber-50, opaque */
@@ -106,23 +149,22 @@ html.theme-dark .app-sticky-glass[data-tone='amber'] {
    組み合わせが読みにくくなるため、ここへ集約する（他のカスタムクラスと同じ方針）。 */
 
 /* --- 通常時の道具バー（amazon-app の .amazon-tool-capsule と同系統。色は青系に置換） --- */
+/* 2026-09-23: 面・縁・影は共通レシピへ統一（.sb-glass-surface-ringed と同値）。
+   ここは実体の border を持たないので、縁 1px は box-shadow のリングで描く。 */
 .sb-tool-capsule {
   isolation: isolate;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.42);
-  -webkit-backdrop-filter: blur(18px) saturate(1.5);
-  backdrop-filter: blur(18px) saturate(1.5);
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.75),
-    0 0 0 1px rgba(40, 28, 16, 0.10),
-    0 10px 30px -18px rgba(40, 28, 16, 0.35);
+  background: var(--sb-glass-bg, rgba(255, 255, 255, 0.85));
+  -webkit-backdrop-filter: var(--sb-glass-blur, blur(12px) saturate(1.5));
+  backdrop-filter: var(--sb-glass-blur, blur(12px) saturate(1.5));
+  box-shadow: var(--sb-glass-shadow), 0 0 0 1px var(--sb-glass-border, rgba(15, 23, 42, 0.10));
 }
-html.theme-dark .sb-tool-capsule {
-  background: rgba(15, 23, 42, 0.55);
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.12),
-    0 0 0 1px rgba(0, 0, 0, 0.3),
-    0 10px 30px -18px rgba(0, 0, 0, 0.5);
+@media (prefers-reduced-transparency: reduce) {
+  .sb-tool-capsule {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: var(--sb-glass-bg-opaque, #fff);
+  }
 }
 .sb-tool-rail { position: relative; display: flex; align-items: center; height: 42px; padding: 0 4px; }
 .sb-tool-sep { flex-shrink: 0; width: 1px; height: 20px; margin: 0 3px; background: rgba(40, 28, 16, 0.10); }
@@ -325,15 +367,20 @@ html.theme-dark .sb-group-chip-more { color: #93c5fd; background: rgba(59, 130, 
    クラス名を共有しているため、ここで畳み時の外枠（.sb-glass）側だけを 42px に上書きする。 */
 .sb-glass-float.gf-left .sb-glass { height: 42px; }
 
+/* 2026-09-23: 面・縁・影は共通レシピへ統一（.sb-glass-surface-ringed と同値）。 */
 .sb-glass {
   position: relative; display: inline-flex; align-items: center; height: 40px; border-radius: 999px;
-  background: rgba(255, 255, 255, 0.60);
-  -webkit-backdrop-filter: blur(18px) saturate(1.6);
-  backdrop-filter: blur(18px) saturate(1.6);
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.70),
-    0 0 0 1px rgba(0, 0, 0, 0.06),
-    0 10px 30px -14px rgba(0, 0, 0, 0.25);
+  background: var(--sb-glass-bg, rgba(255, 255, 255, 0.85));
+  -webkit-backdrop-filter: var(--sb-glass-blur, blur(12px) saturate(1.5));
+  backdrop-filter: var(--sb-glass-blur, blur(12px) saturate(1.5));
+  box-shadow: var(--sb-glass-shadow), 0 0 0 1px var(--sb-glass-border, rgba(15, 23, 42, 0.10));
+}
+@media (prefers-reduced-transparency: reduce) {
+  .sb-glass {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: var(--sb-glass-bg-opaque, #fff);
+  }
 }
 .sb-glass::before {
   content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
@@ -347,13 +394,6 @@ html.theme-dark .sb-group-chip-more { color: #93c5fd; background: rgba(59, 130, 
    （症状: 工程カプセルと検索ピルの間に空の白いカプセルが伸び、可視チップが右端へ押し出される）。
    計測レイヤーだけは必ず fixed（＝フローから外す）に戻す。 */
 .sb-glass > .sb-measure-layer { position: fixed; }
-html.theme-dark .sb-glass {
-  background: rgba(15, 23, 42, 0.55);
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.12),
-    0 0 0 1px rgba(0, 0, 0, 0.35),
-    0 10px 30px -14px rgba(0, 0, 0, 0.6);
-}
 html.theme-dark .sb-glass::before {
   background: linear-gradient(to bottom, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.03) 40%, rgba(255, 255, 255, 0) 74%);
 }
@@ -485,17 +525,35 @@ html.theme-dark .sb-glass-chips .sb-group-chip, html.theme-dark .sb-glass-chips 
 html.theme-dark .sb-glass-chevron { color: #64748b; }
 
 /* ===== 画面下中央・一括操作ピル（入荷「選択時の一括操作バー」／出荷 依頼中・作業中の選択ピル） =====
-   決定（2026-09-14）: 反転ガラス。ライト＝濃紺ガラス＋白文字、ダーク＝白ガラス＋濃い文字。
-   上段・下段のリキッドガラス（.sb-glass）と blur 値・質感を揃える。 */
+   決定（2026-09-14 / smologi #574、2026-09-23 に #598 で再確認）: **反転ガラス**。
+   上段の浮遊カプセル（.sb-glass）と違い、**ライトでもダークでも暗い面＋白系の文字**にする。
+   選択中だけ現れる一時的なバーなので、地の一覧から浮いて見えることが要件。
+   ここはテーマで反転させない（--sb-glass-bg を参照しない）のが意図的な例外。
+   共有するのは blur（--sb-glass-blur）だけで、他のガラスと質感だけ揃える。
+
+   最終値（ライト・ダーク共通）:
+     background        rgba(23, 26, 33, 0.72)
+     backdrop-filter   var(--sb-glass-blur) = blur(12px) saturate(1.5)
+     縁                1px rgba(255, 255, 255, 0.08)（box-shadow のリングで描く）
+     box-shadow        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+                       0 8px 24px rgba(0, 0, 0, 0.40)
+     color             #f8fafc
+   prefers-reduced-transparency: reduce では不透明 #171a21。 */
 .sb-bulk-bar {
-  background: rgba(15, 23, 42, 0.72); color: #fff;
-  -webkit-backdrop-filter: blur(18px) saturate(1.4);
-  backdrop-filter: blur(18px) saturate(1.4);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12), 0 18px 44px -16px rgba(0, 0, 0, 0.55);
+  background: rgba(23, 26, 33, 0.72);
+  color: #f8fafc;
+  -webkit-backdrop-filter: var(--sb-glass-blur, blur(12px) saturate(1.5));
+  backdrop-filter: var(--sb-glass-blur, blur(12px) saturate(1.5));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 8px 24px rgba(0, 0, 0, 0.40);
 }
-html.theme-dark .sb-bulk-bar {
-  background: rgba(255, 255, 255, 0.85); color: #0f172a;
-  box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.10), 0 18px 44px -16px rgba(0, 0, 0, 0.60);
+@media (prefers-reduced-transparency: reduce) {
+  .sb-bulk-bar {
+    -webkit-backdrop-filter: none; backdrop-filter: none;
+    background: #171a21;
+  }
 }
 .sb-bulk-btn {
   white-space: nowrap; border-radius: 999px; padding: 0.375rem 1rem; font-size: 0.875rem; font-weight: 600;
@@ -503,18 +561,11 @@ html.theme-dark .sb-bulk-bar {
 }
 .sb-bulk-btn:hover:not(:disabled) { background: rgba(255, 255, 255, 0.24); }
 .sb-bulk-btn:disabled { cursor: not-allowed; opacity: 0.5; }
-html.theme-dark .sb-bulk-btn { background: rgba(15, 23, 42, 0.08); color: #0f172a; }
-html.theme-dark .sb-bulk-btn:hover:not(:disabled) { background: rgba(15, 23, 42, 0.16); }
 .sb-bulk-btn.danger { background: rgba(244, 63, 94, 0.26); color: #fecdd3; }
 .sb-bulk-btn.danger:hover:not(:disabled) { background: rgba(244, 63, 94, 0.40); }
-html.theme-dark .sb-bulk-btn.danger { background: rgba(225, 29, 72, 0.14); color: #9f1239; }
-html.theme-dark .sb-bulk-btn.danger:hover:not(:disabled) { background: rgba(225, 29, 72, 0.22); }
 .sb-bulk-hint { white-space: nowrap; font-size: 0.75rem; color: rgba(255, 255, 255, 0.7); }
-html.theme-dark .sb-bulk-hint { color: rgba(15, 23, 42, 0.6); }
 .sb-bulk-clear { white-space: nowrap; font-size: 0.875rem; color: rgba(255, 255, 255, 0.7); transition: color 120ms ease; }
 .sb-bulk-clear:hover { color: #fff; }
-html.theme-dark .sb-bulk-clear { color: rgba(15, 23, 42, 0.6); }
-html.theme-dark .sb-bulk-clear:hover { color: #0f172a; }
 
 /* 一括操作ピルの置き場（BulkActionPill）。position:fixed は viewport 基準なので、
    そのまま left:50% で中央寄せするとサイドバーの上に乗ってしまう（浮遊ガラス
@@ -547,9 +598,6 @@ html.theme-dark .sb-bulk-clear:hover { color: #0f172a; }
 .sb-bulk-stat { color: rgba(255, 255, 255, 0.72); font-size: 0.8125rem; }
 .sb-bulk-stat.warn { color: #fde68a; font-weight: 600; }
 .sb-bulk-stat-sep { color: rgba(255, 255, 255, 0.35); }
-html.theme-dark .sb-bulk-stat { color: rgba(15, 23, 42, 0.62); }
-html.theme-dark .sb-bulk-stat.warn { color: #b45309; }
-html.theme-dark .sb-bulk-stat-sep { color: rgba(15, 23, 42, 0.32); }
 
 /* 本番崩れ修正（2026-09-14・Opus 実物レビュー）: #app-main-content の pt-8（32px）は
    全 admin ページ共通（layout.tsx）。トップバー第2行（ADMIN_TOPBAR_PAGE_ROW_SLOT_ID）を
@@ -636,26 +684,16 @@ html.theme-dark .sb-sticky-row.is-stuck .sb-sticky-cell { background: transparen
      通常時（セルの padding 16px）と文字の位置が変わらないようにするため（モック合わせ）。 */
   padding: 0 8px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.60);
-  -webkit-backdrop-filter: blur(18px) saturate(1.6);
-  backdrop-filter: blur(18px) saturate(1.6);
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.70),
-    0 0 0 1px rgba(0, 0, 0, 0.06),
-    0 10px 30px -14px rgba(0, 0, 0, 0.25);
+  background: var(--sb-glass-bg, rgba(255, 255, 255, 0.85));
+  -webkit-backdrop-filter: var(--sb-glass-blur, blur(12px) saturate(1.5));
+  backdrop-filter: var(--sb-glass-blur, blur(12px) saturate(1.5));
+  box-shadow: var(--sb-glass-shadow), 0 0 0 1px var(--sb-glass-border, rgba(15, 23, 42, 0.10));
 }
 .sb-sticky-inner.sb-sticky-inner-fixed::before {
   content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
   background: linear-gradient(to bottom, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0.14) 40%, rgba(255, 255, 255, 0) 74%);
 }
 .sb-sticky-inner.sb-sticky-inner-fixed > * { position: relative; z-index: 1; }
-html.theme-dark .sb-sticky-inner.sb-sticky-inner-fixed {
-  background: rgba(15, 23, 42, 0.55);
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.12),
-    0 0 0 1px rgba(0, 0, 0, 0.35),
-    0 10px 30px -14px rgba(0, 0, 0, 0.6);
-}
 html.theme-dark .sb-sticky-inner.sb-sticky-inner-fixed::before {
   background: linear-gradient(to bottom, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.03) 40%, rgba(255, 255, 255, 0) 74%);
 }
@@ -677,26 +715,16 @@ html.theme-dark .sb-colhead { border-bottom-color: rgba(255, 255, 255, 0.06); }
   position: relative;
   border-bottom-color: transparent;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.60);
-  -webkit-backdrop-filter: blur(18px) saturate(1.6);
-  backdrop-filter: blur(18px) saturate(1.6);
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.70),
-    0 0 0 1px rgba(0, 0, 0, 0.06),
-    0 10px 30px -14px rgba(0, 0, 0, 0.25);
+  background: var(--sb-glass-bg, rgba(255, 255, 255, 0.85));
+  -webkit-backdrop-filter: var(--sb-glass-blur, blur(12px) saturate(1.5));
+  backdrop-filter: var(--sb-glass-blur, blur(12px) saturate(1.5));
+  box-shadow: var(--sb-glass-shadow), 0 0 0 1px var(--sb-glass-border, rgba(15, 23, 42, 0.10));
 }
 .sb-colhead.is-stuck::before {
   content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
   background: linear-gradient(to bottom, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0.14) 40%, rgba(255, 255, 255, 0) 74%);
 }
 .sb-colhead.is-stuck > * { position: relative; z-index: 1; }
-html.theme-dark .sb-colhead.is-stuck {
-  background: rgba(15, 23, 42, 0.55);
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.12),
-    0 0 0 1px rgba(0, 0, 0, 0.35),
-    0 10px 30px -14px rgba(0, 0, 0, 0.6);
-}
 html.theme-dark .sb-colhead.is-stuck::before {
   background: linear-gradient(to bottom, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.03) 40%, rgba(255, 255, 255, 0) 74%);
 }
@@ -705,8 +733,10 @@ html.theme-dark .sb-colhead.is-stuck::before {
 html.theme-dark .sb-colhead.is-stuck[data-tone='amber'] { background: rgba(60, 45, 20, 0.70); }
 /* 透明度を下げる設定では不透明にする（.app-sticky-glass と同じ扱い）。 */
 @media (prefers-reduced-transparency: reduce) {
-  .sb-colhead.is-stuck { backdrop-filter: none; -webkit-backdrop-filter: none; background: #fff; }
-  html.theme-dark .sb-colhead.is-stuck { background: #0f172a; }
+  .sb-colhead.is-stuck {
+    backdrop-filter: none; -webkit-backdrop-filter: none;
+    background: var(--sb-glass-bg-opaque, #fff);
+  }
   .sb-colhead.is-stuck[data-tone='amber'] { background: #fffbeb; }
   html.theme-dark .sb-colhead.is-stuck[data-tone='amber'] { background: #2f2410; }
 }

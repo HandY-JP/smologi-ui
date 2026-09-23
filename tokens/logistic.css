@@ -13,6 +13,16 @@
   --accent-light: #eff6ff;
   --accent-on: #ffffff;
   --page-bg: #f6f7fb;
+  /* ガラス（2026-09-23 ユーザー決定: 納品プラン作成の下部ガラスピル基準に統一）。
+     blur/saturate は部品側（.sb-glass-surface）が持つ固定値。ここは寒色（Logistic）。 */
+  --sb-glass-blur: blur(12px) saturate(1.5);
+  --sb-glass-bg: rgba(255, 255, 255, 0.85);
+  --sb-glass-bg-opaque: #ffffff;
+  --sb-glass-border: rgba(15, 23, 42, 0.10);
+  --sb-glass-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.65),
+    inset 0 -1px 0 rgba(15, 23, 42, 0.06),
+    0 8px 24px rgba(15, 23, 42, 0.12);
 }
 html.theme-dark {
   --sb-bg: #0f172a;
@@ -28,4 +38,10 @@ html.theme-dark {
   --accent-light: #10233c;
   --accent-on: #ffffff;
   --page-bg: #0f1115;
+  --sb-glass-bg: rgba(15, 23, 42, 0.72);
+  --sb-glass-bg-opaque: #0f172a;
+  --sb-glass-border: rgba(255, 255, 255, 0.08);
+  --sb-glass-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 8px 24px rgba(0, 0, 0, 0.40);
 }
