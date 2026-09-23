@@ -1,6 +1,6 @@
 {
   "name": "@handy-jp/smologi-ui",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "スモロジ系列アプリ（Logistic / Seller / ポータル / B2B）で共有する UI 部品とデザイントークン",
   "license": "UNLICENSED",
   "private": false,
@@ -12,10 +12,19 @@
     "type": "git",
     "url": "git+https://github.com/HandY-JP/smologi-ui.git"
   },
-  "sideEffects": ["*.css"],
-  "files": ["dist", "tokens", "README.md"],
+  "sideEffects": [
+    "*.css"
+  ],
+  "files": [
+    "dist",
+    "tokens",
+    "README.md"
+  ],
   "exports": {
-    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
     "./styles.css": "./dist/styles/components.css",
     "./dark-compat.css": "./dist/styles/dark-compat.css",
     "./tokens/logistic.css": "./tokens/logistic.css",

@@ -1,13 +1,16 @@
-/* Seller（amazon-app・橙）。現行 amazon-app の :root を 13 変数へ揃えたもの。 */
+/* Seller（amazon-app・橙）。現行 amazon-app の :root を 13 変数へ揃えたもの。
+   ライトの --sb-border / --accent-hover は amazon-app の globals.css・ThemeProvider が
+   実際に当てている値と同じにしてある（違うと、ThemeProvider が inline style を書く前の
+   初回描画だけ色が変わって見える）。ここを変えるときは amazon-app 側と一緒に動かすこと。 */
 :root {
   --sb-bg: #f9f1e8;
-  --sb-border: #ebe3da;
+  --sb-border: transparent;
   --sb-hover: #f3e8db;
   --sb-text: #231f1c;
   --sb-label: #6b625b;
   --sb-heading: #1a1614;
   --sb-accent-bg: #ea580c;
-  --accent-hover: #c2410c;
+  --accent-hover: #ea580c;
   --accent-ring: rgba(234, 88, 12, 0.15);
   --accent-subtle: #fff7ed;
   --accent-light: #fff7ed;
