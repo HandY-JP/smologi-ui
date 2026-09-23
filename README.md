@@ -118,6 +118,7 @@ git push origin v0.1.1
 | `tokens/seller.css` | 橙 `#ea580c` | amazon-app |
 | `tokens/portal.css` | スレート `#475569` | handy-internal-app |
 | `tokens/research.css` | 金 `#b7791f` | Research 拡張 |
+| `tokens/b2b.css` | 青 `#2563eb` | smologi-b2b（売り手画面） |
 
 各ファイルは `:root`（ライト）と `html.theme-dark`（ダーク）の 2 ブロックを持つ。
 
@@ -125,8 +126,15 @@ git push origin v0.1.1
 `var()` 相手の透過修飾子を黙って捨てる（ユーティリティごと出力されない）ので、
 透過はトークン側で用意しないと効かない。
 
-> smologi-b2b は `html.dark` を使っている。載せ替え時に `theme-dark` へ寄せるか、
-> b2b の globals.css に `html.dark { /* theme-dark と同じ変数 */ }` を 1 ブロック足す。
+> **B2B のダークだけ発火クラスが2つある。** smologi-b2b は `html.dark` でダークにしており、
+> アプリ側の変数（Tailwind の gray を差し替える `--neutral-*` の反転ランプ・`--surface`）も
+> `html.dark` に紐付いている。部品 CSS（`styles.css`）は系列共通の `html.theme-dark` で書いて
+> あるので、`tokens/b2b.css` は **両方のセレクタ**を受けるようにしてあり、
+> smologi-b2b 側の ThemeToggle が `dark` と `theme-dark` を**同時に**付け外しする。
+>
+> また smologi-b2b は `dark-compat.css` を**読み込まない**。B2B は gray を反転ランプへ
+> 差し替える方式なので、生の gray ユーティリティを暗転させる互換層を重ねると二重反転になる
+> （代わりに、部品が使う素の `bg-white` だけを b2b の globals.css が売り手スコープで受ける）。
 
 ---
 
