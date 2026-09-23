@@ -96,8 +96,9 @@ function ProcessSegment({
           type: "button",
           onClick: () => onSelectStage(s.key),
           "aria-current": currentStage === s.key ? "step" : void 0,
+          disabled: s.disabled,
           title: s.title,
-          className: `sb-glass-stage${currentStage === s.key ? " on" : ""}${s.tone === "danger" ? " danger" : ""}${dense ? " dense" : ""}`,
+          className: `sb-glass-stage${currentStage === s.key ? " on" : ""}${s.tone === "danger" ? " danger" : ""}${dense ? " dense" : ""}${s.disabled ? " is-disabled" : ""}`,
           children: [
             s.label,
             !dense && s.count != null && /* @__PURE__ */ jsx("b", { children: s.count > 999 ? "999+" : s.count })

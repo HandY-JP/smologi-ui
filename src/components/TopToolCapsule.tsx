@@ -13,7 +13,7 @@
 //   failed  = アイコンが3回小さく横揺れし、右上に赤い点＋ツールチップ
 import { Fragment, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import { overflowedBarItems, selectBarItemKeys, type TopToolPlacement } from '../lib/top-tool-placement';
+import { orderToolItems, overflowedBarItems, selectBarItemKeys, type TopToolPlacement } from '../lib/top-tool-placement';
 
 export interface TopToolMenuItem {
   key: string;
@@ -27,6 +27,20 @@ export interface TopToolMenuItem {
   description?: string;
   /** 直前に区切り線を入れる（同じメニュー内で毛色の違う項目を分けるとき。先頭では無視）。 */
   separatorBefore?: boolean;
+}
+
+/**
+ * その画面に紐づく設定への導線（2026-09-23 ユーザー決定）。
+ * 帯（カプセル）には絶対に出さず、右端の「▾」で開く一覧パネル（ToolListPanel）の**末尾**に
+ * 区切り線＋「関連する設定」見出しでまとめて出す。道具が無い画面と同じ扱い＝渡さなければ何も出ない。
+ */
+export interface TopToolSettingsLink {
+  label: string;
+  /** 一言説明（20文字前後）。道具の一覧の他の行と同じ体裁。 */
+  description?: string;
+  /** 遷移先。router.push で移動する（onClick を渡した場合はそちらを優先）。 */
+  href?: string;
+  onClick?: () => void;
 }
 
 export interface TopToolItem {
@@ -49,8 +63,9 @@ export interface TopToolItem {
   description?: string;
   /**
    * 2026-09-22 ユーザー決定: 帯（カプセル）にワンクリックで出す道具は「新規（primary の ＋）」
-   * 「一覧を最新にする」＋あと最大3個まで。それ以外は帯に出さず、右端の「▾」で開く一覧
+   * 「更新」＋あと最大3個まで。それ以外は帯に出さず、右端の「▾」で開く一覧
    * パネルからだけ実行する。'list' を指定した道具は帯に描画しない（一覧には常に全部出る）。
+   * 2026-09-23 ユーザー決定: 帯・一覧の並びは常に「＋新規→更新→その他」（orderToolItems）。
    */
   placement?: TopToolPlacement;
   primary?: boolean;
@@ -220,6 +235,14 @@ const CaretDownIcon = (
   </svg>
 );
 
+/** 「関連する設定」行の歯車アイコン。道具本体のアイコンと見分けが付くよう、設定行だけこれを使う。 */
+const SettingsGearIcon = (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} aria-hidden>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+    <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+  </svg>
+);
+
 // ── 道具の一覧パネル（2026-09-22 ユーザー決定「案A」） ──────────────────────────
 // 帯（42px のカプセル）はアイコンだけなので、初めて見た人には何のボタンか分からない。
 // 帯の右端に小さな「▾」ハンドルを足し、押すと**全ツールが縦一覧**で開く。
@@ -273,10 +296,13 @@ function ToolListRowStatus({ item }: { item: TopToolItem }) {
 
 function ToolListPanel({
   items,
+  settingsLinks,
   onClose,
   triggerRef,
 }: {
   items: TopToolItem[];
+  /** 末尾の「関連する設定」グループ。無ければ何も出さない。 */
+  settingsLinks?: TopToolSettingsLink[];
   onClose: () => void;
   triggerRef: React.RefObject<HTMLButtonElement | null>;
 }) {
@@ -437,6 +463,40 @@ function ToolListPanel({
           </Fragment>
         );
       })}
+      {settingsLinks && settingsLinks.length > 0 && (
+        <>
+          <span className="my-1 block h-px bg-gray-100" aria-hidden />
+          <div className="px-2.5 pb-1 pt-1.5 text-[11px] font-semibold uppercase tracking-wide text-gray-400">
+            関連する設定
+          </div>
+          {settingsLinks.map((link) => (
+            <button
+              key={link.label}
+              type="button"
+              role="menuitem"
+              tabIndex={-1}
+              onClick={() => {
+                if (link.onClick) link.onClick();
+                // パッケージは next に依存しない(peer に無い)ので href は素の遷移。ソフト遷移が
+                // 欲しい画面は onClick に router.push を渡す(本体アプリ側の複製は useRouter を使う)。
+                else if (link.href) window.location.assign(link.href);
+                onClose();
+              }}
+              className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left transition-colors hover:bg-gray-50 focus:bg-gray-50 focus:outline-none"
+            >
+              <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center text-gray-400 [&_svg]:h-5 [&_svg]:w-5" aria-hidden>
+                {SettingsGearIcon}
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block truncate text-sm font-semibold text-gray-800">{link.label}</span>
+                {link.description && (
+                  <span className="mt-0.5 block text-xs leading-snug text-gray-500">{link.description}</span>
+                )}
+              </span>
+            </button>
+          ))}
+        </>
+      )}
     </div>,
     document.body,
   );
@@ -526,10 +586,12 @@ function ToolButton({ item, variant }: { item: TopToolItem; variant: 'normal' | 
  */
 function ToolListHandle({
   items,
+  settingsLinks,
   variant,
   hiddenStatus,
 }: {
   items: TopToolItem[];
+  settingsLinks?: TopToolSettingsLink[];
   variant: 'normal' | 'compact';
   /** 帯に出ていない道具の done/failed をまとめたもの（ハンドル右上の点で知らせる）。 */
   hiddenStatus: { status: 'done' | 'failed'; count: number } | null;
@@ -583,7 +645,9 @@ function ToolListHandle({
         )}
       </button>
       {(hovering || keyboardFocus) && !open && <ToolTooltip text={handleLabel} triggerRef={triggerRef} />}
-      {open && <ToolListPanel items={items} onClose={close} triggerRef={triggerRef} />}
+      {open && (
+        <ToolListPanel items={items} settingsLinks={settingsLinks} onClose={close} triggerRef={triggerRef} />
+      )}
     </div>
   );
 }
@@ -594,6 +658,7 @@ const DEFAULT_MAX_BAR_ITEMS = 5;
 export function TopToolCapsule({
   ariaLabel,
   items,
+  settingsLinks,
   variant = 'normal',
   dataTour,
   listPanel = true,
@@ -601,6 +666,11 @@ export function TopToolCapsule({
 }: {
   ariaLabel: string;
   items: TopToolItem[];
+  /**
+   * その画面に紐づく設定への導線（2026-09-23 ユーザー決定）。帯には出さず、「▾」一覧の末尾に
+   * 「関連する設定」としてまとめて出す。無い画面では何も出ない。
+   */
+  settingsLinks?: TopToolSettingsLink[];
   variant?: 'normal' | 'compact';
   dataTour?: string;
   /** 帯の右端に「▾」（全ツールの縦一覧）を出すか。既定 true。 */
@@ -612,11 +682,14 @@ export function TopToolCapsule({
   const railClass = variant === 'normal' ? 'sb-tool-rail' : 'sb-glass-tools';
   const sepClass = variant === 'normal' ? 'sb-tool-sep' : 'sb-glass-sep';
   const showListPanel = listPanel && items.length > 0;
+  // 2026-09-23 ユーザー決定: 帯・一覧とも並びは常に「＋新規（primary）→更新→その他」に揃える
+  // （画面の toolItems 定義順に依存しない）。
+  const orderedItems = orderToolItems(items);
   // 一覧パネルを出せないときまで道具を隠すと実行できなくなるので、そのときだけ上限を外す。
-  const barKeys = selectBarItemKeys(items, showListPanel ? maxBarItems : Number.POSITIVE_INFINITY);
-  const barItems = showListPanel ? items.filter((item) => barKeys.has(item.key)) : items;
+  const barKeys = selectBarItemKeys(orderedItems, showListPanel ? maxBarItems : Number.POSITIVE_INFINITY);
+  const barItems = showListPanel ? orderedItems.filter((item) => barKeys.has(item.key)) : orderedItems;
   // 帯に出ていない道具の done/failed は帯では見えないので、ハンドルの点でまとめて知らせる。
-  const hiddenItems = items.filter((item) => !barKeys.has(item.key));
+  const hiddenItems = orderedItems.filter((item) => !barKeys.has(item.key));
   const hiddenFailed = hiddenItems.some((item) => item.status === 'failed');
   const hiddenDoneCount = hiddenItems
     .filter((item) => item.status === 'done')
@@ -629,8 +702,10 @@ export function TopToolCapsule({
   // 開発時だけ、帯からあふれた道具を知らせる（並びを決め直す合図。1回だけ）。
   const warnedRef = useRef(false);
   useEffect(() => {
-    if (process.env.NODE_ENV === 'production' || warnedRef.current) return;
-    const overflow = overflowedBarItems(items, barKeys);
+    // パッケージは @types/node を持たないので process は globalThis 経由で読む(バンドラが置換しなくても動く)。
+    const nodeEnv = (globalThis as { process?: { env?: { NODE_ENV?: string } } }).process?.env?.NODE_ENV;
+    if (nodeEnv === 'production' || warnedRef.current) return;
+    const overflow = overflowedBarItems(orderedItems, barKeys);
     if (overflow.length === 0) return;
     warnedRef.current = true;
     console.warn(
@@ -650,7 +725,12 @@ export function TopToolCapsule({
         {showListPanel && (
           <>
             {barItems.length > 0 && <span className={sepClass} aria-hidden />}
-            <ToolListHandle items={items} variant={variant} hiddenStatus={hiddenStatus} />
+            <ToolListHandle
+              items={orderedItems}
+              settingsLinks={settingsLinks}
+              variant={variant}
+              hiddenStatus={hiddenStatus}
+            />
           </>
         )}
       </div>

@@ -14,7 +14,7 @@ import { createPortal } from 'react-dom';
 import { computeChipOverflow, type OverflowChip } from '../lib/topbar-compaction';
 import { useChromeOptional, DEFAULT_TOP_BAR_FIT } from './app-chrome';
 import { CollapsedFilterTriggerProvider, FilterChipsHostProvider } from './FilterPopover';
-import { TopToolCapsule, type TopToolItem } from './TopToolCapsule';
+import { TopToolCapsule, type TopToolItem, type TopToolSettingsLink } from './TopToolCapsule';
 import { ProcessSegment, type ProcessStage } from './ProcessSegment';
 
 /** 検索カプセル幅の下限（px）。通常時の実測（topBarFit.pillWidthPx）が使えないときの
@@ -107,6 +107,10 @@ function MiniFilterChips({ chips }: { chips: FloatingFilterChip[] }) {
 export function FloatingGlassDock({
   visible,
   tools,
+  /** 道具カプセル末尾の「▾」（全ツール一覧）を出すか。設定モードは項目が少ないので出さない。 */
+  toolsListPanel = true,
+  /** 道具の「▾」一覧の末尾に出す「関連する設定」。通常時（TopToolCapsule）と同じものを渡す。 */
+  toolsSettingsLinks,
   toolsAriaLabel,
   processAriaLabel,
   leadLabel,
@@ -128,9 +132,13 @@ export function FloatingGlassDock({
   filterControl,
   filterChips = [],
   processTrailing,
+  showProcess = true,
+  showSearch = true,
 }: {
   visible: boolean;
   tools: TopToolItem[];
+  toolsListPanel?: boolean;
+  toolsSettingsLinks?: TopToolSettingsLink[];
   toolsAriaLabel: string;
   processAriaLabel: string;
   leadLabel?: string;
@@ -147,16 +155,26 @@ export function FloatingGlassDock({
    * 「現在の1顧客」という概念が無い一覧（入荷・出荷の管理一覧は多顧客横断）では省略してよい。
    */
   leading?: ReactNode;
-  searchValue: string;
-  onSearchChange: (value: string) => void;
-  onSearchSubmit: () => void;
-  searchPlaceholder: string;
+  searchValue?: string;
+  onSearchChange?: (value: string) => void;
+  onSearchSubmit?: () => void;
+  searchPlaceholder?: string;
   searchAriaLabel?: string;
   searchInputRef?: RefObject<HTMLInputElement | null>;
   filterControl?: ReactNode;
   filterChips?: FloatingFilterChip[];
   /** 工程（セグメント）カプセルの中、ピル列の直後に置く追加要素（商品マスタの保存ビュー「▾」）。 */
   processTrailing?: ReactNode;
+  /**
+   * 工程セグメントのカプセルを出すか（既定 true）。工程が無い画面（商品の新規登録など）で
+   * 空のカプセルだけが浮くのを避けるために false にする。
+   */
+  showProcess?: boolean;
+  /**
+   * 検索ピルを出すか（既定 true）。検索の無い画面（商品詳細）では false にする
+   * ＝畳み時の右側は工程セグメントだけになる（仕様書の「右＝空 or 検索」）。
+   */
+  showSearch?: boolean;
 }): ReactNode {
   // 一度も畳んだことが無いページ（最上部を出たり入ったりしていない）では DOM 自体を作らない
   // （Opus レビュー指摘: 常時 portal しているとタブ順・アクセシビリティツリーが二重になる）。
@@ -239,21 +257,28 @@ export function FloatingGlassDock({
 
   const dock = (
     <div className="sb-glass-layer" aria-hidden={!visible}>
-      <div ref={glassLeftRef} className={`sb-glass-float gf-left${visible ? ' is-visible' : ''}`}>
-        {/* 2026-09-22 ユーザー決定: 末尾の「上へ戻る（↑）」ボタンは撤去した（区切り線ごと）。
-            末尾に残すのは道具の一覧ハンドル「▾」だけ。 */}
-        <TopToolCapsule
-          ariaLabel={toolsAriaLabel}
-          items={tools}
-          variant="compact"
-        />
-      </div>
+      {/* 道具が 1 つも無い画面（設定の Research 拡張など）では左カプセルを描かない。空のまま描くと
+          小さなガラスの欠片が左上に残る（2026-09-23 本番指摘）。ref は測定用なので無くても動く。 */}
+      {(tools.length > 0 || (toolsSettingsLinks?.length ?? 0) > 0) && (
+        <div ref={glassLeftRef} className={`sb-glass-float gf-left${visible ? ' is-visible' : ''}`}>
+          {/* 2026-09-22 ユーザー決定: 末尾の「上へ戻る（↑）」ボタンは撤去した（区切り線ごと）。
+              末尾に残すのは道具の一覧ハンドル「▾」だけ。 */}
+          <TopToolCapsule
+            ariaLabel={toolsAriaLabel}
+            items={tools}
+            settingsLinks={toolsSettingsLinks}
+            variant="compact"
+            listPanel={toolsListPanel}
+          />
+        </div>
+      )}
 
       {/* 2026-09-14 最終決定: 中央カプセルは廃止。右側に「工程セグメント／絞り込みチップ／検索」を
           まとめる（通常時の「右側グループに12px空けて並べる」と同じ並び・見た目の連続性）。
           狭い幅（collapsedTier）: 1=工程を件数無し・詰め表示、2=さらに絞り込みチップを隠す。
           検索ピルは畳んでも縮めない・工程カプセルは畳み時も必ず出す（2026-09-22 ユーザー決定）。 */}
       <div ref={glassRightRef} className={`sb-glass-float gf-right${visible ? ' is-visible' : ''}`}>
+        {showProcess && (
         <ProcessSegment
           ariaLabel={processAriaLabel}
           leadLabel={collapsedTier >= 1 ? undefined : leadLabel}
@@ -267,10 +292,12 @@ export function FloatingGlassDock({
           dense={collapsedTier >= 1}
           segmentTrailing={processTrailing}
         />
+        )}
         {/* 2026-09-15: 絞り込みチップはモック（v8 の gf-right）どおり**検索ピルのすぐ左**に置く
             （以前は工程セグメントより左にあり、条件と検索欄が離れていた）。 */}
-        {collapsedTier < 2 && <MiniFilterChips chips={filterChips} />}
+        {showSearch && collapsedTier < 2 && <MiniFilterChips chips={filterChips} />}
         {/* 幅は常に通常時の検索ピルと同値（実測 pillWidthPx）。狭いときも縮めない。 */}
+        {showSearch && (
         <div className="sb-glass sb-glass-search" style={{ width: desiredPillPx }}>
           {leading && (
             <>
@@ -286,9 +313,9 @@ export function FloatingGlassDock({
           <input
             ref={searchInputRef}
             type="text"
-            value={searchValue}
-            onChange={(e) => onSearchChange(e.target.value)}
-            onKeyDown={(e) => { if (e.key === 'Enter') onSearchSubmit(); }}
+            value={searchValue ?? ''}
+            onChange={(e) => onSearchChange?.(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter') onSearchSubmit?.(); }}
             placeholder={searchPlaceholder}
             aria-label={searchAriaLabel ?? searchPlaceholder}
           />
@@ -303,6 +330,7 @@ export function FloatingGlassDock({
             </FilterChipsHostProvider>
           )}
         </div>
+        )}
       </div>
     </div>
   );

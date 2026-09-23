@@ -2,7 +2,7 @@
 import { Fragment, jsx, jsxs } from "react/jsx-runtime";
 import { Fragment as Fragment2, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { overflowedBarItems, selectBarItemKeys } from "../lib/top-tool-placement.js";
+import { orderToolItems, overflowedBarItems, selectBarItemKeys } from "../lib/top-tool-placement.js";
 const TOOL_TIP_MARGIN_PX = 8;
 const TOOL_TIP_GAP_PX = 6;
 function ToolTooltip({ text, triggerRef }) {
@@ -115,6 +115,10 @@ function ToolMenu({ items, onClose, triggerRef }) {
 }
 const CheckIcon = /* @__PURE__ */ jsx("svg", { viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2.4, "aria-hidden": true, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "m5 13 4.5 4.5L19 7.5" }) });
 const CaretDownIcon = /* @__PURE__ */ jsx("svg", { viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2, "aria-hidden": true, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "m6 9 6 6 6-6" }) });
+const SettingsGearIcon = /* @__PURE__ */ jsxs("svg", { viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.8, "aria-hidden": true, children: [
+  /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" }),
+  /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M15 12a3 3 0 11-6 0 3 3 0 016 0z" })
+] });
 const TOOL_LIST_WIDTH_PX = 312;
 const TOOL_LIST_MARGIN_PX = 8;
 const TOOL_LIST_GAP_PX = 6;
@@ -143,6 +147,7 @@ function ToolListRowStatus({ item }) {
 }
 function ToolListPanel({
   items,
+  settingsLinks,
   onClose,
   triggerRef
 }) {
@@ -195,7 +200,7 @@ function ToolListPanel({
   }, [positioned]);
   if (typeof document === "undefined" || !position) return null;
   return createPortal(
-    /* @__PURE__ */ jsx(
+    /* @__PURE__ */ jsxs(
       "div",
       {
         ref: panelRef,
@@ -213,87 +218,115 @@ function ToolListPanel({
           else if (e.key === "Home") focusRow(0);
           else focusRow(buttons.length - 1);
         },
-        children: rows.map((row) => {
-          if (row.kind === "sub") {
-            const { parent, sub: sub2 } = row;
+        children: [
+          rows.map((row) => {
+            if (row.kind === "sub") {
+              const { parent, sub: sub2 } = row;
+              return /* @__PURE__ */ jsxs(Fragment2, { children: [
+                sub2.separatorBefore && /* @__PURE__ */ jsx("span", { className: "my-1 block h-px bg-gray-100", "aria-hidden": true }),
+                /* @__PURE__ */ jsxs(
+                  "button",
+                  {
+                    type: "button",
+                    role: "menuitem",
+                    tabIndex: -1,
+                    "aria-disabled": sub2.disabled || void 0,
+                    onClick: () => {
+                      if (sub2.disabled) return;
+                      sub2.onClick();
+                      onClose();
+                    },
+                    className: `flex w-full items-center gap-2.5 rounded-lg py-1.5 pl-9 pr-2.5 text-left transition-colors ${sub2.disabled ? "cursor-not-allowed opacity-40" : "hover:bg-gray-50 focus:bg-gray-50 focus:outline-none"}`,
+                    children: [
+                      /* @__PURE__ */ jsx("span", { className: "flex h-4 w-4 flex-shrink-0 items-center justify-center text-gray-300 [&_svg]:h-4 [&_svg]:w-4", "aria-hidden": true, children: parent.icon }),
+                      /* @__PURE__ */ jsxs("span", { className: "min-w-0 flex-1", children: [
+                        /* @__PURE__ */ jsx("span", { className: "block truncate text-[13px] font-medium text-gray-700", children: sub2.label }),
+                        sub2.description && /* @__PURE__ */ jsx("span", { className: "mt-0.5 block text-[11px] leading-snug text-gray-400", children: sub2.description })
+                      ] })
+                    ]
+                  }
+                )
+              ] }, row.key);
+            }
+            const { item } = row;
+            const hasMenu = !!item.menuItems && item.menuItems.length > 0;
+            const expanded = expandedKey === item.key;
+            const inert = !!item.disabled || item.status === "progress";
+            const sub = inert && item.disabled && item.disabledReason ? item.disabledReason : item.description;
             return /* @__PURE__ */ jsxs(Fragment2, { children: [
-              sub2.separatorBefore && /* @__PURE__ */ jsx("span", { className: "my-1 block h-px bg-gray-100", "aria-hidden": true }),
+              row.separator && /* @__PURE__ */ jsx("span", { className: "my-1 block h-px bg-gray-100", "aria-hidden": true }),
               /* @__PURE__ */ jsxs(
                 "button",
                 {
                   type: "button",
                   role: "menuitem",
                   tabIndex: -1,
-                  "aria-disabled": sub2.disabled || void 0,
+                  "aria-disabled": inert || void 0,
+                  "aria-expanded": hasMenu ? expanded : void 0,
                   onClick: () => {
-                    if (sub2.disabled) return;
-                    sub2.onClick();
+                    if (inert) return;
+                    if (hasMenu) {
+                      setExpandedKey((cur) => cur === item.key ? null : item.key);
+                      return;
+                    }
+                    item.onClick?.();
                     onClose();
                   },
-                  className: `flex w-full items-center gap-2.5 rounded-lg py-1.5 pl-9 pr-2.5 text-left transition-colors ${sub2.disabled ? "cursor-not-allowed opacity-40" : "hover:bg-gray-50 focus:bg-gray-50 focus:outline-none"}`,
+                  className: `flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left transition-colors ${inert ? "cursor-not-allowed opacity-45" : "hover:bg-gray-50 focus:bg-gray-50 focus:outline-none"}`,
                   children: [
-                    /* @__PURE__ */ jsx("span", { className: "flex h-4 w-4 flex-shrink-0 items-center justify-center text-gray-300 [&_svg]:h-4 [&_svg]:w-4", "aria-hidden": true, children: parent.icon }),
+                    /* @__PURE__ */ jsx(
+                      "span",
+                      {
+                        className: `flex h-5 w-5 flex-shrink-0 items-center justify-center [&_svg]:h-5 [&_svg]:w-5 ${item.primary ? "text-blue-600" : item.active ? "text-amber-500" : "text-gray-400"}`,
+                        "aria-hidden": true,
+                        children: item.icon
+                      }
+                    ),
                     /* @__PURE__ */ jsxs("span", { className: "min-w-0 flex-1", children: [
-                      /* @__PURE__ */ jsx("span", { className: "block truncate text-[13px] font-medium text-gray-700", children: sub2.label }),
-                      sub2.description && /* @__PURE__ */ jsx("span", { className: "mt-0.5 block text-[11px] leading-snug text-gray-400", children: sub2.description })
-                    ] })
+                      /* @__PURE__ */ jsx("span", { className: "block truncate text-sm font-semibold text-gray-800", children: item.label }),
+                      sub && /* @__PURE__ */ jsx("span", { className: "mt-0.5 block text-xs leading-snug text-gray-500", children: sub })
+                    ] }),
+                    /* @__PURE__ */ jsx(ToolListRowStatus, { item }),
+                    hasMenu && /* @__PURE__ */ jsx(
+                      "span",
+                      {
+                        className: `flex-shrink-0 text-gray-400 transition-transform [&_svg]:h-4 [&_svg]:w-4 ${expanded ? "rotate-180" : "-rotate-90"}`,
+                        "aria-hidden": true,
+                        children: CaretDownIcon
+                      }
+                    )
                   ]
                 }
               )
             ] }, row.key);
-          }
-          const { item } = row;
-          const hasMenu = !!item.menuItems && item.menuItems.length > 0;
-          const expanded = expandedKey === item.key;
-          const inert = !!item.disabled || item.status === "progress";
-          const sub = inert && item.disabled && item.disabledReason ? item.disabledReason : item.description;
-          return /* @__PURE__ */ jsxs(Fragment2, { children: [
-            row.separator && /* @__PURE__ */ jsx("span", { className: "my-1 block h-px bg-gray-100", "aria-hidden": true }),
-            /* @__PURE__ */ jsxs(
+          }),
+          settingsLinks && settingsLinks.length > 0 && /* @__PURE__ */ jsxs(Fragment, { children: [
+            /* @__PURE__ */ jsx("span", { className: "my-1 block h-px bg-gray-100", "aria-hidden": true }),
+            /* @__PURE__ */ jsx("div", { className: "px-2.5 pb-1 pt-1.5 text-[11px] font-semibold uppercase tracking-wide text-gray-400", children: "\u95A2\u9023\u3059\u308B\u8A2D\u5B9A" }),
+            settingsLinks.map((link) => /* @__PURE__ */ jsxs(
               "button",
               {
                 type: "button",
                 role: "menuitem",
                 tabIndex: -1,
-                "aria-disabled": inert || void 0,
-                "aria-expanded": hasMenu ? expanded : void 0,
                 onClick: () => {
-                  if (inert) return;
-                  if (hasMenu) {
-                    setExpandedKey((cur) => cur === item.key ? null : item.key);
-                    return;
-                  }
-                  item.onClick?.();
+                  if (link.onClick) link.onClick();
+                  else if (link.href) window.location.assign(link.href);
                   onClose();
                 },
-                className: `flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left transition-colors ${inert ? "cursor-not-allowed opacity-45" : "hover:bg-gray-50 focus:bg-gray-50 focus:outline-none"}`,
+                className: "flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left transition-colors hover:bg-gray-50 focus:bg-gray-50 focus:outline-none",
                 children: [
-                  /* @__PURE__ */ jsx(
-                    "span",
-                    {
-                      className: `flex h-5 w-5 flex-shrink-0 items-center justify-center [&_svg]:h-5 [&_svg]:w-5 ${item.primary ? "text-blue-600" : item.active ? "text-amber-500" : "text-gray-400"}`,
-                      "aria-hidden": true,
-                      children: item.icon
-                    }
-                  ),
+                  /* @__PURE__ */ jsx("span", { className: "flex h-5 w-5 flex-shrink-0 items-center justify-center text-gray-400 [&_svg]:h-5 [&_svg]:w-5", "aria-hidden": true, children: SettingsGearIcon }),
                   /* @__PURE__ */ jsxs("span", { className: "min-w-0 flex-1", children: [
-                    /* @__PURE__ */ jsx("span", { className: "block truncate text-sm font-semibold text-gray-800", children: item.label }),
-                    sub && /* @__PURE__ */ jsx("span", { className: "mt-0.5 block text-xs leading-snug text-gray-500", children: sub })
-                  ] }),
-                  /* @__PURE__ */ jsx(ToolListRowStatus, { item }),
-                  hasMenu && /* @__PURE__ */ jsx(
-                    "span",
-                    {
-                      className: `flex-shrink-0 text-gray-400 transition-transform [&_svg]:h-4 [&_svg]:w-4 ${expanded ? "rotate-180" : "-rotate-90"}`,
-                      "aria-hidden": true,
-                      children: CaretDownIcon
-                    }
-                  )
+                    /* @__PURE__ */ jsx("span", { className: "block truncate text-sm font-semibold text-gray-800", children: link.label }),
+                    link.description && /* @__PURE__ */ jsx("span", { className: "mt-0.5 block text-xs leading-snug text-gray-500", children: link.description })
+                  ] })
                 ]
-              }
-            )
-          ] }, row.key);
-        })
+              },
+              link.label
+            ))
+          ] })
+        ]
       }
     ),
     document.body
@@ -372,6 +405,7 @@ function ToolButton({ item, variant }) {
 }
 function ToolListHandle({
   items,
+  settingsLinks,
   variant,
   hiddenStatus
 }) {
@@ -423,7 +457,7 @@ function ToolListHandle({
           }
         ),
         (hovering || keyboardFocus) && !open && /* @__PURE__ */ jsx(ToolTooltip, { text: handleLabel, triggerRef }),
-        open && /* @__PURE__ */ jsx(ToolListPanel, { items, onClose: close, triggerRef })
+        open && /* @__PURE__ */ jsx(ToolListPanel, { items, settingsLinks, onClose: close, triggerRef })
       ]
     }
   );
@@ -432,6 +466,7 @@ const DEFAULT_MAX_BAR_ITEMS = 5;
 function TopToolCapsule({
   ariaLabel,
   items,
+  settingsLinks,
   variant = "normal",
   dataTour,
   listPanel = true,
@@ -441,17 +476,19 @@ function TopToolCapsule({
   const railClass = variant === "normal" ? "sb-tool-rail" : "sb-glass-tools";
   const sepClass = variant === "normal" ? "sb-tool-sep" : "sb-glass-sep";
   const showListPanel = listPanel && items.length > 0;
-  const barKeys = selectBarItemKeys(items, showListPanel ? maxBarItems : Number.POSITIVE_INFINITY);
-  const barItems = showListPanel ? items.filter((item) => barKeys.has(item.key)) : items;
-  const hiddenItems = items.filter((item) => !barKeys.has(item.key));
+  const orderedItems = orderToolItems(items);
+  const barKeys = selectBarItemKeys(orderedItems, showListPanel ? maxBarItems : Number.POSITIVE_INFINITY);
+  const barItems = showListPanel ? orderedItems.filter((item) => barKeys.has(item.key)) : orderedItems;
+  const hiddenItems = orderedItems.filter((item) => !barKeys.has(item.key));
   const hiddenFailed = hiddenItems.some((item) => item.status === "failed");
   const hiddenDoneCount = hiddenItems.filter((item) => item.status === "done").reduce((sum, item) => sum + (item.doneCount ?? 0), 0);
   const hiddenDone = hiddenItems.some((item) => item.status === "done");
   const hiddenStatus = hiddenFailed ? { status: "failed", count: 0 } : hiddenDone ? { status: "done", count: hiddenDoneCount } : null;
   const warnedRef = useRef(false);
   useEffect(() => {
-    if (process.env.NODE_ENV === "production" || warnedRef.current) return;
-    const overflow = overflowedBarItems(items, barKeys);
+    const nodeEnv = globalThis.process?.env?.NODE_ENV;
+    if (nodeEnv === "production" || warnedRef.current) return;
+    const overflow = overflowedBarItems(orderedItems, barKeys);
     if (overflow.length === 0) return;
     warnedRef.current = true;
     console.warn(
@@ -465,7 +502,15 @@ function TopToolCapsule({
     ] }, item.key)),
     showListPanel && /* @__PURE__ */ jsxs(Fragment, { children: [
       barItems.length > 0 && /* @__PURE__ */ jsx("span", { className: sepClass, "aria-hidden": true }),
-      /* @__PURE__ */ jsx(ToolListHandle, { items, variant, hiddenStatus })
+      /* @__PURE__ */ jsx(
+        ToolListHandle,
+        {
+          items: orderedItems,
+          settingsLinks,
+          variant,
+          hiddenStatus
+        }
+      )
     ] })
   ] }) });
 }
