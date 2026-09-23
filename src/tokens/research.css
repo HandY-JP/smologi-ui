@@ -15,6 +15,7 @@
   --page-bg: #fbf7ec;
   /* ガラス（2026-09-23 ユーザー決定: 納品プラン作成の下部ガラスピル基準に統一）。
      blur/saturate は部品側（.sb-glass-surface）が持つ固定値。ここは暖色（Research）。 */
+  --sb-glass-blur: blur(12px) saturate(1.5);
   --sb-glass-bg: rgba(255, 255, 255, 0.85);
   --sb-glass-bg-opaque: #ffffff;
   --sb-glass-border: rgba(60, 40, 20, 0.12);

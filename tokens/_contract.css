@@ -1,6 +1,6 @@
 /* @handy/smologi-ui — トークンの契約（このファイル自体は読み込まない。仕様のメモ）
  *
- * 部品が参照する CSS 変数はこの 17 個だけ。アプリは tokens/*.css のどれか 1 つを
+ * 部品が参照する CSS 変数はこの 18 個だけ。アプリは tokens/*.css のどれか 1 つを
  * `:root` へ流し込む（または独自プリセットを同じ名前で定義する）。
  *
  *   --sb-bg            サイドバー／ドックの面色
@@ -20,9 +20,12 @@
  *
  * ガラス（2026-09-23 ユーザー決定。基準＝納品プラン作成の下部ガラスピル）。
  * 実際に組み立てるのは styles/components.css の .sb-glass-surface /
- * .sb-glass-surface-ringed で、blur(12px) saturate(1.5) は部品側の固定値。
+ * .sb-glass-surface-ringed。
  * アプリごとに変えるのは色温度（Seller・Research＝暖色 / Logistic・ポータル＝寒色）だけ。
  *
+ *   --sb-glass-blur      backdrop-filter の値。全アプリ・ライト/ダーク共通で
+ *                        blur(12px) saturate(1.5)。反転ガラスの一括操作ピル
+ *                        （.sb-bulk-bar）もこれを参照する
  *   --sb-glass-bg        ガラスの面色（ライト rgba(255,255,255,.85) / ダーク rgba(…,.72)）
  *   --sb-glass-bg-opaque prefers-reduced-transparency: reduce のときの不透明な面色
  *   --sb-glass-border    ガラスの縁 1px の色

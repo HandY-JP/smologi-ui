@@ -61,13 +61,15 @@
 
 /* ===== 共通のガラス面（2026-09-23 ユーザー決定） =====
    基準は納品プラン作成の下部ガラスピル（旧 .amazon-inbound-new-glass）。
-   系列アプリの浮遊カプセル・検索ピル・一括操作ピル・道具バーカプセル・追従ピルは
+   系列アプリの浮遊カプセル・検索ピル・道具バーカプセル・追従ピル（日付帯・列見出し帯）は
    すべてこの 1 レシピに寄せる。色温度だけ tokens/*.css の --sb-glass-* で切り替える
    （Seller/Research＝暖色、Logistic/ポータル＝寒色）。
+   例外は一括操作ピル（.sb-bulk-bar）で、あちらは smologi #574/#598 の決定どおり
+   ライト・ダークとも「暗い反転ガラス」のまま。共有するのは blur（--sb-glass-blur）だけ。
 
    最終値（ライト・Seller）:
      background        rgba(255, 255, 255, 0.85)
-     backdrop-filter   blur(12px) saturate(1.5)
+     backdrop-filter   var(--sb-glass-blur) = blur(12px) saturate(1.5)（全アプリ共通）
      border            1px rgba(60, 40, 20, 0.12)        ← Logistic は rgba(15, 23, 42, 0.10)
      box-shadow        inset 0 1px 0 rgba(255, 255, 255, 0.65),
                        inset 0 -1px 0 rgba(60, 40, 20, 0.06),
@@ -86,8 +88,8 @@
 .sb-glass-surface-ringed {
   background: var(--sb-glass-bg, rgba(255, 255, 255, 0.85));
   border-color: var(--sb-glass-border, rgba(15, 23, 42, 0.10));
-  -webkit-backdrop-filter: blur(12px) saturate(1.5);
-  backdrop-filter: blur(12px) saturate(1.5);
+  -webkit-backdrop-filter: var(--sb-glass-blur, blur(12px) saturate(1.5));
+  backdrop-filter: var(--sb-glass-blur, blur(12px) saturate(1.5));
 }
 .sb-glass-surface { box-shadow: var(--sb-glass-shadow); }
 .sb-glass-surface-ringed {
@@ -112,8 +114,8 @@
 .app-sticky-glass {
   background: var(--sb-glass-bg, rgba(255, 255, 255, 0.85));
   border-color: var(--sb-glass-border, rgba(15, 23, 42, 0.10));
-  -webkit-backdrop-filter: blur(12px) saturate(1.5);
-  backdrop-filter: blur(12px) saturate(1.5);
+  -webkit-backdrop-filter: var(--sb-glass-blur, blur(12px) saturate(1.5));
+  backdrop-filter: var(--sb-glass-blur, blur(12px) saturate(1.5));
   box-shadow: var(--sb-glass-shadow);
 }
 .app-sticky-glass[data-tone='amber'] {
@@ -153,8 +155,8 @@ html.theme-dark .app-sticky-glass[data-tone='amber'] {
   isolation: isolate;
   border-radius: 999px;
   background: var(--sb-glass-bg, rgba(255, 255, 255, 0.85));
-  -webkit-backdrop-filter: blur(12px) saturate(1.5);
-  backdrop-filter: blur(12px) saturate(1.5);
+  -webkit-backdrop-filter: var(--sb-glass-blur, blur(12px) saturate(1.5));
+  backdrop-filter: var(--sb-glass-blur, blur(12px) saturate(1.5));
   box-shadow: var(--sb-glass-shadow), 0 0 0 1px var(--sb-glass-border, rgba(15, 23, 42, 0.10));
 }
 @media (prefers-reduced-transparency: reduce) {
@@ -369,8 +371,8 @@ html.theme-dark .sb-group-chip-more { color: #93c5fd; background: rgba(59, 130, 
 .sb-glass {
   position: relative; display: inline-flex; align-items: center; height: 40px; border-radius: 999px;
   background: var(--sb-glass-bg, rgba(255, 255, 255, 0.85));
-  -webkit-backdrop-filter: blur(12px) saturate(1.5);
-  backdrop-filter: blur(12px) saturate(1.5);
+  -webkit-backdrop-filter: var(--sb-glass-blur, blur(12px) saturate(1.5));
+  backdrop-filter: var(--sb-glass-blur, blur(12px) saturate(1.5));
   box-shadow: var(--sb-glass-shadow), 0 0 0 1px var(--sb-glass-border, rgba(15, 23, 42, 0.10));
 }
 @media (prefers-reduced-transparency: reduce) {
@@ -523,50 +525,47 @@ html.theme-dark .sb-glass-chips .sb-group-chip, html.theme-dark .sb-glass-chips 
 html.theme-dark .sb-glass-chevron { color: #64748b; }
 
 /* ===== 画面下中央・一括操作ピル（入荷「選択時の一括操作バー」／出荷 依頼中・作業中の選択ピル） =====
-   2026-09-23 ユーザー決定でガラスの質感を系列共通レシピ（.sb-glass-surface-ringed）へ統一。
-   これ以前は「反転ガラス（ライト＝濃紺＋白文字 / ダーク＝白＋濃い文字）」だったが、
-   上段の浮遊カプセル・検索ピル・道具バーと同じ面へ揃える方針に変わったため、
-   ライト＝白ガラス＋濃い文字 / ダーク＝暗ガラス＋明るい文字（他のガラスと同じ向き）にする。
-   落ち影だけは「画面下端に浮く大きめのピル」用に従来の強さ（0 18px 44px -16px）を残す。 */
+   決定（2026-09-14 / smologi #574、2026-09-23 に #598 で再確認）: **反転ガラス**。
+   上段の浮遊カプセル（.sb-glass）と違い、**ライトでもダークでも暗い面＋白系の文字**にする。
+   選択中だけ現れる一時的なバーなので、地の一覧から浮いて見えることが要件。
+   ここはテーマで反転させない（--sb-glass-bg を参照しない）のが意図的な例外。
+   共有するのは blur（--sb-glass-blur）だけで、他のガラスと質感だけ揃える。
+
+   最終値（ライト・ダーク共通）:
+     background        rgba(23, 26, 33, 0.72)
+     backdrop-filter   var(--sb-glass-blur) = blur(12px) saturate(1.5)
+     縁                1px rgba(255, 255, 255, 0.08)（box-shadow のリングで描く）
+     box-shadow        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+                       0 8px 24px rgba(0, 0, 0, 0.40)
+     color             #f8fafc
+   prefers-reduced-transparency: reduce では不透明 #171a21。 */
 .sb-bulk-bar {
-  background: var(--sb-glass-bg, rgba(255, 255, 255, 0.85));
-  color: var(--sb-text, #0f172a);
-  -webkit-backdrop-filter: blur(12px) saturate(1.5);
-  backdrop-filter: blur(12px) saturate(1.5);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.65),
-    0 0 0 1px var(--sb-glass-border, rgba(15, 23, 42, 0.10)),
-    0 18px 44px -16px rgba(0, 0, 0, 0.35);
-}
-html.theme-dark .sb-bulk-bar {
-  color: var(--sb-heading, #f1f5f9);
+  background: rgba(23, 26, 33, 0.72);
+  color: #f8fafc;
+  -webkit-backdrop-filter: var(--sb-glass-blur, blur(12px) saturate(1.5));
+  backdrop-filter: var(--sb-glass-blur, blur(12px) saturate(1.5));
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 0 0 1px var(--sb-glass-border, rgba(255, 255, 255, 0.08)),
-    0 18px 44px -16px rgba(0, 0, 0, 0.6);
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 8px 24px rgba(0, 0, 0, 0.40);
 }
 @media (prefers-reduced-transparency: reduce) {
   .sb-bulk-bar {
     -webkit-backdrop-filter: none; backdrop-filter: none;
-    background: var(--sb-glass-bg-opaque, #fff);
+    background: #171a21;
   }
 }
 .sb-bulk-btn {
   white-space: nowrap; border-radius: 999px; padding: 0.375rem 1rem; font-size: 0.875rem; font-weight: 600;
-  background: rgba(15, 23, 42, 0.07); color: inherit; transition: background-color 120ms ease;
+  background: rgba(255, 255, 255, 0.14); color: #fff; transition: background-color 120ms ease;
 }
-.sb-bulk-btn:hover:not(:disabled) { background: rgba(15, 23, 42, 0.14); }
+.sb-bulk-btn:hover:not(:disabled) { background: rgba(255, 255, 255, 0.24); }
 .sb-bulk-btn:disabled { cursor: not-allowed; opacity: 0.5; }
-html.theme-dark .sb-bulk-btn { background: rgba(255, 255, 255, 0.10); }
-html.theme-dark .sb-bulk-btn:hover:not(:disabled) { background: rgba(255, 255, 255, 0.18); }
-.sb-bulk-btn.danger { background: rgba(225, 29, 72, 0.12); color: #be123c; }
-.sb-bulk-btn.danger:hover:not(:disabled) { background: rgba(225, 29, 72, 0.20); }
-html.theme-dark .sb-bulk-btn.danger { background: rgba(244, 63, 94, 0.22); color: #fda4af; }
-html.theme-dark .sb-bulk-btn.danger:hover:not(:disabled) { background: rgba(244, 63, 94, 0.32); }
-.sb-bulk-hint { white-space: nowrap; font-size: 0.75rem; color: var(--sb-label, #64748b); }
-.sb-bulk-clear { white-space: nowrap; font-size: 0.875rem; color: var(--sb-label, #64748b); transition: color 120ms ease; }
-.sb-bulk-clear:hover { color: var(--sb-heading, #0f172a); }
-html.theme-dark .sb-bulk-clear:hover { color: #f1f5f9; }
+.sb-bulk-btn.danger { background: rgba(244, 63, 94, 0.26); color: #fecdd3; }
+.sb-bulk-btn.danger:hover:not(:disabled) { background: rgba(244, 63, 94, 0.40); }
+.sb-bulk-hint { white-space: nowrap; font-size: 0.75rem; color: rgba(255, 255, 255, 0.7); }
+.sb-bulk-clear { white-space: nowrap; font-size: 0.875rem; color: rgba(255, 255, 255, 0.7); transition: color 120ms ease; }
+.sb-bulk-clear:hover { color: #fff; }
 
 /* 一括操作ピルの置き場（BulkActionPill）。position:fixed は viewport 基準なので、
    そのまま left:50% で中央寄せするとサイドバーの上に乗ってしまう（浮遊ガラス
@@ -596,11 +595,9 @@ html.theme-dark .sb-bulk-clear:hover { color: #f1f5f9; }
   padding-left: 0.5rem; padding-right: 0.625rem; margin-left: 1px;
 }
 /* 選択の中身（CSV未出力 3 など）。残っている作業は少し強く出す。 */
-.sb-bulk-stat { color: var(--sb-label, #64748b); font-size: 0.8125rem; }
-.sb-bulk-stat.warn { color: #b45309; font-weight: 600; }
-.sb-bulk-stat-sep { color: rgba(15, 23, 42, 0.28); }
-html.theme-dark .sb-bulk-stat.warn { color: #fde68a; }
-html.theme-dark .sb-bulk-stat-sep { color: rgba(255, 255, 255, 0.3); }
+.sb-bulk-stat { color: rgba(255, 255, 255, 0.72); font-size: 0.8125rem; }
+.sb-bulk-stat.warn { color: #fde68a; font-weight: 600; }
+.sb-bulk-stat-sep { color: rgba(255, 255, 255, 0.35); }
 
 /* 本番崩れ修正（2026-09-14・Opus 実物レビュー）: #app-main-content の pt-8（32px）は
    全 admin ページ共通（layout.tsx）。トップバー第2行（ADMIN_TOPBAR_PAGE_ROW_SLOT_ID）を
@@ -688,8 +685,8 @@ html.theme-dark .sb-sticky-row.is-stuck .sb-sticky-cell { background: transparen
   padding: 0 8px;
   border-radius: 999px;
   background: var(--sb-glass-bg, rgba(255, 255, 255, 0.85));
-  -webkit-backdrop-filter: blur(12px) saturate(1.5);
-  backdrop-filter: blur(12px) saturate(1.5);
+  -webkit-backdrop-filter: var(--sb-glass-blur, blur(12px) saturate(1.5));
+  backdrop-filter: var(--sb-glass-blur, blur(12px) saturate(1.5));
   box-shadow: var(--sb-glass-shadow), 0 0 0 1px var(--sb-glass-border, rgba(15, 23, 42, 0.10));
 }
 .sb-sticky-inner.sb-sticky-inner-fixed::before {
@@ -719,8 +716,8 @@ html.theme-dark .sb-colhead { border-bottom-color: rgba(255, 255, 255, 0.06); }
   border-bottom-color: transparent;
   border-radius: 999px;
   background: var(--sb-glass-bg, rgba(255, 255, 255, 0.85));
-  -webkit-backdrop-filter: blur(12px) saturate(1.5);
-  backdrop-filter: blur(12px) saturate(1.5);
+  -webkit-backdrop-filter: var(--sb-glass-blur, blur(12px) saturate(1.5));
+  backdrop-filter: var(--sb-glass-blur, blur(12px) saturate(1.5));
   box-shadow: var(--sb-glass-shadow), 0 0 0 1px var(--sb-glass-border, rgba(15, 23, 42, 0.10));
 }
 .sb-colhead.is-stuck::before {
