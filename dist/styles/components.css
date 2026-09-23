@@ -67,10 +67,10 @@
    例外は一括操作ピル（.sb-bulk-bar）で、あちらは smologi #574/#598 の決定どおり
    ライト・ダークとも「暗い反転ガラス」のまま。共有するのは blur（--sb-glass-blur）だけ。
 
-   最終値（ライト・Seller）:
-     background        rgba(255, 255, 255, 0.85)
+   最終値（ライト・Seller。v0.1.5 で「面を塗らない」上質ピルに変更＝ユーザー決定）:
+     background        rgba(255, 255, 255, 0)  ← 塗らない。blur と内側ハイライトだけ
      backdrop-filter   var(--sb-glass-blur) = blur(12px) saturate(1.5)（全アプリ共通）
-     border            1px rgba(60, 40, 20, 0.12)        ← Logistic は rgba(15, 23, 42, 0.10)
+     border            transparent（全アプリ。縁は inset ハイライトが担う）
      box-shadow        inset 0 1px 0 rgba(255, 255, 255, 0.65),
                        inset 0 -1px 0 rgba(60, 40, 20, 0.06),
                        0 8px 24px rgba(60, 40, 20, 0.12)  ← Logistic は影も寒色
@@ -100,6 +100,17 @@
   .sb-glass-surface-ringed {
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
+    background: var(--sb-glass-bg-opaque, #fff);
+  }
+}
+/* backdrop-filter が使えない環境では透明のままだと中身が透けて読めないので、不透明面に戻す。 */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .sb-glass-surface,
+  .sb-glass-surface-ringed,
+  .app-sticky-glass,
+  .sb-glass,
+  .sb-sticky-inner.sb-sticky-inner-fixed,
+  .sb-colhead.is-stuck {
     background: var(--sb-glass-bg-opaque, #fff);
   }
 }

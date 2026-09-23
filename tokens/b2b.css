@@ -27,12 +27,13 @@
   --accent-light: #eff6ff;
   --accent-on: #ffffff;
   --page-bg: #f3f5fa;
-  /* ガラス（2026-09-23 ユーザー決定: 納品プラン作成の下部ガラスピル基準に統一）。
+  /* ガラス（2026-09-23 ユーザー決定: 納品プラン作成の下部ガラスピル基準に統一。
+     v0.1.5: ライトは面を塗らない「透明＋blur＋内側ハイライト＋落ち影」の上質レシピ。縁も持たない）。
      blur/saturate は部品側（.sb-glass-surface）が持つ固定値。B2B は寒色。 */
   --sb-glass-blur: blur(12px) saturate(1.5);
-  --sb-glass-bg: rgba(255, 255, 255, 0.85);
+  --sb-glass-bg: rgba(255, 255, 255, 0);
   --sb-glass-bg-opaque: #ffffff;
-  --sb-glass-border: rgba(15, 23, 42, 0.10);
+  --sb-glass-border: transparent;
   --sb-glass-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.65),
     inset 0 -1px 0 rgba(15, 23, 42, 0.06),
