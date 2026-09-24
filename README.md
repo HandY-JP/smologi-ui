@@ -348,6 +348,19 @@ import { Modal, LargeModal, ConfirmDialog } from '@handy-jp/smologi-ui';
 
 ---
 
+## ★ 変更時の約束（2026-09〜）
+
+- ここは色の唯一の出所。消費アプリ（smologi / amazon-app / B2B / ポータル）側の globals.css に
+  `html.theme-dark .xxx{}` のような個別ダーク上書きを増やさない運用にしているので、ダーク色の不具合は
+  まずアプリ側ではなくここ（`tokens/<app>.css` の `--dc-*` 変数、または `dark-compat.css`）を疑う
+- 変数を増減・改名するときは `tokens/_contract.css`（このファイル冒頭のコメント）を必ず同期する。
+  部品はここに書かれた変数名しか参照しない
+- 新テーマ（新アプリ・新アクセント色）を追加するときは `tokens/` に 1 ファイル、
+  `:root` と `html.theme-dark` の 2 ブロックを持つプリセットを足すだけ（上の「トークン」節の表に追記）
+- `dist/` を作り直してからタグを打つこと（「リリース」節の手順どおり）。忘れると古いコードが配られる
+
+---
+
 ## 開発
 
 ```sh
