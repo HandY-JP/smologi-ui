@@ -39,3 +39,7 @@
  * その配色は任意の --dc-* 変数で差し替えられる（未定義なら Logistic の値。v0.1.9。
  * README「ダーク互換層の配色」、例は tokens/seller.css の末尾ブロック）。
  */
+
+/* v0.2.0: アプリ画面用の意味名パレット（canvas / surface / ink / line / accent / 状態 / cat-1〜8）は
+ * tokens/palette.css。部品はまだそれを参照しない（上の 18 変数のまま）。
+ * tokens/palette-compat.css を読むと、上の 13 変数（ガラス 5 以外）がパレットから引かれる。 */

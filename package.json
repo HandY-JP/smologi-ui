@@ -1,6 +1,6 @@
 {
   "name": "@handy-jp/smologi-ui",
-  "version": "0.1.9",
+  "version": "0.2.0",
   "description": "スモロジ系列アプリ（Logistic / Seller / ポータル / B2B）で共有する UI 部品とデザイントークン",
   "license": "UNLICENSED",
   "private": false,
@@ -34,11 +34,14 @@
     "./tokens/portal.css": "./tokens/portal.css",
     "./tokens/research.css": "./tokens/research.css",
     "./tokens/b2b.css": "./tokens/b2b.css",
+    "./tokens/palette.css": "./tokens/palette.css",
+    "./tokens/palette-compat.css": "./tokens/palette-compat.css",
     "./tokens/_contract.css": "./tokens/_contract.css",
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "node scripts/build.mjs",
+    "build": "node scripts/check-palette.mjs && node scripts/build.mjs",
+    "test": "node scripts/check-palette.mjs",
     "typecheck": "tsc -p tsconfig.build.json --noEmit"
   },
   "peerDependencies": {
