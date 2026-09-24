@@ -1,0 +1,83 @@
+/* @handy/smologi-ui — ダーク互換レイヤーのうち入力欄（input / textarea / select）の暗転。
+ * dark-compat-core.css から v0.1.9 で分けた。スモロジ本体は dark-compat.css（= この後に core を連結したもの）を
+ * 読むので従来どおり。入力欄を自前で暗転させているアプリ（Seller）は core だけを読み、これは読まない。
+ * 元は core の（3）と（5）の間にあった。ここの規則（要素＋属性で 0,1,2〜0,2,3）は、core の規則と
+ * 「同じ要素・同じプロパティ・同じ詳細度」で重ならない（core のユーティリティは 0,2,1 / 0,3,1 / 0,4,1）ので、
+ * 前へ出しても勝ち負けは変わらない。
+ * 下の「ピル・ガラスの中は透過」は（4）と同じ詳細度で後勝ちさせているので、必ずこのファイルの中で（4）より後に置くこと。 */
+
+/* --- (4) フォーム --- */
+html.theme-dark input:not([type]),
+html.theme-dark input[type="text"],
+html.theme-dark input[type="number"],
+html.theme-dark input[type="date"],
+html.theme-dark input[type="datetime-local"],
+html.theme-dark input[type="month"],
+html.theme-dark input[type="week"],
+html.theme-dark input[type="time"],
+html.theme-dark input[type="email"],
+html.theme-dark input[type="tel"],
+html.theme-dark input[type="url"],
+html.theme-dark input[type="search"],
+html.theme-dark input[type="password"],
+html.theme-dark textarea,
+html.theme-dark select {
+  background-color: var(--dc-field-bg, #0f172a);
+  color: var(--dc-field-text, #e2e8f0);
+  border-color: var(--dc-field-border, #334155);
+}
+/* 無効・読み取り専用は「触れない面」だと分かる程度に地と差を付ける。
+   （入力欄の指定より後に置くこと。同じ詳細度なので後勝ちで効かせている） */
+html.theme-dark input:disabled,
+html.theme-dark textarea:disabled,
+html.theme-dark select:disabled,
+html.theme-dark input[readonly],
+html.theme-dark textarea[readonly] {
+  background-color: var(--dc-field-disabled-bg, #16202f);
+  color: var(--dc-field-disabled-text, #8494ab);
+}
+/* ★ 部品が「面は親（カプセル・セル・ピル）が持つ」と宣言したフォーム部品は、ダークでも透過のまま。
+   上の一括指定は要素＋属性セレクタ（詳細度 0,2,2）で、Tailwind の `bg-transparent`（0,1,0）に
+   勝ってしまう。その結果、丸いカプセルや一覧セルに溶け込ませてあった入力欄・セレクトが
+   ダークだけ「中に四角い別色の箱」として浮いていた（検索ピルのお客様セレクタ／検索欄、
+   畳み時の浮遊ガラスの検索欄、ページャの表示件数セレクト、インライン編集セルなど）。
+   ライトと同じく「親の地を継ぐ」へ戻す。ここは（4）の指定より後に置くこと（同詳細度＝後勝ち）。 */
+html.theme-dark input.bg-transparent,
+html.theme-dark textarea.bg-transparent,
+html.theme-dark select.bg-transparent { background-color: transparent; }
+html.theme-dark input::placeholder,
+html.theme-dark textarea::placeholder,
+html.theme-dark .placeholder\:text-gray-400::placeholder,
+html.theme-dark .placeholder\:text-gray-500::placeholder { color: var(--dc-field-placeholder, #6c7c93); }
+/* チェックボックス・ラジオはブラウザが描く部品なので、CSS の背景色では塗り替えられない。
+   既定（color-scheme: light）のままだと未チェックの枡が真っ白で、暗い一覧・日付帯の上で
+   白い四角が点々と光る。部品自身に color-scheme: dark を与えて、ブラウザに暗い枡を
+   描かせる（チェック時の色は従来どおり accent-color）。ページ全体の color-scheme は
+   変えない＝日付ピッカーのアイコン反転（下）や select のポップアップは現状のまま。 */
+html.theme-dark input[type="checkbox"],
+html.theme-dark input[type="radio"] { color-scheme: dark; accent-color: var(--sb-accent-bg); }
+html.theme-dark input[type="range"],
+html.theme-dark progress { accent-color: var(--sb-accent-bg); }
+/* カレンダー／時刻ピッカーのアイコンは黒のままだと入力欄に沈む。 */
+html.theme-dark input[type="date"]::-webkit-calendar-picker-indicator,
+html.theme-dark input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+html.theme-dark input[type="month"]::-webkit-calendar-picker-indicator,
+html.theme-dark input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.85);
+}
+
+/* 検索ピル（SearchFilterBar / 商品マスタのトップバー検索ドック）の入力欄。
+   面はピル側（bg-gray-50・フォーカス時 bg-white）が持ち、入力欄自体は透過で重ねている。
+   ところが (4) の `input[type="search"]` 一括指定は Tailwind の `bg-transparent` より
+   詳細度が高く、丸いピルの中に四角い面（#0f172a）が乗ってしまう
+   （＝右端が丸く閉じず、継ぎ目のように見える／フォーカス時は面の色も食い違う）。
+   ピルの中だけ透過へ戻す。(4) より後に置くこと（同詳細度＝後勝ち）。 */
+html.theme-dark .themed-search-pill input,
+html.theme-dark .themed-search-pill select { background-color: transparent; }
+/* 同じ理由で、ガラスのカプセル（浮遊ドック・追従帯・画面下のページャ）の中に置いた
+   フォーム部品も透過のままにする（ページャの「50件」セレクトが、丸いガラスの中に
+   角丸の濃紺の箱として乗っていた）。 */
+html.theme-dark .sb-glass input,
+html.theme-dark .sb-glass select,
+html.theme-dark .app-sticky-glass input,
+html.theme-dark .app-sticky-glass select { background-color: transparent; }
