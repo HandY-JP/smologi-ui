@@ -1,7 +1,10 @@
 /* @handy/smologi-ui — ダーク互換レイヤー（html.theme-dark）。
  * 生の Tailwind ユーティリティ（bg-white / text-gray-900 / border-gray-200 …）を
  * ダーク時に塗り替える互換層。アプリが dark: バリアントで書き直していない限り必要。
- * 出自: smologi src/app/globals.css（main = 1b2259b2）L125-803。
+ * 出自: smologi src/app/globals.css（main = 1b2259b2）L125-803。v0.1.8 で main = cb4ef1bf の
+ * ダーク層（L181-860）と規則単位で突き合わせ、差分なしを確認。以後スモロジ本体はこのファイルを読み込み、
+ * 自前の複製を持たない（ダークの互換規則を足すときはここへ）。グラフ変数・ガラスの代替地など
+ * アプリ固有の html.theme-dark 変数は含めない。
  * 採否はアプリごとに選べるよう、styles.css とは別ファイルにしてある。*/
 
 /* ===== ダークテーマ — html.theme-dark で発火 =====

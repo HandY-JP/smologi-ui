@@ -1,4 +1,8 @@
-/* Logistic（スモロジ本体・青）。smologi の THEMES.light と同値。 */
+/* Logistic（スモロジ本体・青）。
+   :root は smologi の THEMES.light・globals.css の :root と同値、
+   html.theme-dark は smologi の THEMES.dark・globals.css のダーク値と同値（v0.1.8 でスモロジ本体に合わせた）。
+   スモロジ本体はこのファイルを globals.css より前に読み込み、同名の変数を globals.css に持たない。
+   ここを変えるときは smologi 側（lib/theme.ts・AppProviders の塗り前スクリプト）と一緒に動かすこと。 */
 :root {
   --sb-bg: #f6f7fb;
   --sb-border: #e7ebf0;
@@ -15,10 +19,11 @@
   --page-bg: #f6f7fb;
   /* ガラス（2026-09-23 ユーザー決定: 納品プラン作成の下部ガラスピル基準に統一。
      v0.1.5: ライトは面を塗らない「透明＋blur＋内側ハイライト＋落ち影」の上質レシピ。縁も持たない）。
-     blur/saturate は部品側（.sb-glass-surface）が持つ固定値。ここは寒色（Logistic）。 */
+     blur/saturate は部品側（.sb-glass-surface）が持つ固定値。ここは寒色（Logistic）。
+     --sb-glass-bg-opaque はぼかしが効かないときの代替の地（ライト＝白 85%。smologi 本体と同値）。 */
   --sb-glass-blur: blur(12px) saturate(1.5);
   --sb-glass-bg: rgba(255, 255, 255, 0);
-  --sb-glass-bg-opaque: #ffffff;
+  --sb-glass-bg-opaque: rgba(255, 255, 255, 0.85);
   --sb-glass-border: transparent;
   --sb-glass-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.65),
@@ -26,22 +31,23 @@
     0 8px 24px rgba(15, 23, 42, 0.12);
 }
 html.theme-dark {
-  --sb-bg: #0f172a;
-  --sb-border: #24334d;
+  --sb-bg: #020617;
+  --sb-border: #1e293b;
   --sb-hover: #1e293b;
-  --sb-text: #c2cddd;
-  --sb-label: #8b9bb0;
-  --sb-heading: #f1f5f9;
+  --sb-text: #cbd5e1;
+  --sb-label: #64748b;
+  --sb-heading: #ffffff;
   --sb-accent-bg: #3b82f6;
   --accent-hover: #2563eb;
-  --accent-ring: rgba(59, 130, 246, 0.22);
-  --accent-subtle: #10233c;
-  --accent-light: #10233c;
+  --accent-ring: rgba(59, 130, 246, 0.15);
+  --accent-subtle: #1e3a8a;
+  --accent-light: #1e3a8a;
   --accent-on: #ffffff;
-  --page-bg: #0f1115;
-  --sb-glass-bg: rgba(15, 23, 42, 0.72);
-  --sb-glass-bg-opaque: #0f172a;
-  --sb-glass-border: rgba(255, 255, 255, 0.08);
+  --page-bg: #0f172a;
+  /* ダークは暗い地で塗り無しだと本文が透けて読めないので 72% の暗色を敷く（ぼかしは同じ）。 */
+  --sb-glass-bg: rgba(23, 26, 33, 0.72);
+  --sb-glass-bg-opaque: #171a21;
+  --sb-glass-border: rgba(255, 255, 255, 0.10);
   --sb-glass-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.08),
     0 8px 24px rgba(0, 0, 0, 0.40);

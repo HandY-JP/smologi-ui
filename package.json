@@ -1,6 +1,6 @@
 {
   "name": "@handy-jp/smologi-ui",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "スモロジ系列アプリ（Logistic / Seller / ポータル / B2B）で共有する UI 部品とデザイントークン",
   "license": "UNLICENSED",
   "private": false,
