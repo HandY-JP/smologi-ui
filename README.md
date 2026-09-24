@@ -61,7 +61,7 @@ content: [
 
 @import '@handy-jp/smologi-ui/tokens/seller.css';   /* logistic | seller | portal | research */
 @import '@handy-jp/smologi-ui/styles.css';          /* 部品が要るカスタム CSS */
-@import '@handy-jp/smologi-ui/dark-compat.css';     /* html.theme-dark の互換層（任意） */
+@import '@handy-jp/smologi-ui/dark-compat.css';     /* html.theme-dark の互換層（任意。入力欄を自前で持つなら dark-compat-core.css） */
 ```
 
 `styles.css` と `dark-compat.css` は `@tailwind utilities` の**あと**に置くこと
@@ -135,6 +135,21 @@ git push origin v0.1.1
 > また smologi-b2b は `dark-compat.css` を**読み込まない**。B2B は gray を反転ランプへ
 > 差し替える方式なので、生の gray ユーティリティを暗転させる互換層を重ねると二重反転になる
 > （代わりに、部品が使う素の `bg-white` だけを b2b の globals.css が売り手スコープで受ける）。
+
+### ダーク互換層の配色（`--dc-*`、v0.1.9）
+
+`dark-compat.css`（= `dark-compat-fields.css` 入力欄 → `dark-compat-core.css` ユーティリティ・自前クラス の連結）の色は、
+すべて `var(--dc-<slot>, <Logistic の値>)`。slot 名は「ダーク時にそのユーティリティを何色へ塗り替えるか」
+（`--dc-bg-gray-50` / `--dc-border-blue-200` / `--dc-text-red-700` / `--dc-hover-bg-gray-50` / `--dc-popover-bg` …。
+一覧は `dark-compat-core.css` の中の `var(--dc-` を検索）。変数を定義しなければ Logistic の配色のまま。
+
+**新しいテーマ（配色）を足す手順** — 変数ブロックを 1 つ足すだけ:
+
+1. `src/tokens/<app>.css` に `html.theme-dark { --dc-bg-white: …; --dc-text-gray-700: …; … }` を 1 ブロック足す（変えたい slot だけでよい）。
+2. アプリは `tokens/<app>.css` と `dark-compat.css`（入力欄も自前ならば `dark-compat-core.css`）を読み込む。
+3. 規則（セレクタ）はパッケージ側で共通。暗転させたくないユーティリティは slot にライトと同じ値を入れる（例: `tokens/seller.css` の「未暗転」）。
+4. 例: `tokens/seller.css` の末尾ブロック（Seller の現行ダーク配色。amazon-app はこれで自前のダーク層 179 セレクタを削除した）。
+5. アプリ固有の暗転（任意値クラス・画面固有クラス）は従来どおりアプリの globals.css に置く（パッケージより後に読むので同じ詳細度なら勝つ）。
 
 ---
 
@@ -336,7 +351,7 @@ import { Modal, LargeModal, ConfirmDialog } from '@handy-jp/smologi-ui';
 | `components/WorkspaceSwitch.tsx` | `src/components/layout/WorkspaceSwitch.tsx` | **props 化**: `WorkspaceKind` 型を `lib/workspace` から取る（遷移は従来どおり `onSwitch` prop） |
 | `components/EmptyState.tsx` | （smologi では削除済み） | smologi は参照ゼロになったため 2026-09 に削除した。amazon-app には現役の複製（53 行）があるので、載せ替え先として同梱している |
 | `styles/components.css` | `src/app/globals.css` L806-816 / L986-996 / L1037-1090 / L1608-2268 | 抜き出しのみ（各ブロックの先頭行がアンカー） |
-| `styles/dark-compat.css` | `src/app/globals.css` L125-803 | 抜き出しのみ |
+| `styles/dark-compat-core.css` + `styles/dark-compat-fields.css`（→ `dist/styles/dark-compat.css` に連結） | `src/app/globals.css` L125-803 | 抜き出し＋色を `var(--dc-*, 元の値)` 化（v0.1.9）。入力欄の（4）を fields へ分離 |
 | `lib/topbar-slots.ts` / `lib/workspace.ts` | （パッケージ専用） | 上の props 化の受け皿 |
 
 ### まだ入れていない（0.2.0 の候補）

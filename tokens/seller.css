@@ -49,3 +49,154 @@ html.theme-dark {
     inset 0 1px 0 rgba(255, 255, 255, 0.08),
     0 8px 24px rgba(0, 0, 0, 0.40);
 }
+/* ダーク互換層（dark-compat-core.css）の配色 = Seller の現行ダーク（amazon-app の旧 globals.css から抽出。v0.1.9）。
+   名前は「ダーク時にそのユーティリティを何色へ塗り替えるか」（--dc-bg-gray-50 = bg-gray-50 の面）。
+   ここに無い slot は dark-compat の既定値（＝Logistic の値）になる。
+   「未暗転」はライトと同じ値＝Seller が現状ダークで塗り替えていない階調。見た目を変えないためにそのままにしてある
+   （暗転させるときは値を差し替えるだけでよい）。
+   Seller は入力欄の暗転（dark-compat-fields.css）を読み込まない。amazon-app の globals.css に自前の指定がある。 */
+html.theme-dark {
+  --dc-body-text: #e4e4e7;
+  --dc-bg-white: #171a21;
+  --dc-bg-gray-50: #11141a;
+  --dc-bg-gray-100: #252a33;
+  --dc-bg-gray-200: #303640;
+  --dc-bg-gray-300: #3a414d;
+  --dc-bg-gray-400: #9ca3af; /* 未暗転 */
+  --dc-bg-gray-800: #343b47;
+  --dc-hover-bg-gray-50: #252a33;
+  --dc-focus-bg-gray-50: #f9fafb; /* 未暗転 */
+  --dc-hover-bg-gray-100: #252a33;
+  --dc-hover-bg-gray-200: #e5e7eb; /* 未暗転 */
+  --dc-hover-bg-gray-800: #3f4756;
+  --dc-border-gray-100: #272c35;
+  --dc-border-gray-200: #2f3540;
+  --dc-border-gray-300: #3a414d;
+  --dc-border-gray-400: #9ca3af; /* 未暗転 */
+  --dc-ring-black-5: rgba(0, 0, 0, 0.05); /* 未暗転 */
+  --dc-ring-white: #ffffff; /* 未暗転 */
+  --dc-text-gray-900: #fafafa;
+  --dc-text-gray-800: #f4f4f5;
+  --dc-text-gray-700: #e4e4e7;
+  --dc-text-gray-600: #c4c7cf;
+  --dc-text-gray-500: #b8bbc3;
+  --dc-text-gray-400: #9ca3af;
+  --dc-text-gray-300: #858b96;
+  --dc-table-border: #2f3540;
+  --dc-search-box-border: #3a414d;
+  --dc-popover-bg: #171a21; /* 持ち上げない（bg-white 等と同じ） */
+  --dc-popover-border: #2f3540; /* 持ち上げない（bg-white 等と同じ） */
+  --dc-popover-divider: #272c35; /* 持ち上げない（bg-white 等と同じ） */
+  --dc-popover-control-border: #3a414d; /* 持ち上げない（bg-white 等と同じ） */
+  --dc-popover-hover-bg: #252a33; /* 持ち上げない（bg-white 等と同じ） */
+  --dc-bg-blue-50: #14283e;
+  --dc-bg-blue-100: #1b3551;
+  --dc-bg-blue-200: #bfdbfe; /* 未暗転 */
+  --dc-border-blue-100: #315f89;
+  --dc-border-blue-200: #315f89;
+  --dc-border-blue-300: #315f89;
+  --dc-text-blue-600: #93c5fd;
+  --dc-text-blue-700: #93c5fd;
+  --dc-text-blue-800: #93c5fd;
+  --dc-text-blue-900: #93c5fd;
+  --dc-bg-sky-50: #14283e;
+  --dc-bg-sky-100: #e0f2fe; /* 未暗転 */
+  --dc-border-sky-100: #315f89;
+  --dc-border-sky-200: #bae6fd; /* 未暗転 */
+  --dc-text-sky-600: #0284c7; /* 未暗転 */
+  --dc-text-sky-700: #93c5fd;
+  --dc-text-sky-800: #93c5fd;
+  --dc-text-sky-900: #0c4a6e; /* 未暗転 */
+  --dc-bg-cyan-50: #ecfeff; /* 未暗転 */
+  --dc-text-cyan-700: #0e7490; /* 未暗転 */
+  --dc-bg-teal-100: #ccfbf1; /* 未暗転 */
+  --dc-border-teal-200: #99f6e4; /* 未暗転 */
+  --dc-text-teal-700: #0f766e; /* 未暗転 */
+  --dc-bg-emerald-50: #102a22;
+  --dc-bg-emerald-100: #17382d;
+  --dc-bg-emerald-200: #1f4a3b;
+  --dc-border-emerald-100: #28654f;
+  --dc-border-emerald-200: #28654f;
+  --dc-border-emerald-300: #28654f;
+  --dc-text-emerald-600: #6ee7b7;
+  --dc-text-emerald-700: #6ee7b7;
+  --dc-text-emerald-800: #6ee7b7;
+  --dc-text-emerald-900: #6ee7b7;
+  --dc-bg-green-100: #dcfce7; /* 未暗転 */
+  --dc-border-green-200: #bbf7d0; /* 未暗転 */
+  --dc-text-green-700: #15803d; /* 未暗転 */
+  --dc-bg-yellow-100: #fef9c3; /* 未暗転 */
+  --dc-border-yellow-200: #fef08a; /* 未暗転 */
+  --dc-text-yellow-700: #a16207; /* 未暗転 */
+  --dc-bg-amber-50: #30240e;
+  --dc-bg-amber-100: #403015;
+  --dc-bg-amber-200: #fde68a; /* 未暗転 */
+  --dc-border-amber-100: #79591e;
+  --dc-border-amber-200: #79591e;
+  --dc-border-amber-300: #79591e;
+  --dc-border-amber-400: #fbbf24; /* 未暗転 */
+  --dc-text-amber-600: #fcd34d;
+  --dc-text-amber-700: #fcd34d;
+  --dc-text-amber-800: #fcd34d;
+  --dc-text-amber-900: #fcd34d;
+  --dc-bg-orange-50: #3b1d0d;
+  --dc-bg-orange-100: #4a240f;
+  --dc-bg-orange-200: #5c2d12;
+  --dc-border-orange-100: #9a4517;
+  --dc-border-orange-200: #9a4517;
+  --dc-border-orange-300: #9a4517;
+  --dc-text-orange-600: #fb923c;
+  --dc-text-orange-700: #fb923c;
+  --dc-text-orange-800: #fb923c;
+  --dc-text-orange-900: #fb923c;
+  --dc-bg-red-50: #351820;
+  --dc-bg-red-100: #46202a;
+  --dc-border-red-100: #7c3547;
+  --dc-border-red-200: #7c3547;
+  --dc-border-red-300: #7c3547;
+  --dc-text-red-600: #fda4af;
+  --dc-text-red-700: #fda4af;
+  --dc-text-red-800: #fda4af;
+  --dc-text-red-900: #fda4af;
+  --dc-bg-rose-50: #351820;
+  --dc-bg-rose-100: #46202a;
+  --dc-border-rose-100: #7c3547;
+  --dc-border-rose-200: #7c3547;
+  --dc-border-rose-300: #7c3547;
+  --dc-text-rose-600: #fda4af;
+  --dc-text-rose-700: #fda4af;
+  --dc-text-rose-800: #fda4af;
+  --dc-text-rose-900: #fda4af;
+  --dc-bg-pink-100: #fce7f3; /* 未暗転 */
+  --dc-border-pink-200: #fbcfe8; /* 未暗転 */
+  --dc-text-pink-700: #be185d; /* 未暗転 */
+  --dc-bg-purple-50: #2b1b3d;
+  --dc-bg-purple-100: #38244d;
+  --dc-border-purple-100: #674287;
+  --dc-border-purple-200: #674287;
+  --dc-border-purple-300: #674287;
+  --dc-text-purple-600: #9333ea; /* 未暗転 */
+  --dc-text-purple-700: #d8b4fe;
+  --dc-text-purple-800: #d8b4fe;
+  --dc-text-purple-900: #d8b4fe;
+  --dc-bg-violet-50: #2b1b3d;
+  --dc-border-violet-100: #674287;
+  --dc-border-violet-200: #674287;
+  --dc-text-violet-700: #d8b4fe;
+  --dc-bg-indigo-50: #202342;
+  --dc-bg-indigo-100: #2b3054;
+  --dc-border-indigo-100: #4b5287;
+  --dc-border-indigo-200: #4b5287;
+  --dc-border-indigo-300: #a5b4fc; /* 未暗転 */
+  --dc-text-indigo-600: #c7d2fe;
+  --dc-text-indigo-700: #c7d2fe;
+  --dc-text-indigo-800: #c7d2fe;
+  --dc-text-indigo-900: #c7d2fe;
+  --dc-bg-slate-300: #2f3540;
+  --dc-bg-slate-400: #94a3b8; /* 未暗転 */
+  --dc-border-gray-50: #f1f5f9; /* 未暗転 */
+  --dc-hover-text-slate-950: #fafafa;
+  --dc-checklist-border: #9ca3af; /* 未暗転 */
+  --dc-checklist-bg: #ffffff; /* 未暗転 */
+  --dc-checklist-checked: #10b981; /* 未暗転 */
+}

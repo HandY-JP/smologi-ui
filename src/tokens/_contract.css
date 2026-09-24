@@ -36,4 +36,6 @@
  *
  * 部品側のグレー・罫線はテーマ非依存（Tailwind の gray / 白黒の alpha）で
  * 書いてあり、ダーク時は styles/dark-compat.css が受ける。
+ * その配色は任意の --dc-* 変数で差し替えられる（未定義なら Logistic の値。v0.1.9。
+ * README「ダーク互換層の配色」、例は tokens/seller.css の末尾ブロック）。
  */

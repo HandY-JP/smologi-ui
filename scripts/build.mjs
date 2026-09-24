@@ -164,6 +164,16 @@ async function main() {
   // CSS は変換しない。styles は dist/ の下、tokens は公開パス（package.json の exports）に合わせて
   // リポジトリ直下へ置く。
   await cp(path.join(ROOT, 'src', 'styles'), path.join(ROOT, 'dist', 'styles'), { recursive: true });
+  // dark-compat.css = fields → core の連結（v0.1.9 で分割。スモロジ本体は従来どおりこの 1 本を読む）。
+  // @import で繋がずに連結するのは、読み込む側のバンドラ（webpack / turbopack）の @import 解決に依存しないため。
+  {
+    const fields = await readFile(path.join(ROOT, 'src', 'styles', 'dark-compat-fields.css'), 'utf8');
+    const core = await readFile(path.join(ROOT, 'src', 'styles', 'dark-compat-core.css'), 'utf8');
+    await writeFile(
+      path.join(ROOT, 'dist', 'styles', 'dark-compat.css'),
+      `/* 生成物（scripts/build.mjs）: dark-compat-fields.css → dark-compat-core.css の連結。直接編集しないこと。 */\n${fields}\n${core}`,
+    );
+  }
   await cp(path.join(ROOT, 'src', 'tokens'), path.join(ROOT, 'tokens'), { recursive: true });
   console.log('[build] css  : dist/styles, tokens');
 
