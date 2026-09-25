@@ -41,6 +41,8 @@ export * from './components/GroupSelectCheckbox';
 export * from './components/BulkActionPill';
 export * from './components/ListFooter';
 export * from './components/Pagination';
+export * from './lib/column-header';
+export * from './components/ColumnHeaderMenu';
 
 // ---- 設定画面（区画・フォーム行・検索） ----
 export * from './lib/settings-search-store';

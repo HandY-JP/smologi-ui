@@ -25,6 +25,8 @@ export * from "./components/GroupSelectCheckbox.js";
 export * from "./components/BulkActionPill.js";
 export * from "./components/ListFooter.js";
 export * from "./components/Pagination.js";
+export * from "./lib/column-header.js";
+export * from "./components/ColumnHeaderMenu.js";
 export * from "./lib/settings-search-store.js";
 export * from "./components/SettingsSection.js";
 export * from "./components/SettingsRow.js";

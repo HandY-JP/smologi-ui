@@ -152,6 +152,32 @@ git push origin v0.1.1
 4. 例: `tokens/seller.css` の末尾ブロック（Seller の現行ダーク配色。amazon-app はこれで自前のダーク層 179 セレクタを削除した）。
 5. アプリ固有の暗転（任意値クラス・画面固有クラス）は従来どおりアプリの globals.css に置く（パッケージより後に読むので同じ詳細度なら勝つ）。
 
+### 列見出しの ⋮ メニュー（`ColumnHeaderCell`、v0.3.0）
+
+一覧の `<th>` の中に置く。見出しの文字クリック＝並び替えトグル（1回目→逆順→解除）、右端の ⋮ で
+並び替え・絞り込み・表示切替・左右移動・列を隠す・表示設定… のポップオーバー。状態は持たない
+（値は画面の既存 state をそのまま渡す＝上部の絞り込みメニュー・保存ビュー・チップと同じ 1 か所）。
+
+```tsx
+import { ColumnHeaderCell, singleEnumValue, singleEnumFromValues } from '@handy-jp/smologi-ui';
+
+<th><ColumnHeaderCell
+  label="売価" labelText="売価" align="right"
+  sort={{ dir, labels: { asc: '安い順', desc: '高い順' }, firstDir: 'desc', onSort, onClear }}
+  filters={[{ kind: 'numberRange', min: priceMin, max: priceMax, unit: '¥', onChange: ({ min, max }) => … }]}
+  move={{ onMoveLeft, onMoveRight }}
+  onHide={() => hide('price')}
+/></th>
+```
+
+- 絞り込みの種類: `text`（含む）/ `numberRange` / `enum`（`multiple: false` で単一）/ `boolean`（`falseLabel` 省略で「すべて / はい」）/ `dateRange`。
+  入力系は下書きを持ち Enter か「適用」で確定、選択系はその場で反映。
+- 画面で計算する値など並び替えできない列は `sort` を渡さず `sortUnavailableReason` を渡す（メニューに理由を出す）。
+- 片方の向きしか無い並びは `sort.available: ['desc']`。
+- 写像のテスト用に純関数を出している: `nextColumnSortDir` / `isColumnFilterActive` / `clearColumnFilter` /
+  `columnFilterSummary` / `normalizeColumnNumberInput` / `singleEnumValue` ほか。
+- smologi 本体の同名部品と props 互換（smologi は import 先を差し替えるだけで載せ替えられる）。
+
 ### 最小パレット（意味名トークン・複数テーマ、v0.2.0）
 
 `tokens/palette.css` は、アプリの画面（表・バッジ・入力欄）を生の Tailwind 色（gray/slate/blue-50…）ではなく
@@ -404,6 +430,7 @@ import { Modal, LargeModal, ConfirmDialog } from '@handy-jp/smologi-ui';
 | `components/SidebarNewDot.tsx` | `src/components/layout/SidebarNewDot.tsx` | なし |
 | `components/ThemeIcon.tsx` | `src/components/layout/ThemeIcon.tsx` | なし |
 | `components/AppSwitcherIcon.tsx` | `src/components/layout/AppSwitcherIcon.tsx` | なし |
+| `components/ColumnHeaderMenu.tsx` + `lib/column-header.ts` | `src/components/layout/ColumnHeaderMenu.tsx` | **拡張（v0.3.0）**: 既存 props は同名・同形のまま、`filters`（型付き 5 種）/ `sortUnavailableReason` / `sort.available` / `move` を追加。型と純関数は `lib/column-header.ts` へ分離 |
 | `components/TopbarSearchDock.tsx` | `src/components/customer/TopbarSearchDock.tsx` | **props 化**: スロット ID 2 つの直接 import をやめ、`configureTopbarDockSlots()` で登録した ID を順に探す（`slotId` prop での直接指定は従来どおり） |
 | `components/WorkspaceSwitch.tsx` | `src/components/layout/WorkspaceSwitch.tsx` | **props 化**: `WorkspaceKind` 型を `lib/workspace` から取る（遷移は従来どおり `onSwitch` prop） |
 | `components/EmptyState.tsx` | （smologi では削除済み） | smologi は参照ゼロになったため 2026-09 に削除した。amazon-app には現役の複製（53 行）があるので、載せ替え先として同梱している |

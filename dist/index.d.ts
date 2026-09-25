@@ -25,6 +25,8 @@ export * from './components/GroupSelectCheckbox';
 export * from './components/BulkActionPill';
 export * from './components/ListFooter';
 export * from './components/Pagination';
+export * from './lib/column-header';
+export * from './components/ColumnHeaderMenu';
 export * from './lib/settings-search-store';
 export * from './components/SettingsSection';
 export * from './components/SettingsRow';
