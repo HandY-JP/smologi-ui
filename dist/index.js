@@ -1,4 +1,5 @@
 export * from "./lib/theme.js";
+export * from "./lib/palette.js";
 export * from "./lib/flat-table.js";
 export * from "./lib/list-card.js";
 export * from "./lib/list-page-size.js";

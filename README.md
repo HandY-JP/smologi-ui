@@ -9,6 +9,7 @@
 
 - 中身は **純 UI だけ**。通知・ヘルプ・権限・セッション・お客様キャッシュに触るものは入れない。
 - 色は CSS 変数 13 個だけを参照する。アプリは `tokens/` のプリセットを 1 つ読み込む。
+- アプリ画面用の意味名パレット（22＋識別色 24、7 テーマ）は `tokens/palette.css`（→「最小パレット」節）。
 - React 19 / Next 16（App Router）前提。`react` / `react-dom` は peerDependencies。
 - 中身は smologi `main` の同名ファイルと**機能的に同一**（差分は import だけ。→ 末尾の対応表）。
 
@@ -150,6 +151,62 @@ git push origin v0.1.1
 3. 規則（セレクタ）はパッケージ側で共通。暗転させたくないユーティリティは slot にライトと同じ値を入れる（例: `tokens/seller.css` の「未暗転」）。
 4. 例: `tokens/seller.css` の末尾ブロック（Seller の現行ダーク配色。amazon-app はこれで自前のダーク層 179 セレクタを削除した）。
 5. アプリ固有の暗転（任意値クラス・画面固有クラス）は従来どおりアプリの globals.css に置く（パッケージより後に読むので同じ詳細度なら勝つ）。
+
+### 最小パレット（意味名トークン・複数テーマ、v0.2.0）
+
+`tokens/palette.css` は、アプリの画面（表・バッジ・入力欄）を生の Tailwind 色（gray/slate/blue-50…）ではなく
+**意味名**で塗るためのトークン。既存の 13 変数（部品用）とは別の層で、スモロジ本体・モバイルの色置き換えの土台。
+
+- 値は `r g b` の 3 値（`#hex` 禁止）。CSS では `rgb(var(--ink))`、`rgb(var(--accent) / .15)`。
+- 意味名 22: `canvas` / `surface` `surface-subtle` `surface-muted` / `ink` `ink-muted` `ink-faint` /
+  `line` `line-strong` / `accent` `accent-soft` `accent-ink` `on-accent` /
+  `success|warning|danger` × `soft`（地）`ink`（文字）`solid`（ドット・塗り）。**info は accent に吸収**。
+- 識別色 24: `cat-1`〜`cat-8` × `soft` `ink` `solid`（出荷グループ等の区別用。番号は併記しない）。
+- `ink-faint` はプレースホルダ・「—」など読めなくても困らない文字専用（コントラスト検証の対象外）。
+
+| キー | 表示名 | 系 | 雰囲気 |
+| --- | --- | --- | --- |
+| `light` | ライト | ライト | 既定。白い面と青のアクセント |
+| `dark` | ダーク | ダーク | 暗い地に濃い青（ライトと同じ blue-600 相当） |
+| `midnight` | ミッドナイト | ダーク | 紺の地に藍色。夜間向け |
+| `sepia` | セピア | ライト | 紙とインク。まぶしさを抑えた暖色 |
+| `forest` | フォレスト | ライト | 生成りの地に深緑 |
+| `sakura` | サクラ | ライト | 白地に淡いピンク |
+| `contrast` | ハイコントラスト | ライト | 黒文字・濃い罫線。本文と状態色は 7:1（AAA） |
+
+**導入**
+
+```css
+/* globals.css — アプリのプリセット → パレット →（移行が済んだら）互換エイリアス */
+@import '@handy-jp/smologi-ui/tokens/logistic.css';
+@import '@handy-jp/smologi-ui/tokens/palette.css';
+@import '@handy-jp/smologi-ui/tokens/palette-compat.css'; /* 任意: 13 変数を新トークンから引く */
+```
+
+```js
+// tailwind.config.js — 1 行。bg-surface / text-ink-muted / bg-accent/15 / text-cat-3-ink …
+const { tailwindPreset } = require('@handy-jp/smologi-ui'); // ESM なら import
+module.exports = { presets: [tailwindPreset], /* … */ };
+// または theme.extend.colors に paletteColors を展開
+```
+
+```ts
+import { PALETTE_THEMES, applyPaletteTheme } from '@handy-jp/smologi-ui';
+applyPaletteTheme('midnight'); // <html class="theme-dark theme-midnight">
+```
+
+ダーク系テーマは `html` に `theme-dark` も付ける（部品 CSS と `dark-compat.css` がそれで暗転するため）。
+`paletteThemeClassNames(key)` / `applyPaletteTheme(key)` がそうする。
+B2B は globals.css で `--surface` を同じ形式（`r g b`）で持っているので、パレットを読むときは読み込み順に注意。
+
+**テーマを足す手順**（ブロック 1 つ）
+
+1. `src/tokens/palette.css` に `html.theme-<key> { … }` を 1 ブロック足す。**意味名 22 ＋ cat 24 を全部**書く（欠けると検証で落ちる）。ダーク系は `html.theme-dark` ブロックより後ろに置く。
+2. `src/lib/palette.ts` の `PALETTE_THEMES` に 1 行（key・表示名・scheme・説明・見本色）。
+3. `npm test`（= `node scripts/check-palette.mjs`、`--verbose` で全ペアの比）。CSS と TS の対応、全トークンの有無と形式、
+   WCAG AA（4.5:1）を検証する: `ink`・`ink-muted` × `surface`/`canvas`/`surface-subtle`、`on-accent`/`accent`、
+   `accent-ink` × `accent-soft`/`surface`、各状態 `ink` × `soft`/`surface`、`cat-n-ink`/`cat-n-soft`。
+   `contrast` テーマは cat 以外 7:1。`npm run build` も最初にこれを走らせるので、落ちたままではビルドできない。
 
 ---
 
@@ -380,7 +437,8 @@ import { Modal, LargeModal, ConfirmDialog } from '@handy-jp/smologi-ui';
 
 ```sh
 npm install
-npm run build      # esbuild/tsup（bundle なし）→ tsc で .d.ts → styles/ tokens/ をコピー
+npm test           # パレットの検証（全トークン・CSS/TS 対応・WCAG AA）
+npm run build      # パレット検証 → esbuild/tsup（bundle なし）→ tsc で .d.ts → styles/ tokens/ をコピー
 npm run typecheck
 npm pack --dry-run # 同梱物の確認
 ```

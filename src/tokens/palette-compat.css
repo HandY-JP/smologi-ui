@@ -1,0 +1,23 @@
+/* @handy/smologi-ui — 既存 13 変数（_contract.css）を最小パレットのエイリアスにする（任意・v0.2.0）
+ *
+ * 読み込み順: tokens/<app>.css → tokens/palette.css → tokens/palette-compat.css
+ * （同じ `:root` 詳細度なので、後に読んだこのファイルが <app>.css の 13 変数を上書きする）。
+ * テーマの付け替え（html.theme-*）で --accent などが変われば、ここの値も追従する。
+ * ガラス 5 変数（--sb-glass-*）は色温度がアプリ別なので対象外（<app>.css の値のまま）。
+ * 移行が済んだアプリから順に読み込む。読み込まなければ従来どおり <app>.css の値。
+ */
+:root {
+  --page-bg: rgb(var(--canvas));
+  --sb-bg: rgb(var(--canvas));
+  --sb-border: rgb(var(--line));
+  --sb-hover: rgb(var(--surface-muted));
+  --sb-text: rgb(var(--ink));
+  --sb-label: rgb(var(--ink-muted));
+  --sb-heading: rgb(var(--ink));
+  --sb-accent-bg: rgb(var(--accent));
+  --accent-hover: color-mix(in srgb, rgb(var(--accent)) 85%, #000);
+  --accent-ring: rgb(var(--accent) / 0.15);
+  --accent-subtle: rgb(var(--accent-soft));
+  --accent-light: rgb(var(--accent-soft));
+  --accent-on: rgb(var(--on-accent));
+}
