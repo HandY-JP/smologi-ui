@@ -802,3 +802,15 @@ html.theme-dark .sb-section-jump.on b { background: rgba(255, 255, 255, 0.24); c
 /* 「次のグループ ▸」も同じ理由で一段明るく（ガラス帯・見出し帯どちらの地でも読める階調）。 */
 html.theme-dark .sb-section-next { color: #94a3b8; }
 html.theme-dark .sb-section-next:hover { background: rgba(255, 255, 255, 0.1); color: #f1f5f9; }
+
+/* v0.4.0: SidebarAccountRow の歯車（設定モード中）・サイドバーの丸い選択表示。
+   smologi 本体の globals.css と同じ規則（本体が同名を持っていても値が同じなので衝突しない）。
+   Tailwind v3 は bg-[var(--x)]/10 のような var() 相手の透過修飾子を黙って捨てるため CSS 側で持つ。 */
+.sb-nav-round-active {
+  background: var(--accent-ring, rgba(37, 99, 235, 0.15));
+  color: var(--sb-active-ink, var(--accent-hover, #1d4ed8));
+}
+.sb-nav-round-active:hover {
+  background: color-mix(in srgb, var(--sb-accent-bg, #2563eb) 24%, transparent);
+}
+html.theme-dark .sb-nav-round-active { color: var(--sb-active-ink, color-mix(in srgb, var(--sb-accent-bg, #3b82f6) 72%, #ffffff)); }

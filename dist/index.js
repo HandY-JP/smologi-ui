@@ -50,4 +50,6 @@ export * from "./components/ThemeIcon.js";
 export * from "./components/AppSwitcherIcon.js";
 export * from "./components/SidebarNewDot.js";
 export * from "./components/WorkspaceSwitch.js";
+export * from "./components/AppLauncherPopover.js";
+export * from "./components/SidebarAccountRow.js";
 //# sourceMappingURL=index.js.map
