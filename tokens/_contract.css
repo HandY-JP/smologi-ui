@@ -18,6 +18,19 @@
  *   --accent-on        アクセント塗りの上に乗る文字色
  *   --page-bg          本文の地色
  *
+ * アプリ一覧ポップオーバー（AppLauncherPopover。v0.4.0、任意の 7 変数）。body へポータルするため
+ * アプリ側のスコープ付きテーマ（例: b2b の .b2b-seller-theme 配下）が届かない。
+ * 面・罫線・文字をこの変数で受ける。未定義なら 白 / #e5e7eb / #1f2937 / #6b7280、
+ * 現在地行は --accent-subtle / --sb-accent-bg。
+ *
+ *   --sb-popover-bg          面色
+ *   --sb-popover-line        外枠・見出し下の罫線
+ *   --sb-popover-ink         本文（アプリ名）
+ *   --sb-popover-muted       弱文字（説明・↗・読み込み中）
+ *   --sb-popover-current-bg  現在地の行・ホバー行の背景（既定 --accent-subtle）
+ *   --sb-popover-current-ink 現在地ラベルの文字（既定 --sb-accent-bg）
+ *   --sb-popover-focus       フォーカスリング（既定 --sb-accent-bg）
+ *
  * ガラス（2026-09-23 ユーザー決定。基準＝納品プラン作成の下部ガラスピル）。
  * 実際に組み立てるのは styles/components.css の .sb-glass-surface /
  * .sb-glass-surface-ringed。

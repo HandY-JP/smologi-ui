@@ -50,4 +50,6 @@ export * from './components/ThemeIcon';
 export * from './components/AppSwitcherIcon';
 export * from './components/SidebarNewDot';
 export * from './components/WorkspaceSwitch';
+export * from './components/AppLauncherPopover';
+export * from './components/SidebarAccountRow';
 //# sourceMappingURL=index.d.ts.map
