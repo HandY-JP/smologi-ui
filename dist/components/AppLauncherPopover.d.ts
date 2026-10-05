@@ -31,8 +31,9 @@ export type AppLauncherLinkProps = {
  * - Esc / ポップオーバー外・アンカー外のクリックで onClose。開いたら先頭のリンクへフォーカス、
  *   閉じたらアンカーへフォーカスを戻す。
  * - データ取得はしない。apps / loading / failed は呼び出し側が渡す。
- * - 色は gray（本文・補助）、bg-white（ダークは dark-compat.css が受ける）、--sb-accent-bg /
- *   --accent-subtle のみ。パレット意味名の Tailwind クラスは使わない。
+ * - 色は専用変数 --sb-popover-bg / -line / -ink / -muted / -current-bg / -current-ink / -focus 経由
+ *   （body へポータルするのでアプリ側のスコープ付きダーク CSS は届かない）。未定義なら
+ *   白・gray・--accent-subtle・--sb-accent-bg。パレット意味名の Tailwind クラスは使わない。
  *   → 消費側は tokens/<app>.css ＋ styles.css（＋任意で dark-compat.css）を読み込んでいること。
  */
 export declare function AppLauncherPopover({ anchorRef, open, onClose, apps, loading, failed, header, renderIcon, renderNewDot, renderLink, loadingText, failedText, currentLabel, ariaLabel, id, regionProps, }: {

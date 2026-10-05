@@ -5,6 +5,12 @@ import { createPortal } from "react-dom";
 const POPOVER_WIDTH = 340;
 const POPOVER_GAP = 8;
 const VIEWPORT_MARGIN = 8;
+const POPOVER_BG = "var(--sb-popover-bg, #ffffff)";
+const POPOVER_LINE = "var(--sb-popover-line, #e5e7eb)";
+const POPOVER_INK = "var(--sb-popover-ink, #1f2937)";
+const POPOVER_MUTED = "var(--sb-popover-muted, #6b7280)";
+const POPOVER_CURRENT_BG = "var(--sb-popover-current-bg, var(--accent-subtle))";
+const POPOVER_CURRENT_INK = "var(--sb-popover-current-ink, var(--sb-accent-bg))";
 function AppLauncherPopover({
   anchorRef,
   open,
@@ -90,25 +96,25 @@ function AppLauncherPopover({
         id,
         role: "dialog",
         "aria-label": ariaLabel,
-        className: "fixed z-[80] w-[340px] max-w-[calc(100vw-1rem)] overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl ring-1 ring-black/5",
-        style: { top: position.top, left: position.left },
+        className: "fixed z-[80] w-[340px] max-w-[calc(100vw-1rem)] overflow-hidden rounded-2xl border shadow-2xl ring-1 ring-black/5",
+        style: { top: position.top, left: position.left, backgroundColor: POPOVER_BG, borderColor: POPOVER_LINE, color: POPOVER_INK },
         children: [
-          header != null && /* @__PURE__ */ jsx("div", { className: "border-b border-gray-200 px-5 py-4", children: header }),
+          header != null && /* @__PURE__ */ jsx("div", { className: "border-b px-5 py-4", style: { borderColor: POPOVER_LINE }, children: header }),
           /* @__PURE__ */ jsxs("div", { className: "max-h-[calc(100vh-9rem)] overflow-y-auto p-2", children: [
-            loading && /* @__PURE__ */ jsx("p", { className: "px-3 py-5 text-sm text-gray-500", children: loadingText }),
-            failed && /* @__PURE__ */ jsx("p", { className: "px-3 py-5 text-sm text-gray-500", children: failedText }),
+            loading && /* @__PURE__ */ jsx("p", { className: "px-3 py-5 text-sm", style: { color: POPOVER_MUTED }, children: loadingText }),
+            failed && /* @__PURE__ */ jsx("p", { className: "px-3 py-5 text-sm", style: { color: POPOVER_MUTED }, children: failedText }),
             apps.map((app) => {
               const icon = renderIcon ? renderIcon(app) : app.icon ?? (app.iconSrc ? /* @__PURE__ */ jsx("img", { src: app.iconSrc, alt: "", className: "h-10 w-10 shrink-0 rounded-xl shadow-sm" }) : null);
               const content = /* @__PURE__ */ jsxs(Fragment, { children: [
                 icon,
                 /* @__PURE__ */ jsxs("span", { className: "min-w-0 flex-1", children: [
-                  /* @__PURE__ */ jsxs("span", { className: "flex items-center text-sm font-semibold text-gray-800", children: [
+                  /* @__PURE__ */ jsxs("span", { className: "flex items-center text-sm font-semibold", style: { color: POPOVER_INK }, children: [
                     /* @__PURE__ */ jsx("span", { className: "truncate", children: app.name }),
                     renderNewDot?.(app)
                   ] }),
-                  app.description && /* @__PURE__ */ jsx("span", { className: "mt-0.5 block truncate text-xs text-gray-500", children: app.description })
+                  app.description && /* @__PURE__ */ jsx("span", { className: "mt-0.5 block truncate text-xs", style: { color: POPOVER_MUTED }, children: app.description })
                 ] }),
-                app.current ? /* @__PURE__ */ jsx("span", { className: "text-[10px] font-medium", style: { color: "var(--sb-accent-bg)" }, children: currentLabel }) : app.external ?? true ? /* @__PURE__ */ jsx("span", { className: "text-gray-500", "aria-hidden": "true", children: "\u2197" }) : null
+                app.current ? /* @__PURE__ */ jsx("span", { className: "text-[10px] font-medium", style: { color: POPOVER_CURRENT_INK }, children: currentLabel }) : app.external ?? true ? /* @__PURE__ */ jsx("span", { style: { color: POPOVER_MUTED }, "aria-hidden": "true", children: "\u2197" }) : null
               ] });
               if (app.current) {
                 return /* @__PURE__ */ jsx(
@@ -116,7 +122,7 @@ function AppLauncherPopover({
                   {
                     "aria-current": "page",
                     className: "flex items-center gap-3 rounded-xl px-3 py-3",
-                    style: { backgroundColor: "var(--accent-subtle)" },
+                    style: { backgroundColor: POPOVER_CURRENT_BG },
                     children: content
                   },
                   app.id
@@ -127,7 +133,7 @@ function AppLauncherPopover({
                 href: app.href,
                 ...external ? { target: "_blank", rel: "noopener noreferrer" } : {},
                 onClick: onClose,
-                className: "flex items-center gap-3 rounded-xl px-3 py-3 transition hover:bg-[var(--accent-subtle)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--sb-accent-bg)]",
+                className: "flex items-center gap-3 rounded-xl px-3 py-3 transition hover:bg-[var(--sb-popover-current-bg,var(--accent-subtle))] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--sb-popover-focus,var(--sb-accent-bg))]",
                 children: content
               };
               return renderLink ? /* @__PURE__ */ jsx("span", { className: "contents", children: renderLink(app, linkProps) }, app.id) : /* @__PURE__ */ jsx("a", { ...linkProps }, app.id);

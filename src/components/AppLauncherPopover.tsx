@@ -33,6 +33,13 @@ export type AppLauncherLinkProps = {
   children: ReactNode;
 };
 
+const POPOVER_BG = 'var(--sb-popover-bg, #ffffff)';
+const POPOVER_LINE = 'var(--sb-popover-line, #e5e7eb)';
+const POPOVER_INK = 'var(--sb-popover-ink, #1f2937)';
+const POPOVER_MUTED = 'var(--sb-popover-muted, #6b7280)';
+const POPOVER_CURRENT_BG = 'var(--sb-popover-current-bg, var(--accent-subtle))';
+const POPOVER_CURRENT_INK = 'var(--sb-popover-current-ink, var(--sb-accent-bg))';
+
 /**
  * アプリ一覧ポップオーバー（smologi の ContractedAppsPopover の枠だけを純 UI 化）。
  *
@@ -41,8 +48,9 @@ export type AppLauncherLinkProps = {
  * - Esc / ポップオーバー外・アンカー外のクリックで onClose。開いたら先頭のリンクへフォーカス、
  *   閉じたらアンカーへフォーカスを戻す。
  * - データ取得はしない。apps / loading / failed は呼び出し側が渡す。
- * - 色は gray（本文・補助）、bg-white（ダークは dark-compat.css が受ける）、--sb-accent-bg /
- *   --accent-subtle のみ。パレット意味名の Tailwind クラスは使わない。
+ * - 色は専用変数 --sb-popover-bg / -line / -ink / -muted / -current-bg / -current-ink / -focus 経由
+ *   （body へポータルするのでアプリ側のスコープ付きダーク CSS は届かない）。未定義なら
+ *   白・gray・--accent-subtle・--sb-accent-bg。パレット意味名の Tailwind クラスは使わない。
  *   → 消費側は tokens/<app>.css ＋ styles.css（＋任意で dark-compat.css）を読み込んでいること。
  */
 export function AppLauncherPopover({
@@ -159,13 +167,13 @@ export function AppLauncherPopover({
       id={id}
       role="dialog"
       aria-label={ariaLabel}
-      className="fixed z-[80] w-[340px] max-w-[calc(100vw-1rem)] overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl ring-1 ring-black/5"
-      style={{ top: position.top, left: position.left }}
+      className="fixed z-[80] w-[340px] max-w-[calc(100vw-1rem)] overflow-hidden rounded-2xl border shadow-2xl ring-1 ring-black/5"
+      style={{ top: position.top, left: position.left, backgroundColor: POPOVER_BG, borderColor: POPOVER_LINE, color: POPOVER_INK }}
     >
-      {header != null && <div className="border-b border-gray-200 px-5 py-4">{header}</div>}
+      {header != null && <div className="border-b px-5 py-4" style={{ borderColor: POPOVER_LINE }}>{header}</div>}
       <div className="max-h-[calc(100vh-9rem)] overflow-y-auto p-2">
-        {loading && <p className="px-3 py-5 text-sm text-gray-500">{loadingText}</p>}
-        {failed && <p className="px-3 py-5 text-sm text-gray-500">{failedText}</p>}
+        {loading && <p className="px-3 py-5 text-sm" style={{ color: POPOVER_MUTED }}>{loadingText}</p>}
+        {failed && <p className="px-3 py-5 text-sm" style={{ color: POPOVER_MUTED }}>{failedText}</p>}
         {apps.map((app) => {
           const icon = renderIcon
             ? renderIcon(app)
@@ -177,18 +185,18 @@ export function AppLauncherPopover({
             <>
               {icon}
               <span className="min-w-0 flex-1">
-                <span className="flex items-center text-sm font-semibold text-gray-800">
+                <span className="flex items-center text-sm font-semibold" style={{ color: POPOVER_INK }}>
                   <span className="truncate">{app.name}</span>
                   {renderNewDot?.(app)}
                 </span>
                 {app.description && (
-                  <span className="mt-0.5 block truncate text-xs text-gray-500">{app.description}</span>
+                  <span className="mt-0.5 block truncate text-xs" style={{ color: POPOVER_MUTED }}>{app.description}</span>
                 )}
               </span>
               {app.current ? (
-                <span className="text-[10px] font-medium" style={{ color: 'var(--sb-accent-bg)' }}>{currentLabel}</span>
+                <span className="text-[10px] font-medium" style={{ color: POPOVER_CURRENT_INK }}>{currentLabel}</span>
               ) : (app.external ?? true) ? (
-                <span className="text-gray-500" aria-hidden="true">↗</span>
+                <span style={{ color: POPOVER_MUTED }} aria-hidden="true">↗</span>
               ) : null}
             </>
           );
@@ -198,7 +206,7 @@ export function AppLauncherPopover({
                 key={app.id}
                 aria-current="page"
                 className="flex items-center gap-3 rounded-xl px-3 py-3"
-                style={{ backgroundColor: 'var(--accent-subtle)' }}
+                style={{ backgroundColor: POPOVER_CURRENT_BG }}
               >
                 {content}
               </div>
@@ -210,7 +218,7 @@ export function AppLauncherPopover({
             ...(external ? { target: '_blank' as const, rel: 'noopener noreferrer' } : {}),
             onClick: onClose,
             className:
-              'flex items-center gap-3 rounded-xl px-3 py-3 transition hover:bg-[var(--accent-subtle)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--sb-accent-bg)]',
+              'flex items-center gap-3 rounded-xl px-3 py-3 transition hover:bg-[var(--sb-popover-current-bg,var(--accent-subtle))] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--sb-popover-focus,var(--sb-accent-bg))]',
             children: content,
           };
           return renderLink

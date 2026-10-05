@@ -28,6 +28,12 @@
   --accent-light: #f5f3ff;
   --accent-on: #ffffff;
   --page-bg: #f6f4fb;
+  /* アプリ一覧ポップオーバー（body へポータルするので b2b-seller-theme 配下の補正が届かない。
+     b2b globals の --surface / --neutral-200 / -800 / -500 と同値） */
+  --sb-popover-bg: #ffffff;
+  --sb-popover-line: #e5e7eb;
+  --sb-popover-ink: #1f2937;
+  --sb-popover-muted: #6b7280;
   /* ガラス（2026-09-23 ユーザー決定: 納品プラン作成の下部ガラスピル基準に統一。
      v0.1.5: ライトは面を塗らない「透明＋blur＋内側ハイライト＋落ち影」の上質レシピ。縁も持たない）。
      blur/saturate は部品側（.sb-glass-surface）が持つ固定値。B2B は寒色。 */
@@ -55,6 +61,10 @@ html.dark {
   --accent-light: #251b3d;
   --accent-on: #ffffff;
   --page-bg: #0f0d18;
+  --sb-popover-bg: #151c26;
+  --sb-popover-line: #2a3648;
+  --sb-popover-ink: #d9e1ec;
+  --sb-popover-muted: #8b9bb0;
   --sb-glass-bg: rgba(20, 18, 33, 0.72);
   --sb-glass-bg-opaque: #141221;
   --sb-glass-border: rgba(255, 255, 255, 0.08);

@@ -157,7 +157,7 @@ git push origin v0.1.1
 smologi と smologi-b2b のサイドバーで共通に使う 3 部品。next / next-auth には依存しない（遷移・データ取得は呼び出し側）。
 
 - `WorkspaceSwitch` を汎用化: `items: {kind, label, title?, icon}[]` / `current` / `onSelect`（`onSwitch` も可）/ `pending`（`pendingTarget` も可）/ `ariaLabel`。`items` 省略時は従来どおり倉庫/お客様（既定アイコンは smologi 本体の段ボール箱／店構え）。`DEFAULT_WORKSPACE_ITEMS` `WAREHOUSE_ICON` `STOREFRONT_ICON` も export。
-- `AppLauncherPopover`: smologi の `ContractedAppsPopover` の枠（幅 340px・body へポータル・fixed）。`apps` / `loading` / `failed` / `header` / `anchorRef` / `open` / `onClose` / `renderIcon` / `renderNewDot` / `renderLink` / `regionProps` ほか。
+- `AppLauncherPopover`（色は任意変数 `--sb-popover-bg/-line/-ink/-muted/-current-bg/-current-ink/-focus` 経由。body へポータルするのでスコープ付きテーマが届かないため。未定義なら白・gray。`tokens/b2b.css` が値を持つ。smologi は globals.css でパレット意味名へ割当）: smologi の `ContractedAppsPopover` の枠（幅 340px・body へポータル・fixed）。`apps` / `loading` / `failed` / `header` / `anchorRef` / `open` / `onClose` / `renderIcon` / `renderNewDot` / `renderLink` / `regionProps` ほか。
 - `SidebarAccountRow`（＋ `SidebarAccountAvatar`）: アバター＋名前＋歯車の行。`extraActions` は歯車の左。
 
 ---
