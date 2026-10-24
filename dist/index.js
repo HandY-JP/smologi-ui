@@ -45,6 +45,7 @@ export * from "./components/EmptyState.js";
 export * from "./components/ErrorBanner.js";
 export * from "./components/SortIndicator.js";
 export * from "./components/Skeleton.js";
+export * from "./components/HandyPortalLoader.js";
 export * from "./components/ProductThumb.js";
 export * from "./components/ThemeIcon.js";
 export * from "./components/AppSwitcherIcon.js";

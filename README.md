@@ -397,6 +397,21 @@ import { Modal, LargeModal, ConfirmDialog } from '@handy-jp/smologi-ui';
 `SearchableSelect`、`GuideTour`、`SummaryTile`、`EmptyState`、`ErrorBanner`、
 `SortIndicator`、`Skeleton`、`ProductThumb`。
 
+### 読み込み表示（v0.6.0）
+
+```tsx
+import { HandyPortalLoader, LoadingIndicator, DualRingLoader } from '@handy-jp/smologi-ui';
+
+<HandyPortalLoader />                       {/* page: 表のスケルトン + リング */}
+<HandyPortalLoader variant="inline" />      {/* 小さな枠内 */}
+<HandyPortalLoader variant="screen" />      {/* 全面オーバーレイ（--page-bg） */}
+<HandyPortalLoader mark={<MyBrandMark />} /> {/* リングをアプリ独自のマークに差し替え */}
+```
+
+CSS（`.hp-*`）は `styles.css` に入っている。色は `--sb-accent-bg`、枠・背景は
+`--hp-panel-border` / `--hp-panel-bg` / `--hp-inline-border` / `--hp-head-bg` で上書きできる
+（未指定は Logistic の見た目。B2B は `--sb-line` / `--sb-panel` などに向ける）。
+
 ---
 
 ## 入っていないもの（アプリ側に残す）

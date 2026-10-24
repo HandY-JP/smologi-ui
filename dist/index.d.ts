@@ -45,6 +45,7 @@ export * from './components/EmptyState';
 export * from './components/ErrorBanner';
 export * from './components/SortIndicator';
 export * from './components/Skeleton';
+export * from './components/HandyPortalLoader';
 export * from './components/ProductThumb';
 export * from './components/ThemeIcon';
 export * from './components/AppSwitcherIcon';
