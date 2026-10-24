@@ -120,6 +120,7 @@ git push origin v0.1.1
 | `tokens/portal.css` | スレート `#475569` | handy-internal-app |
 | `tokens/research.css` | 金 `#b7791f` | Research 拡張 |
 | `tokens/b2b.css` | 青 `#2563eb` | smologi-b2b（売り手画面） |
+| `tokens/mobile.css` | （ガラス変数のみ） | smologi-mobile（v0.5.0。`--surface: r g b` から面を引く） |
 
 各ファイルは `:root`（ライト）と `html.theme-dark`（ダーク）の 2 ブロックを持つ。
 
@@ -136,6 +137,31 @@ git push origin v0.1.1
 > また smologi-b2b は `dark-compat.css` を**読み込まない**。B2B は gray を反転ランプへ
 > 差し替える方式なので、生の gray ユーティリティを暗転させる互換層を重ねると二重反転になる
 > （代わりに、部品が使う素の `bg-white` だけを b2b の globals.css が売り手スコープで受ける）。
+
+### ガラスのクラスとトークン（v0.5.0）
+
+Web Seller の「質のいいガラス」を全アプリへ一本化する（2026-10-24 ユーザー決定）。既存クラス名は変えていない。
+
+| クラス | 用途 | 縁 |
+| --- | --- | --- |
+| `.sb-glass-surface` | border ユーティリティと併用する面（既存） | 呼び出し側の `border` |
+| `.sb-glass-surface-ringed` | border を持たない丸ピル（既存）。影のリングで縁を足す | `box-shadow` のリング |
+| `.sb-glass-chip` **新** | 丸ボタン・ピル。見た目は ringed と同じ。Tailwind の `border` の有無に関わらず同じ見え方 | 自前の `border: 1px solid var(--sb-glass-border)`（ring なし） |
+| `.sb-glass-field` **新** | 入力欄。面あり（`--sb-glass-field-bg`、約 78%）で読みやすさ優先。落ち影は小さい | 同上 |
+
+`.sb-glass-chip` / `.sb-glass-field` は `prefers-reduced-transparency: reduce` と `backdrop-filter` 非対応で
+`--sb-glass-bg-opaque` に退避する。ダークは下辺に `inset 0 -1px 0 var(--sb-glass-edge-lo)` を足す。
+
+| トークン（v0.5.0 追加） | ライト | ダーク |
+| --- | --- | --- |
+| `--sb-glass-edge-lo` | 暖色（Seller/Research）`rgba(60,40,20,.06)` / 寒色（Logistic/Portal/B2B/Mobile）`rgba(15,23,42,.06)` | `rgba(0,0,0,.30)` |
+| `--sb-glass-field-bg` | `rgba(255,255,255,.78)` | 各テーマの `--sb-glass-bg` の面色を 78%（Seller `rgba(23,26,33,.78)`、Portal `rgba(15,23,42,.78)`、B2B `rgba(20,18,33,.78)` ほか） |
+
+**`tokens/mobile.css`**（smologi-mobile 用、`@handy-jp/smologi-ui/tokens/mobile.css`）: ガラス変数だけを持つ。
+色は `rgb(var(--surface) / α)`（ダーク系 dark・midnight は `html.theme-dark` で 72%、入力欄は全テーマ 78%、
+`--sb-glass-bg-opaque` は `rgb(var(--surface))`）。ライト系（light/sepia/forest/sakura）は面を塗らない。
+`theme-contrast` は透かさず不透明＋濃い縁。影色は**中立のスレート `15,23,42`**: スマホはモードごとにアクセントが変わり
+テーマも 7 色なので、暖色（Seller）・寒色（Logistic）のどちらかに寄せると他テーマで濁るため。既存 `.glass-chip` の影と同値。
 
 ### ダーク互換層の配色（`--dc-*`、v0.1.9）
 

@@ -115,6 +115,59 @@
   }
 }
 
+/* ===== ガラスの丸ボタン・ピル（.sb-glass-chip）と入力欄（.sb-glass-field）（v0.5.0） =====
+   Web Seller の「質のいいガラス」を全アプリへ一本化するための 2 クラス（2026-10-24 ユーザー決定）。
+   .sb-glass-chip  … .sb-glass-surface-ringed と同じ見た目。ただし縁は実体の
+                     `border: 1px solid var(--sb-glass-border)`（ショートハンド）で持ち、ring は使わない。
+                     Tailwind の `border` を付けても付けなくても同じ見え方になる
+                     （border-width だけ足すのでなく、幅・種類・色を一括指定しているため。
+                     上の警告どおり、ringed に border を足すと縁が 2px になる）。
+                     ダークは下辺に edge-lo の線を足す（ライトは --sb-glass-shadow がすでに持つ）。
+   .sb-glass-field … 入力欄用。面あり（--sb-glass-field-bg、約 78%）で読みやすさ優先。落ち影は小さく。
+   どちらも prefers-reduced-transparency / backdrop-filter 非対応では --sb-glass-bg-opaque へ退避する。 */
+.sb-glass-chip,
+.sb-glass-field {
+  border: 1px solid var(--sb-glass-border, rgba(15, 23, 42, 0.10));
+  -webkit-backdrop-filter: var(--sb-glass-blur, blur(12px) saturate(1.5));
+  backdrop-filter: var(--sb-glass-blur, blur(12px) saturate(1.5));
+}
+.sb-glass-chip {
+  background: var(--sb-glass-bg, rgba(255, 255, 255, 0.85));
+  box-shadow: var(--sb-glass-shadow);
+}
+html.theme-dark .sb-glass-chip,
+html.dark .sb-glass-chip {
+  box-shadow: var(--sb-glass-shadow), inset 0 -1px 0 var(--sb-glass-edge-lo, rgba(0, 0, 0, 0.3));
+}
+.sb-glass-field {
+  background: var(--sb-glass-field-bg, rgba(255, 255, 255, 0.78));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.65),
+    inset 0 -1px 0 var(--sb-glass-edge-lo, rgba(15, 23, 42, 0.06)),
+    0 1px 2px rgba(15, 23, 42, 0.08);
+}
+html.theme-dark .sb-glass-field,
+html.dark .sb-glass-field {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 -1px 0 var(--sb-glass-edge-lo, rgba(0, 0, 0, 0.3)),
+    0 1px 2px rgba(0, 0, 0, 0.30);
+}
+@media (prefers-reduced-transparency: reduce) {
+  .sb-glass-chip,
+  .sb-glass-field {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: var(--sb-glass-bg-opaque, #fff);
+  }
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .sb-glass-chip,
+  .sb-glass-field {
+    background: var(--sb-glass-bg-opaque, #fff);
+  }
+}
+
 /* 一覧下端に浮かせるガラスピル（StickyPagerBar）。面の色は data-tone（既定 'default' /
    商品マスタ編集モードなどの 'amber'）で切り替える。className で Tailwind の bg-* を
    渡す方式はやめた（ダーク上書きと生成順で競合し、amber面がダーク/reduced-transparency

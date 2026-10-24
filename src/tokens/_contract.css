@@ -46,6 +46,8 @@
  *   --sb-glass-shadow    内側ハイライト＋外側の落ち影（縁の 1px は含めない。
  *                        縁を実体の border で持たない部品は .sb-glass-surface-ringed が
  *                        `0 0 0 1px var(--sb-glass-border)` を足す）
+ *   --sb-glass-edge-lo   （v0.5.0）下辺の暗い線の色。ライトは暖/寒の 6%、ダークは rgba(0,0,0,.3)。.sb-glass-chip / .sb-glass-field が使う
+ *   --sb-glass-field-bg  （v0.5.0）入力欄用の面あり約 78% のガラス面色（.sb-glass-field）
  *
  * 部品側のグレー・罫線はテーマ非依存（Tailwind の gray / 白黒の alpha）で
  * 書いてあり、ダーク時は styles/dark-compat.css が受ける。

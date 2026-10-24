@@ -1,0 +1,41 @@
+/* Mobile（smologi-mobile）のガラストークン（v0.5.0）。
+   smologi-mobile は色を `--surface: r g b`（3 値）で持ち、7 テーマ（light / dark / midnight /
+   sepia / forest / sakura / contrast）を <html> のクラスで切り替える。ここはガラス系の変数
+   （--sb-glass-*）だけを定義し、色は --surface から引く（palette.css の --surface と同じ名前）。
+   他のトークン（--sb-bg 等）は定義しない。mobile は palette.css を別途読み込む前提。
+
+   ダーク系（dark / midnight）は palette の paletteThemeClassNames が `theme-dark` を一緒に付けるので、
+   html.theme-dark の 1 ブロックで 2 テーマとも受ける。
+
+   影の色は「中立のスレート（15, 23, 42）」にした。Seller は暖色（橙）、Logistic は寒色（青）だが、
+   スマホは物流 / Client / Amazon などモードごとにアクセントが変わり、テーマも sepia・forest・sakura と
+   色味が分かれる。どれか 1 色に寄せると他のテーマで濁って見えるため、既存の .glass-chip の影
+   （rgba(15, 23, 42, 0.12)）と同じ中立寄りにした。 */
+:root {
+  --sb-glass-blur: blur(12px) saturate(1.5);
+  --sb-glass-bg: rgba(255, 255, 255, 0); /* ライトは面を塗らない（Web と同じ上質ピルのレシピ） */
+  --sb-glass-bg-opaque: rgb(var(--surface, 255 255 255));
+  --sb-glass-border: transparent;
+  --sb-glass-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.65),
+    inset 0 -1px 0 rgba(15, 23, 42, 0.06),
+    0 8px 24px rgba(15, 23, 42, 0.12);
+  --sb-glass-edge-lo: rgba(15, 23, 42, 0.06);
+  --sb-glass-field-bg: rgb(var(--surface, 255 255 255) / 0.78);
+}
+html.theme-dark {
+  --sb-glass-bg: rgb(var(--surface) / 0.72);
+  --sb-glass-bg-opaque: rgb(var(--surface));
+  --sb-glass-border: rgba(255, 255, 255, 0.08);
+  --sb-glass-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 8px 24px rgba(0, 0, 0, 0.40);
+  --sb-glass-edge-lo: rgba(0, 0, 0, 0.30);
+  --sb-glass-field-bg: rgb(var(--surface) / 0.78);
+}
+/* ハイコントラスト（AAA 7:1）: 透かさない。面は不透明、縁ははっきり出す。 */
+html.theme-contrast {
+  --sb-glass-bg: rgb(var(--surface));
+  --sb-glass-border: rgba(0, 0, 0, 0.55);
+  --sb-glass-field-bg: rgb(var(--surface));
+}
