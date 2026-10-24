@@ -42,7 +42,6 @@
   },
   "scripts": {
     "build": "node scripts/check-palette.mjs && node scripts/build.mjs",
-    "test": "node scripts/check-palette.mjs",
     "typecheck": "tsc -p tsconfig.build.json --noEmit",
     "test": "node --test scripts/*.test.mjs"
   },
