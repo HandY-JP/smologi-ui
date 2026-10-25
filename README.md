@@ -412,6 +412,18 @@ CSS（`.hp-*`）は `styles.css` に入っている。色は `--sb-accent-bg`、
 `--hp-panel-border` / `--hp-panel-bg` / `--hp-inline-border` / `--hp-head-bg` で上書きできる
 （未指定は Logistic の見た目。B2B は `--sb-line` / `--sb-panel` などに向ける）。
 
+### ダッシュボード編集キット（v0.7.0）
+
+ダッシュボードのウィジェットをその場で並べ替え・サイズ変更・追加・削除する部品。アプリの事情（データ・保存先・権限）は持たない。
+
+- ロジックと型（`WidgetDef` / `LayoutItem` / `normalizeItems` / `draftFor` など）は `@handy-jp/smologi-ui` から（サーバーからも import 可）
+- UI（`WidgetGrid` / `EditToolbar` / `AddWidgetSheet` / `useLayoutEditor`）は **サブパス `@handy-jp/smologi-ui/dashboard-kit`** から。`@dnd-kit/core` を使うため、メインの index には出していない
+- `@dnd-kit/core`（^6.3.1）は **optional な peerDependency**。kit を使うアプリだけが dependencies に入れる（使わないアプリのビルドは影響を受けない）
+- 揺れのアニメ（`dash-jiggle`）は `tailwindPreset` に入っている（`motion-safe:` 付きで使うので reduced-motion では動かない）
+- 色は持たない。枠・ボタン・シートの見た目は `classNames` / `sheetClassName` / `candidateClassName` で呼び出し側が渡す
+- `AddWidgetSheet` の候補は `disabled` / `badge` を持てる（Plus 未契約を「Plus」バッジ付きで選べなく出す等）
+- 編集中に隠したいヘッダー右の操作には `data-widget-right` を付ける。ヘッダーには `data-widget-header`
+
 ---
 
 ## 入っていないもの（アプリ側に残す）
@@ -507,6 +519,7 @@ CSS（`.hp-*`）は `styles.css` に入っている。色は `--sb-accent-bg`、
   部品はここに書かれた変数名しか参照しない
 - 新テーマ（新アプリ・新アクセント色）を追加するときは `tokens/` に 1 ファイル、
   `:root` と `html.theme-dark` の 2 ブロックを持つプリセットを足すだけ（上の「トークン」節の表に追記）
+- `dashboard-kit` は dnd 依存の UI をサブパスに分けている。メイン index に UI（`@dnd-kit` を import するもの）を足さない。`@dnd-kit/core` は optional peer のまま保つ
 - `dist/` を作り直してからタグを打つこと（「リリース」節の手順どおり）。忘れると古いコードが配られる
 
 ---

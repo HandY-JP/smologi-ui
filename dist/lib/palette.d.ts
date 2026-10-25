@@ -192,6 +192,19 @@ export declare const tailwindPreset: {
                 };
                 readonly cat: Record<"1" | "2" | "3" | "4" | "5" | "6" | "7" | "8", ReturnType<typeof status>>;
             };
+            keyframes: {
+                'dash-jiggle': {
+                    '0%, 100%': {
+                        transform: string;
+                    };
+                    '50%': {
+                        transform: string;
+                    };
+                };
+            };
+            animation: {
+                'dash-jiggle': string;
+            };
         };
     };
 };

@@ -53,4 +53,5 @@ export * from './components/SidebarNewDot';
 export * from './components/WorkspaceSwitch';
 export * from './components/AppLauncherPopover';
 export * from './components/SidebarAccountRow';
+export * from './dashboard-kit/index';
 //# sourceMappingURL=index.d.ts.map

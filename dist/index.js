@@ -53,4 +53,5 @@ export * from "./components/SidebarNewDot.js";
 export * from "./components/WorkspaceSwitch.js";
 export * from "./components/AppLauncherPopover.js";
 export * from "./components/SidebarAccountRow.js";
+export * from "./dashboard-kit/index.js";
 //# sourceMappingURL=index.js.map

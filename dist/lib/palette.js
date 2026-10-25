@@ -81,7 +81,19 @@ const paletteColors = {
   )
 };
 const tailwindPreset = {
-  theme: { extend: { colors: paletteColors } }
+  theme: {
+    extend: {
+      colors: paletteColors,
+      // ダッシュボード編集中のタイルがゆらゆら揺れる（dashboard-kit）。使う側は motion-safe: を付けるので reduced-motion では動かない。
+      keyframes: {
+        "dash-jiggle": {
+          "0%, 100%": { transform: "rotate(-0.5deg)" },
+          "50%": { transform: "rotate(0.5deg)" }
+        }
+      },
+      animation: { "dash-jiggle": "dash-jiggle 0.28s ease-in-out infinite" }
+    }
+  }
 };
 export {
   DEFAULT_PALETTE_THEME,
