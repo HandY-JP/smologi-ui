@@ -422,6 +422,7 @@ CSS（`.hp-*`）は `styles.css` に入っている。色は `--sb-accent-bg`、
 - 揺れのアニメ（`dash-jiggle`）は `tailwindPreset` に入っている（`motion-safe:` 付きで使うので reduced-motion では動かない）
 - 色は持たない。枠・ボタン・シートの見た目は `classNames` / `sheetClassName` / `candidateClassName` で呼び出し側が渡す
 - `AddWidgetSheet` の候補は `disabled` / `badge` を持てる（Plus 未契約を「Plus」バッジ付きで選べなく出す等）
+- グリッドの 1 段は約 102px（2 段 + gap = 220px）。S/M は 2 段、L は 4 段（約 456px）、W は既定 1 段（帯）。W を 220px の高さにしたいウィジェットは `WidgetDef.rows: 2`（`sizeClassFor(size, rows)` が class を返す）
 - 編集中に隠したいヘッダー右の操作には `data-widget-right` を付ける。ヘッダーには `data-widget-header`
 
 ---

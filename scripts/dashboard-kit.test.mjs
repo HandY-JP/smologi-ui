@@ -50,3 +50,18 @@ test('並べ替え・サイズ送り・外す・追加', () => {
   assert.deepEqual(m.appendItem(base, 'c').map((i) => i.id), ['a', 'b', 'c']);
   assert.equal(m.appendItem(base, 'c')[2].on, true);
 });
+
+test('sizeClassFor: S/M=2段・L=4段・W は rows で 1/2 段（既定 1）', () => {
+  assert.match(m.sizeClassFor('S'), /row-span-2/);
+  assert.match(m.sizeClassFor('M', 1), /row-span-2/);
+  assert.match(m.sizeClassFor('L'), /row-span-4/);
+  assert.match(m.sizeClassFor('W'), /row-span-1/);
+  assert.match(m.sizeClassFor('W', 2), /row-span-2/);
+  assert.equal(m.WIDGET_ROW_HEIGHT_PX * 2 + m.WIDGET_GRID_GAP_PX, 220);
+  assert.equal(m.WIDGET_ROW_HEIGHT_PX * 4 + m.WIDGET_GRID_GAP_PX * 3, 456);
+});
+
+test('normalizeItems: rows は定義側の属性で保存値には入らない', () => {
+  const d = [{ id: 'w', title: 'W', sizes: ['W'], defaultSize: 'W', defaultOn: true, rows: 2 }];
+  assert.deepEqual(m.normalizeItems(d, null), [{ id: 'w', on: true, size: 'W' }]);
+});

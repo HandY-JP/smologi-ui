@@ -20,7 +20,7 @@ import {
   type DragOverEvent,
   type DragStartEvent,
 } from '@dnd-kit/core';
-import { GRID_CLASS, SIZE_CLASS, SIZE_LABEL } from './sizes';
+import { GRID_CLASS, SIZE_LABEL, sizeClassFor } from './sizes';
 import type { LayoutItem, WidgetDef, WidgetSize } from './types';
 
 const REMEASURE_MS = 80;
@@ -99,7 +99,7 @@ function Tile({
       }}
       className={[
         'relative min-w-0',
-        SIZE_CLASS[size],
+        sizeClassFor(size, def.rows),
         classes.frame,
         editing
           ? `cursor-grab select-none motion-safe:animate-dash-jiggle motion-reduce:outline ${classes.editing} [&_[data-widget-header]]:pr-24 [&_[data-widget-right]]:hidden`

@@ -14,7 +14,7 @@ import {
   useSensor,
   useSensors
 } from "@dnd-kit/core";
-import { GRID_CLASS, SIZE_CLASS, SIZE_LABEL } from "./sizes.js";
+import { GRID_CLASS, SIZE_LABEL, sizeClassFor } from "./sizes.js";
 const REMEASURE_MS = 80;
 const STOP_DRAG = {
   onPointerDown: (e) => e.stopPropagation(),
@@ -60,7 +60,7 @@ function Tile({
       },
       className: [
         "relative min-w-0",
-        SIZE_CLASS[size],
+        sizeClassFor(size, def.rows),
         classes.frame,
         editing ? `cursor-grab select-none motion-safe:animate-dash-jiggle motion-reduce:outline ${classes.editing} [&_[data-widget-header]]:pr-24 [&_[data-widget-right]]:hidden` : "",
         isDragging ? "opacity-35 !animate-none" : ""

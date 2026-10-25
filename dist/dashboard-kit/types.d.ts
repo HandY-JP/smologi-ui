@@ -1,4 +1,4 @@
-/** 小=4列・中=6列・大=8列×2段・横長=12列（12 列グリッド）。 */
+/** 小=4列・中=6列・大=8列×2倍の高さ・横長=12列（段数は WidgetDef.rows）（12 列グリッド）。 */
 export type WidgetSize = 'S' | 'M' | 'L' | 'W';
 export interface WidgetDef {
     id: string;
@@ -9,6 +9,8 @@ export interface WidgetDef {
     sizes: readonly WidgetSize[];
     defaultSize: WidgetSize;
     defaultOn: boolean;
+    /** 横長（W）のときの段数。1=帯（既定）、2=約 220px の高さ。S/M/L では無視。 */
+    rows?: 1 | 2;
 }
 export interface LayoutItem<Id extends string = string> {
     id: Id;
