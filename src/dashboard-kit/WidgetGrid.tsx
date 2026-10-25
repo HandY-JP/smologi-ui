@@ -102,7 +102,7 @@ function Tile({
         sizeClassFor(size, def.rows),
         classes.frame,
         editing
-          ? `cursor-grab select-none motion-safe:animate-dash-jiggle motion-reduce:outline ${classes.editing} [&_[data-widget-header]]:pr-24 [&_[data-widget-right]]:hidden`
+          ? `cursor-grab select-none motion-safe:animate-dash-jiggle motion-reduce:outline ${classes.editing} [&_[data-widget-header]]:pl-3 [&_[data-widget-header]]:pr-24 [&_[data-widget-right]]:hidden`
           : '',
         isDragging ? 'opacity-35 !animate-none' : '',
       ].join(' ')}
