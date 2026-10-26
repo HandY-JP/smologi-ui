@@ -137,4 +137,31 @@ export const tailwindPreset = {
       animation: { 'dash-jiggle': 'dash-jiggle 0.28s ease-in-out infinite' },
     },
   },
+  // 編集中のタイルの縁を細い光が 1 周する（dashboard-kit の .dash-edit-glow）。色は呼び出し側が --dash-glow で渡す。
+  // 揺れ（dash-jiggle）は使わなくなったが、互換のため残す。
+  plugins: [
+    ({ addBase }: { addBase: (styles: Record<string, unknown>) => void }) => addBase({
+      '@property --dash-ang': { syntax: '"<angle>"', inherits: 'false', 'initial-value': '0deg' },
+      '.dash-edit-glow': {
+        // 静的な縁（reduced-motion・@property 非対応でも色が見える）
+        boxShadow: '0 0 0 1px color-mix(in srgb, var(--dash-glow, currentColor) 40%, transparent)',
+      },
+      '.dash-edit-glow::after': {
+        content: '""',
+        position: 'absolute',
+        inset: '0',
+        borderRadius: 'inherit',
+        pointerEvents: 'none',
+        padding: '1.5px',
+        background: 'conic-gradient(from var(--dash-ang), transparent 0 70%, var(--dash-glow, currentColor) 85%, transparent 100%)',
+        '-webkit-mask': 'linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)',
+        '-webkit-mask-composite': 'xor',
+        maskComposite: 'exclude',
+      },
+      '@media (prefers-reduced-motion: no-preference)': {
+        '.dash-edit-glow::after': { animation: 'dash-orbit 2.4s linear infinite' },
+      },
+      '@keyframes dash-orbit': { to: { '--dash-ang': '360deg' } },
+    }),
+  ],
 };

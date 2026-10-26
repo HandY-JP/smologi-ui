@@ -419,7 +419,7 @@ CSS（`.hp-*`）は `styles.css` に入っている。色は `--sb-accent-bg`、
 - ロジックと型（`WidgetDef` / `LayoutItem` / `normalizeItems` / `draftFor` など）は `@handy-jp/smologi-ui` から（サーバーからも import 可）
 - UI（`WidgetGrid` / `EditToolbar` / `AddWidgetSheet` / `useLayoutEditor`）は **サブパス `@handy-jp/smologi-ui/dashboard-kit`** から。`@dnd-kit/core` を使うため、メインの index には出していない
 - `@dnd-kit/core`（^6.3.1）は **optional な peerDependency**。kit を使うアプリだけが dependencies に入れる（使わないアプリのビルドは影響を受けない）
-- 揺れのアニメ（`dash-jiggle`）は `tailwindPreset` に入っている（`motion-safe:` 付きで使うので reduced-motion では動かない）
+- 編集中のタイルは揺らさず、縁を細い光が 2.4 秒で 1 周する（`.dash-edit-glow`、`tailwindPreset` の plugin が `@property --dash-ang` と一緒に出す）。光の色は `classNames.editing` に `[--dash-glow:<色>]` を渡す（Seller=橙、Smologi=`rgb(var(--accent))`）。`prefers-reduced-motion` では回さず静的な縁だけ（`@property` 非対応でも同じ）。`dash-jiggle` は互換のため残すが使わない
 - 色は持たない。枠・ボタン・シートの見た目は `classNames` / `sheetClassName` / `candidateClassName` で呼び出し側が渡す
 - `AddWidgetSheet` の候補は `disabled` / `badge` を持てる（Plus 未契約を「Plus」バッジ付きで選べなく出す等）
 - グリッドの 1 段は約 102px（2 段 + gap = 220px）。S/M は 2 段、L は 4 段（約 456px）、W は既定 1 段（帯）。W を 220px の高さにしたいウィジェットは `WidgetDef.rows: 2`（`sizeClassFor(size, rows)` が class を返す）

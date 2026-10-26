@@ -49,7 +49,7 @@ const STOP_DRAG = {
 
 const DEFAULT_CLASSES: Required<WidgetGridClassNames> = {
   frame: 'rounded-[18px] border',
-  editing: 'outline-1 outline-dashed',
+  editing: '',
   minus: 'bg-black/70 text-white',
   sizeButton: 'bg-black/10',
   addTile: 'border-2 border-dashed rounded-[18px]',
@@ -59,7 +59,7 @@ const DEFAULT_CLASSES: Required<WidgetGridClassNames> = {
 function Tile({
   item,
   def,
-  index,
+
   editing,
   classes,
   node,
@@ -95,14 +95,13 @@ function Tile({
       data-widget-size={size}
       style={{
         touchAction: editing ? 'manipulation' : undefined,
-        animationDelay: editing && index % 2 === 1 ? '-0.16s' : undefined,
       }}
       className={[
         'relative min-w-0',
         sizeClassFor(size, def.rows),
         classes.frame,
         editing
-          ? `cursor-grab select-none motion-safe:animate-dash-jiggle motion-reduce:outline ${classes.editing} [&_[data-widget-header]]:pl-3 [&_[data-widget-header]]:pr-24 [&_[data-widget-right]]:hidden`
+          ? `cursor-grab select-none dash-edit-glow ${classes.editing} [&_[data-widget-header]]:pl-3 [&_[data-widget-header]]:pr-24 [&_[data-widget-right]]:hidden`
           : '',
         isDragging ? 'opacity-35 !animate-none' : '',
       ].join(' ')}

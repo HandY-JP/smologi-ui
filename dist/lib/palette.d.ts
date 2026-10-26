@@ -207,6 +207,9 @@ export declare const tailwindPreset: {
             };
         };
     };
+    plugins: (({ addBase }: {
+        addBase: (styles: Record<string, unknown>) => void;
+    }) => void)[];
 };
 export {};
 //# sourceMappingURL=palette.d.ts.map
