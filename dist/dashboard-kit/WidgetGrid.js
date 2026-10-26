@@ -61,7 +61,7 @@ function Tile({
         sizeClassFor(size, def.rows),
         classes.frame,
         editing ? `cursor-grab select-none dash-edit-glow ${classes.editing} [&_[data-widget-header]]:pl-3 [&_[data-widget-header]]:pr-24 [&_[data-widget-right]]:hidden` : "",
-        isDragging ? "opacity-35 !animate-none" : ""
+        isDragging ? "opacity-35 after:![animation:none]" : ""
       ].join(" "),
       ...dndProps,
       children: [
@@ -182,7 +182,7 @@ function WidgetGrid({
       onDragCancel: finish,
       children: [
         /* @__PURE__ */ jsxs("div", { className: GRID_CLASS, children: [
-          items.map((item, index) => {
+          items.map((item) => {
             const def = getDef(item.id);
             if (!def) return null;
             return /* @__PURE__ */ jsx(
@@ -190,7 +190,6 @@ function WidgetGrid({
               {
                 item,
                 def,
-                index,
                 editing,
                 classes,
                 node: renderWidget(item.id, item.size),

@@ -1,6 +1,6 @@
 'use client';
 // 編集できるウィジェットグリッド（12 列・行の高さ固定・row）。Amazon 等には依存しない。
-// - 編集中: タイルがゆらゆら揺れる（reduced-motion では破線枠）。ドラッグで並べ替え、「−」で外す、サイズボタンで切り替え。
+// - 編集中: タイルは止めたまま、縁を細い光が 1 周する（.dash-edit-glow。reduced-motion では静的な縁だけ）。ドラッグで並べ替え、「−」で外す、サイズボタンで切り替え。
 // - 並べ替えは @dnd-kit/core（MouseSensor/TouchSensor/KeyboardSensor。タッチは長押し 200ms 後に掴み、それまではページをスクロールできる）。下書きは呼び出し側（useLayoutEditor）が持つ。
 // - タイルの要素型・入れ子は編集の ON/OFF で変えない（中身の状態＝フィードの途中経過などが作り直されて飛ぶのを防ぐ）。
 //   編集中は中身を inert + pointer-events-none にするだけ。
@@ -68,7 +68,6 @@ function Tile({
 }: {
   item: LayoutItem;
   def: WidgetDef;
-  index: number;
   editing: boolean;
   classes: Required<WidgetGridClassNames>;
   node: React.ReactNode;
@@ -103,7 +102,7 @@ function Tile({
         editing
           ? `cursor-grab select-none dash-edit-glow ${classes.editing} [&_[data-widget-header]]:pl-3 [&_[data-widget-header]]:pr-24 [&_[data-widget-right]]:hidden`
           : '',
-        isDragging ? 'opacity-35 !animate-none' : '',
+        isDragging ? 'opacity-35 after:![animation:none]' : '',
       ].join(' ')}
       {...dndProps}
     >
@@ -245,7 +244,7 @@ export function WidgetGrid({
       onDragCancel={finish}
     >
       <div className={GRID_CLASS}>
-        {items.map((item, index) => {
+        {items.map((item) => {
           const def = getDef(item.id);
           if (!def) return null;
           return (
@@ -253,7 +252,6 @@ export function WidgetGrid({
               key={item.id}
               item={item}
               def={def}
-              index={index}
               editing={editing}
               classes={classes}
               node={renderWidget(item.id, item.size)}

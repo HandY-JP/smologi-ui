@@ -84,7 +84,7 @@ const tailwindPreset = {
   theme: {
     extend: {
       colors: paletteColors,
-      // ダッシュボード編集中のタイルがゆらゆら揺れる（dashboard-kit）。使う側は motion-safe: を付けるので reduced-motion では動かない。
+      // （旧）編集中の揺れ。今は .dash-edit-glow に置き換わり使っていない。互換のため残す。
       keyframes: {
         "dash-jiggle": {
           "0%, 100%": { transform: "rotate(-0.5deg)" },
@@ -100,8 +100,9 @@ const tailwindPreset = {
     ({ addBase }) => addBase({
       "@property --dash-ang": { syntax: '"<angle>"', inherits: "false", "initial-value": "0deg" },
       ".dash-edit-glow": {
-        // 静的な縁（reduced-motion・@property 非対応でも色が見える）
-        boxShadow: "0 0 0 1px color-mix(in srgb, var(--dash-glow, currentColor) 40%, transparent)"
+        // 静的な縁（reduced-motion・@property 非対応でも色が見える）。box-shadow はタイルの shadow ユーティリティに負けるので outline を使う
+        outline: "1px solid color-mix(in srgb, var(--dash-glow, currentColor) 40%, transparent)",
+        outlineOffset: "0px"
       },
       ".dash-edit-glow::after": {
         content: '""',
@@ -110,7 +111,7 @@ const tailwindPreset = {
         borderRadius: "inherit",
         pointerEvents: "none",
         padding: "1.5px",
-        background: "conic-gradient(from var(--dash-ang), transparent 0 70%, var(--dash-glow, currentColor) 85%, transparent 100%)",
+        background: "conic-gradient(from var(--dash-ang, 0deg), transparent 0 70%, var(--dash-glow, currentColor) 85%, transparent 100%)",
         "-webkit-mask": "linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)",
         "-webkit-mask-composite": "xor",
         maskComposite: "exclude"
