@@ -1,8 +1,9 @@
 'use client';
 // 下から出るボトムシート。外したウィジェットを選んで戻す。Esc・外側タップで閉じる。
 // role="dialog" を持つので、編集モードの Esc（やめる）は走らない。
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { confirmedSelection, toggleSelected } from './selection';
 
 export interface AddWidgetCandidate {
   id: string;
@@ -12,6 +13,8 @@ export interface AddWidgetCandidate {
   disabled?: boolean;
   /** 候補に付ける小さなバッジ（例: 「Plus」）。 */
   badge?: string;
+  /** true なら「おすすめ」の小さなタグを付ける。 */
+  recommended?: boolean;
 }
 
 export interface AddWidgetSheetProps {
@@ -24,6 +27,26 @@ export interface AddWidgetSheetProps {
   /** 候補ボタンのクラス。 */
   candidateClassName: string;
   scrimClassName?: string;
+  /**
+   * true なら複数選択モード: 押すと選択が切り替わり（aria-pressed）、「追加する」でまとめて onPickMany を呼ぶ。
+   * disabled の候補は選べない。省略（false）は従来どおり、押した 1 つを onPick で追加して閉じる前提。
+   */
+  multiple?: boolean;
+  onPickMany?: (ids: string[]) => void;
+  /** 見出し（既定: 複数選択は「ウィジェットを選ぶ」、1 つ追加は「ウィジェットを追加」）。 */
+  title?: string;
+  /** 見出しの下の説明（複数選択のときの既定あり）。 */
+  hint?: string;
+  confirmLabel?: string;
+  cancelLabel?: string;
+  /** 複数選択のフッターのボタン（やめる）。 */
+  footerButtonClassName?: string;
+  /** 複数選択のフッターの主ボタン（追加する）。 */
+  footerPrimaryClassName?: string;
+  /** 複数選択のフッター（スクロール中も下に貼り付く）の背景。シートと同じ色を渡す（候補が透けないように）。 */
+  footerClassName?: string;
+  /** 選択中の候補に足すクラス。 */
+  selectedClassName?: string;
 }
 
 export function AddWidgetSheet({
@@ -34,7 +57,28 @@ export function AddWidgetSheet({
   sheetClassName,
   candidateClassName,
   scrimClassName = 'bg-black/35',
+  multiple = false,
+  onPickMany,
+  title,
+  hint,
+  confirmLabel = '追加する',
+  cancelLabel = 'やめる',
+  footerButtonClassName = 'rounded-full border border-current px-4 py-2 text-sm font-medium',
+  footerPrimaryClassName = 'rounded-full bg-current px-4 py-2 text-sm font-medium',
+  selectedClassName = 'ring-2 ring-current',
+  footerClassName = '',
 }: AddWidgetSheetProps) {
+  const [selected, setSelected] = useState<string[]>([]);
+  // 開くたびに選択を空に戻す。
+  useEffect(() => {
+    if (open) setSelected([]); // eslint-disable-line react-hooks/set-state-in-effect
+  }, [open]);
+  const confirm = () => {
+    const ids = confirmedSelection(selected, candidates);
+    if (ids.length === 0) return;
+    onPickMany?.(ids);
+  };
+
   const dialogRef = useRef<HTMLDivElement | null>(null);
   // 開いたらシートへ focus し、閉じたら開く前の要素（開いたボタン）へ戻す。
   useEffect(() => {
@@ -79,12 +123,15 @@ export function AddWidgetSheet({
         ref={dialogRef}
         role="dialog"
         aria-modal="true"
-        aria-label="ウィジェットを追加"
+        aria-label={title ?? (multiple ? 'ウィジェットを選ぶ' : 'ウィジェットを追加')}
         tabIndex={-1}
         className={`fixed bottom-0 left-1/2 z-[41] max-h-[70vh] w-[min(560px,100%)] -translate-x-1/2 overflow-auto outline-none px-4 pb-[calc(20px+env(safe-area-inset-bottom,0px))] pt-2.5 ${sheetClassName}`}
       >
         <div className="mx-auto mb-2.5 mt-1 h-[5px] w-10 rounded-[3px] bg-current opacity-20" />
-        <h4 className="mb-2.5 text-base font-semibold">ウィジェットを追加</h4>
+        <h4 className={`${multiple ? 'mb-1' : 'mb-2.5'} text-base font-semibold`}>{title ?? (multiple ? 'ウィジェットを選ぶ' : 'ウィジェットを追加')}</h4>
+        {multiple ? (
+          <p className="mb-3 text-[13px] opacity-60">{hint ?? '押して選び、「追加する」で並べます。あとから「編集」でいつでも変えられます。'}</p>
+        ) : null}
         {candidates.length === 0 ? (
           <p className="text-[13px] opacity-60">すべてのウィジェットを表示中です。</p>
         ) : (
@@ -95,18 +142,30 @@ export function AddWidgetSheet({
                 type="button"
                 disabled={c.disabled}
                 aria-disabled={c.disabled || undefined}
-                onClick={() => { if (!c.disabled) onPick(c.id); }}
-                className={`text-left ${c.disabled ? 'cursor-not-allowed opacity-50' : ''} ${candidateClassName}`}
+                aria-pressed={multiple && !c.disabled ? selected.includes(c.id) : undefined}
+                onClick={() => {
+                  if (c.disabled) return;
+                  if (multiple) setSelected((cur) => toggleSelected(cur, candidates, c.id));
+                  else onPick(c.id);
+                }}
+                className={`relative text-left ${c.disabled ? 'cursor-not-allowed opacity-50' : ''} ${multiple && selected.includes(c.id) ? selectedClassName : ''} ${candidateClassName}`}
               >
                 <b className="mb-1 flex items-center gap-1.5 text-sm">
-                  <span>{c.disabled ? '' : '＋ '}{c.title}</span>
+                  <span>{c.disabled || multiple ? '' : '＋ '}{c.title}</span>
                   {c.badge ? <span className="rounded-full border border-current px-1.5 py-px text-[10px] font-semibold leading-none opacity-70">{c.badge}</span> : null}
+                  {c.recommended && !c.disabled ? <span className="rounded-full border border-current px-1.5 py-px text-[10px] font-semibold leading-none opacity-70">おすすめ</span> : null}
                 </b>
                 {c.description ? <small className="text-xs leading-normal opacity-60">{c.description}</small> : null}
               </button>
             ))}
           </div>
         )}
+        {multiple ? (
+          <div className={`sticky bottom-0 -mx-4 mt-3.5 flex justify-end gap-2 px-4 py-2 ${footerClassName}`}>
+            <button type="button" onClick={onClose} className={footerButtonClassName}>{cancelLabel}</button>
+            <button type="button" onClick={confirm} disabled={confirmedSelection(selected, candidates).length === 0} className={`${footerPrimaryClassName} disabled:opacity-50`}>{confirmLabel}</button>
+          </div>
+        ) : null}
       </div>
     </>,
     document.body,

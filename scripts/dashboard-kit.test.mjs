@@ -65,3 +65,61 @@ test('normalizeItems: rows は定義側の属性で保存値には入らない',
   const d = [{ id: 'w', title: 'W', sizes: ['W'], defaultSize: 'W', defaultOn: true, rows: 2 }];
   assert.deepEqual(m.normalizeItems(d, null), [{ id: 'w', on: true, size: 'W' }]);
 });
+
+test('emptyLayoutFor: 全 id が on:false で、normalizeItems を通しても空のまま（[] と違い既定に膨らまない）', () => {
+  const empty = m.emptyLayoutFor(defs);
+  assert.deepEqual(empty, [
+    { id: 'a', on: false, size: 'M' },
+    { id: 'b', on: false, size: 'L' },
+  ]);
+  assert.deepEqual(m.normalizeItems(defs, empty), empty);
+  assert.deepEqual(m.normalizeItems(defs, JSON.parse(JSON.stringify(empty))), empty);
+  // 参考: [] は既定に膨らむ
+  assert.deepEqual(m.normalizeItems(defs, []), m.defaultLayoutFor(defs));
+});
+
+test('全 off ↔ おすすめ の往復で defaultOn の意味は変わらない', () => {
+  const rec = m.recommendedLayoutFor(defs);
+  assert.deepEqual(rec, m.defaultLayoutFor(defs));
+  assert.deepEqual(m.visibleItems(rec).map((i) => i.id), ['a']);
+  // 空 → 1 つ追加 → 外して空に戻る
+  const one = m.appendItem(m.emptyLayoutFor(defs), 'b');
+  assert.deepEqual(m.visibleItems(one).map((i) => i.id), ['b']);
+  assert.deepEqual(m.visibleItems(m.removeItem(one, 'b')), []);
+});
+
+test('hasShownItems: 権限で隠すものは数えない（全部隠れなら空扱い）', () => {
+  const rec = m.recommendedLayoutFor(defs);
+  assert.equal(m.hasShownItems(rec), true);
+  assert.equal(m.hasShownItems(rec, new Set(['a'])), false);
+  assert.equal(m.hasShownItems(m.emptyLayoutFor(defs)), false);
+});
+
+test('複数選択: 切り替え・ロック候補は選べない・確定は候補順で選べるものだけ', () => {
+  const cands = [{ id: 'x' }, { id: 'lock', disabled: true }, { id: 'y' }];
+  let sel = [];
+  sel = m.toggleSelected(sel, cands, 'y');
+  sel = m.toggleSelected(sel, cands, 'lock');
+  sel = m.toggleSelected(sel, cands, 'nope');
+  sel = m.toggleSelected(sel, cands, 'x');
+  assert.deepEqual(sel, ['y', 'x']);
+  assert.deepEqual(m.toggleSelected(sel, cands, 'y'), ['x']);
+  assert.deepEqual(m.confirmedSelection(sel, cands), ['x', 'y']);
+  // 後からロックされた候補は確定時に落ちる
+  assert.deepEqual(m.confirmedSelection(['x', 'y'], [{ id: 'x' }, { id: 'y', disabled: true }]), ['x']);
+});
+
+test('DashboardStarter: 文言・2 つのボタン・おすすめチップを描く', async () => {
+  const { createElement } = await import('react');
+  const { renderToStaticMarkup } = await import('react-dom/server');
+  const ui = await import('../dist/dashboard-kit/ui.js');
+  const html = renderToStaticMarkup(
+    createElement(ui.DashboardStarter, {
+      recommendedTitles: ['業績', '売れ筋'],
+      onRecommend() {},
+      onPick() {},
+      className: 'c', iconClassName: 'i', primaryClassName: 'p', secondaryClassName: 's', chipClassName: 'chip',
+    }),
+  );
+  for (const t of ['ダッシュボードを作りましょう', 'おすすめをまとめて入れる', '自分で選ぶ', '業績', '売れ筋']) assert.ok(html.includes(t), t);
+});

@@ -34,6 +34,21 @@ export function defaultLayoutFor(defs: readonly WidgetDef[]): LayoutItem[] {
   return defs.map((d) => ({ id: d.id, on: d.defaultOn, size: d.defaultSize }));
 }
 
+/** 空の配置＝全部非表示。保存しても normalizeItems で既定に膨らまない（`[]` は既定に戻るのでこちらを使う）。 */
+export function emptyLayoutFor(defs: readonly WidgetDef[]): LayoutItem[] {
+  return defs.map((d) => ({ id: d.id, on: false, size: d.defaultSize }));
+}
+
+/** 「おすすめ」の配置＝各定義の defaultOn / defaultSize。defaultLayoutFor と同じ（意味づけのための別名）。 */
+export function recommendedLayoutFor(defs: readonly WidgetDef[]): LayoutItem[] {
+  return defaultLayoutFor(defs);
+}
+
+/** 画面に出せるものが 1 つでもあるか（hiddenIds＝権限などで出さないものは数えない）。 */
+export function hasShownItems(layout: readonly LayoutItem[], hiddenIds?: ReadonlySet<string>): boolean {
+  return layout.some((i) => i.on && !hiddenIds?.has(i.id));
+}
+
 /**
  * 保存値（壊れていてもよい）を定義に合わせる。
  * 未知 id は捨てる／重複は最初のものだけ／足りない id は既定で末尾／on が真偽値でなければ既定／

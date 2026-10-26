@@ -30,6 +30,15 @@ function snapSize(allowed, desired) {
 function defaultLayoutFor(defs) {
   return defs.map((d) => ({ id: d.id, on: d.defaultOn, size: d.defaultSize }));
 }
+function emptyLayoutFor(defs) {
+  return defs.map((d) => ({ id: d.id, on: false, size: d.defaultSize }));
+}
+function recommendedLayoutFor(defs) {
+  return defaultLayoutFor(defs);
+}
+function hasShownItems(layout, hiddenIds) {
+  return layout.some((i) => i.on && !hiddenIds?.has(i.id));
+}
 function normalizeItems(defs, raw) {
   if (!Array.isArray(raw)) return defaultLayoutFor(defs);
   const byId = new Map(defs.map((d) => [d.id, d]));
@@ -97,9 +106,12 @@ export {
   cycleItemSize,
   defaultLayoutFor,
   draftFor,
+  emptyLayoutFor,
+  hasShownItems,
   isWidgetSize,
   legacyWidthToSize,
   normalizeItems,
+  recommendedLayoutFor,
   removeItem,
   reorderItems,
   snapSize,

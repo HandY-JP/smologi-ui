@@ -412,7 +412,7 @@ CSS（`.hp-*`）は `styles.css` に入っている。色は `--sb-accent-bg`、
 `--hp-panel-border` / `--hp-panel-bg` / `--hp-inline-border` / `--hp-head-bg` で上書きできる
 （未指定は Logistic の見た目。B2B は `--sb-line` / `--sb-panel` などに向ける）。
 
-### ダッシュボード編集キット（v0.7.0）
+### ダッシュボード編集キット（v0.7.0、v0.7.1 で空から始める部品を追加）
 
 ダッシュボードのウィジェットをその場で並べ替え・サイズ変更・追加・削除する部品。アプリの事情（データ・保存先・権限）は持たない。
 
@@ -423,6 +423,11 @@ CSS（`.hp-*`）は `styles.css` に入っている。色は `--sb-accent-bg`、
 - 色は持たない。枠・ボタン・シートの見た目は `classNames` / `sheetClassName` / `candidateClassName` で呼び出し側が渡す
 - `AddWidgetSheet` の候補は `disabled` / `badge` を持てる（Plus 未契約を「Plus」バッジ付きで選べなく出す等）
 - グリッドの 1 段は約 102px（2 段 + gap = 220px）。S/M は 2 段、L は 4 段（約 456px）、W は既定 1 段（帯）。W を 220px の高さにしたいウィジェットは `WidgetDef.rows: 2`（`sizeClassFor(size, rows)` が class を返す）
+- **空から始める（v0.7.1・追加のみ。既存の呼び出しは変わらない）**
+  - `emptyLayoutFor(defs)` = 全 id を `on:false` にした配置。保存しても `normalizeItems` で既定に膨らまない（`[]` は既定に戻るので使わない）。`recommendedLayoutFor(defs)` = 今の `defaultOn`（= 「おすすめ」）。`hasShownItems(layout, hiddenIds)` = 権限で隠すものを除いて表示対象が 1 つでもあるか
+  - `DashboardStarter`（サブパス）: 空のときに真ん中へ出す案内カード（「おすすめをまとめて入れる」「自分で選ぶ」＋おすすめ名のチップ）。色・枠は `className` / `iconClassName` / `primaryClassName` / `secondaryClassName` / `chipClassName` で渡す
+  - `AddWidgetSheet` に **複数選択モード**: `multiple` + `onPickMany(ids)`。押すと選択が切り替わり（`aria-pressed`）、「追加する」でまとめて渡す。`disabled` の候補は選べない。候補に `recommended: true` で「おすすめ」タグ。フッターの背景は `footerClassName`（シートと同じ色を渡す）。`multiple` を付けなければ従来どおり 1 タップ追加
+  - 呼び出し側の約束: 「未保存なら空」の判定は呼び出し側。読み込みが確定する前は骨組みを出し、取得に失敗したら案内のボタンを出さない（保存済みの配置をおすすめで上書きしないため）。案内を出す条件は「読み込み確定 && 編集中でない && 表示対象が 0」。「おすすめ」は保存 1 回、「自分で選ぶ」は編集モードに入って並べ、完了で保存
 - 編集中に隠したいヘッダー右の操作には `data-widget-right` を付ける。ヘッダーには `data-widget-header`
 
 ---
