@@ -144,9 +144,13 @@ export const tailwindPreset = {
       '@property --dash-ang': { syntax: '"<angle>"', inherits: 'false', 'initial-value': '0deg' },
       '.dash-edit-glow': {
         // 静的な縁（reduced-motion・@property 非対応でも色が見える）。box-shadow はタイルの shadow ユーティリティに負けるので outline を使う
-    outline: '1px solid color-mix(in srgb, var(--dash-glow, currentColor) 40%, transparent)',
-    outlineOffset: '0px',
-  },
+        outline: '1px solid color-mix(in srgb, var(--dash-glow, currentColor) 40%, transparent)',
+        outlineOffset: '0px',
+      },
+      '.dash-edit-glow:focus-visible': {
+        outline: '2px solid var(--dash-glow, currentColor)',
+        outlineOffset: '2px',
+      },
       '.dash-edit-glow::after': {
         content: '""',
         position: 'absolute',
@@ -161,6 +165,10 @@ export const tailwindPreset = {
       },
       '@media (prefers-reduced-motion: no-preference)': {
         '.dash-edit-glow::after': { animation: 'dash-orbit 2.4s linear infinite' },
+      },
+      // reduced-motion では光の輪を出さず、静的な outline だけにする
+      '@media (prefers-reduced-motion: reduce)': {
+        '.dash-edit-glow::after': { display: 'none' },
       },
       '@keyframes dash-orbit': { to: { '--dash-ang': '360deg' } },
     }),
