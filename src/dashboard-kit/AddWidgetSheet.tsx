@@ -190,7 +190,7 @@ export function AddWidgetSheet({
                   if (multiple) setSelected((cur) => toggleSelected(cur, candidates, c.id));
                   else onPick(c.id);
                 }}
-                className={`relative text-left ${c.added ? 'cursor-default' : ''} ${multiple && selected.includes(c.id) ? selectedClassName : ''} ${candidateClassName}`}
+                className={`relative flex flex-col items-stretch justify-start text-left ${c.added ? 'cursor-default' : ''} ${multiple && selected.includes(c.id) ? selectedClassName : ''} ${candidateClassName}`}
               >
                 {/* 見本。Plus ロックのときだけ薄くする（追加済みは薄くしない）。 */}
                 <div className={locked ? 'opacity-50' : undefined}><PreviewArt kind={c.preview} /></div>
