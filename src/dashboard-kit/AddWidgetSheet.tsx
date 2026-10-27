@@ -174,7 +174,7 @@ export function AddWidgetSheet({
       {allAdded ? (
         <p className="text-[13px] opacity-60">すべてのウィジェットを表示中です。</p>
       ) : (
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-2.5">
+        <div className={`grid gap-2.5 ${wide ? 'grid-cols-3' : 'grid-cols-[repeat(auto-fill,minmax(150px,1fr))]'}`}>
           {candidates.map((c) => {
             const locked = !!c.disabled && !c.added;
             const inert = locked || !!c.added;

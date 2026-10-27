@@ -96,7 +96,7 @@ function AddWidgetSheet({
   const allAdded = candidates.every((c) => c.added);
   const body = /* @__PURE__ */ jsxs(Fragment, { children: [
     multiple ? /* @__PURE__ */ jsx("p", { className: "mb-3 text-[13px] opacity-60", children: hint ?? "\u62BC\u3057\u3066\u9078\u3073\u3001\u300C\u8FFD\u52A0\u3059\u308B\u300D\u3067\u4E26\u3079\u307E\u3059\u3002\u3042\u3068\u304B\u3089\u300C\u7DE8\u96C6\u300D\u3067\u3044\u3064\u3067\u3082\u5909\u3048\u3089\u308C\u307E\u3059\u3002" }) : null,
-    allAdded ? /* @__PURE__ */ jsx("p", { className: "text-[13px] opacity-60", children: "\u3059\u3079\u3066\u306E\u30A6\u30A3\u30B8\u30A7\u30C3\u30C8\u3092\u8868\u793A\u4E2D\u3067\u3059\u3002" }) : /* @__PURE__ */ jsx("div", { className: "grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-2.5", children: candidates.map((c) => {
+    allAdded ? /* @__PURE__ */ jsx("p", { className: "text-[13px] opacity-60", children: "\u3059\u3079\u3066\u306E\u30A6\u30A3\u30B8\u30A7\u30C3\u30C8\u3092\u8868\u793A\u4E2D\u3067\u3059\u3002" }) : /* @__PURE__ */ jsx("div", { className: `grid gap-2.5 ${wide ? "grid-cols-3" : "grid-cols-[repeat(auto-fill,minmax(150px,1fr))]"}`, children: candidates.map((c) => {
       const locked = !!c.disabled && !c.added;
       const inert = locked || !!c.added;
       return /* @__PURE__ */ jsxs(
