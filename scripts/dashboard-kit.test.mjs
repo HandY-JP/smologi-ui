@@ -109,6 +109,14 @@ test('複数選択: 切り替え・ロック候補は選べない・確定は候
   assert.deepEqual(m.confirmedSelection(['x', 'y'], [{ id: 'x' }, { id: 'y', disabled: true }]), ['x']);
 });
 
+test('複数選択: 追加済み(added)は選べず、確定からも落ちる', () => {
+  const cands = [{ id: 'x' }, { id: 'done', added: true }, { id: 'y' }];
+  assert.deepEqual(m.toggleSelected([], cands, 'done'), []);
+  assert.deepEqual(m.toggleSelected(['x'], cands, 'done'), ['x']);
+  assert.deepEqual(m.confirmedSelection(['x', 'done', 'y'], cands), ['x', 'y']);
+  assert.deepEqual(m.confirmedSelection(['y'], [{ id: 'y', added: true }]), []);
+});
+
 test('DashboardStarter: 文言・2 つのボタン・おすすめチップを描く', async () => {
   const { createElement } = await import('react');
   const { renderToStaticMarkup } = await import('react-dom/server');

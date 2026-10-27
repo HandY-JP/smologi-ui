@@ -1,3 +1,4 @@
+import type { WidgetPreview } from './types';
 export interface AddWidgetCandidate {
     id: string;
     title: string;
@@ -8,6 +9,10 @@ export interface AddWidgetCandidate {
     badge?: string;
     /** true なら「おすすめ」の小さなタグを付ける。 */
     recommended?: boolean;
+    /** true なら追加済み。押せないが見本は見えたまま、チェックと「追加済み」を出す。 */
+    added?: boolean;
+    /** 見本の種類（未指定は 'stats'）。 */
+    preview?: WidgetPreview;
 }
 export interface AddWidgetSheetProps {
     open: boolean;
