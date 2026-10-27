@@ -195,16 +195,18 @@ export function AddWidgetSheet({
                 {/* 見本。Plus ロックのときだけ薄くする（追加済みは薄くしない）。 */}
                 <div className={locked ? 'opacity-50' : undefined}><PreviewArt kind={c.preview} /></div>
                 <div className={locked ? 'opacity-50' : undefined}>
-                  <b className="mb-1 flex flex-wrap items-center gap-1.5 text-sm">
-                    <span>{inert || multiple ? '' : '＋ '}{c.title}</span>
+                  <b className="mb-1 flex items-start justify-between gap-2 text-sm">
+                    <span className="flex min-w-0 flex-1 flex-wrap items-center gap-x-1.5 gap-y-1">
+                      <span className="min-w-0 break-words">{inert || multiple ? '' : '＋ '}{c.title}</span>
+                      {c.badge ? <span className="rounded-full border border-current px-1.5 py-px text-[10px] font-semibold leading-none opacity-70">{c.badge}</span> : null}
+                      {c.recommended && !c.disabled && !c.added ? <span className="rounded-full border border-current px-1.5 py-px text-[10px] font-semibold leading-none opacity-70">おすすめ</span> : null}
+                    </span>
                     {c.added ? (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-current/10 px-2 py-0.5 text-[11px] font-semibold leading-none">
-                    <svg viewBox="0 0 12 12" width="11" height="11" aria-hidden><path d="M2.5 6.5l2.5 2.5 4.5-5.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                    追加済み
+                      <span className="inline-flex shrink-0 items-center gap-1 whitespace-nowrap rounded-full bg-current/10 px-2 py-0.5 text-[11px] font-semibold leading-none">
+                        <svg viewBox="0 0 12 12" width="11" height="11" aria-hidden><path d="M2.5 6.5l2.5 2.5 4.5-5.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                        追加済み
                       </span>
                     ) : null}
-                    {c.badge ? <span className="rounded-full border border-current px-1.5 py-px text-[10px] font-semibold leading-none opacity-70">{c.badge}</span> : null}
-                    {c.recommended && !c.disabled && !c.added ? <span className="rounded-full border border-current px-1.5 py-px text-[10px] font-semibold leading-none opacity-70">おすすめ</span> : null}
                   </b>
                   {c.description ? <small className="text-xs leading-normal opacity-60">{c.description}</small> : null}
                 </div>

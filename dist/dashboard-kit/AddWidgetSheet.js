@@ -115,17 +115,19 @@ function AddWidgetSheet({
           children: [
             /* @__PURE__ */ jsx("div", { className: locked ? "opacity-50" : void 0, children: /* @__PURE__ */ jsx(PreviewArt, { kind: c.preview }) }),
             /* @__PURE__ */ jsxs("div", { className: locked ? "opacity-50" : void 0, children: [
-              /* @__PURE__ */ jsxs("b", { className: "mb-1 flex flex-wrap items-center gap-1.5 text-sm", children: [
-                /* @__PURE__ */ jsxs("span", { children: [
-                  inert || multiple ? "" : "\uFF0B ",
-                  c.title
+              /* @__PURE__ */ jsxs("b", { className: "mb-1 flex items-start justify-between gap-2 text-sm", children: [
+                /* @__PURE__ */ jsxs("span", { className: "flex min-w-0 flex-1 flex-wrap items-center gap-x-1.5 gap-y-1", children: [
+                  /* @__PURE__ */ jsxs("span", { className: "min-w-0 break-words", children: [
+                    inert || multiple ? "" : "\uFF0B ",
+                    c.title
+                  ] }),
+                  c.badge ? /* @__PURE__ */ jsx("span", { className: "rounded-full border border-current px-1.5 py-px text-[10px] font-semibold leading-none opacity-70", children: c.badge }) : null,
+                  c.recommended && !c.disabled && !c.added ? /* @__PURE__ */ jsx("span", { className: "rounded-full border border-current px-1.5 py-px text-[10px] font-semibold leading-none opacity-70", children: "\u304A\u3059\u3059\u3081" }) : null
                 ] }),
-                c.added ? /* @__PURE__ */ jsxs("span", { className: "inline-flex items-center gap-1 rounded-full bg-current/10 px-2 py-0.5 text-[11px] font-semibold leading-none", children: [
+                c.added ? /* @__PURE__ */ jsxs("span", { className: "inline-flex shrink-0 items-center gap-1 whitespace-nowrap rounded-full bg-current/10 px-2 py-0.5 text-[11px] font-semibold leading-none", children: [
                   /* @__PURE__ */ jsx("svg", { viewBox: "0 0 12 12", width: "11", height: "11", "aria-hidden": true, children: /* @__PURE__ */ jsx("path", { d: "M2.5 6.5l2.5 2.5 4.5-5.5", fill: "none", stroke: "currentColor", strokeWidth: "1.8", strokeLinecap: "round", strokeLinejoin: "round" }) }),
                   "\u8FFD\u52A0\u6E08\u307F"
-                ] }) : null,
-                c.badge ? /* @__PURE__ */ jsx("span", { className: "rounded-full border border-current px-1.5 py-px text-[10px] font-semibold leading-none opacity-70", children: c.badge }) : null,
-                c.recommended && !c.disabled && !c.added ? /* @__PURE__ */ jsx("span", { className: "rounded-full border border-current px-1.5 py-px text-[10px] font-semibold leading-none opacity-70", children: "\u304A\u3059\u3059\u3081" }) : null
+                ] }) : null
               ] }),
               c.description ? /* @__PURE__ */ jsx("small", { className: "text-xs leading-normal opacity-60", children: c.description }) : null
             ] })
