@@ -13,13 +13,16 @@ function useIsWide() {
   return useSyncExternalStore(subscribeWide, () => window.matchMedia(WIDE_QUERY).matches, () => false);
 }
 function PreviewArt({ kind = "stats" }) {
-  return /* @__PURE__ */ jsx("div", { "aria-hidden": true, className: "mb-2 flex h-14 items-end overflow-hidden rounded-lg bg-current/5 p-2", children: kind === "chart" ? /* @__PURE__ */ jsx("svg", { viewBox: "0 0 100 32", preserveAspectRatio: "none", className: "h-full w-full", children: /* @__PURE__ */ jsx("polyline", { points: "0,26 16,20 32,23 48,12 64,15 80,6 100,9", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinejoin: "round", strokeLinecap: "round", vectorEffect: "non-scaling-stroke", opacity: "0.6" }) }) : kind === "bars" ? /* @__PURE__ */ jsx("div", { className: "flex h-full w-full items-end gap-1.5", children: [40, 65, 50, 85, 60, 95].map((h, i) => /* @__PURE__ */ jsx("span", { className: "flex-1 rounded-sm bg-current opacity-40", style: { height: `${h}%` } }, i)) }) : kind === "list" ? /* @__PURE__ */ jsx("div", { className: "flex h-full w-full flex-col justify-between", children: [90, 70, 80].map((w, i) => /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-1.5", children: [
-    /* @__PURE__ */ jsx("span", { className: "h-1.5 w-1.5 rounded-full bg-current opacity-40" }),
-    /* @__PURE__ */ jsx("span", { className: "h-1.5 rounded-full bg-current opacity-30", style: { width: `${w}%` } })
-  ] }, i)) }) : /* @__PURE__ */ jsxs("div", { className: "flex w-full flex-col gap-1.5 self-center", children: [
-    /* @__PURE__ */ jsx("span", { className: "h-3 w-2/5 rounded-sm bg-current opacity-50" }),
-    /* @__PURE__ */ jsx("span", { className: "h-1.5 w-3/5 rounded-full bg-current opacity-25" })
-  ] }) });
+  return /* @__PURE__ */ jsxs("div", { "aria-hidden": true, className: "relative mb-2 flex h-14 items-end overflow-hidden rounded-lg p-2", children: [
+    /* @__PURE__ */ jsx("span", { className: "absolute inset-0 bg-current opacity-5" }),
+    kind === "chart" ? /* @__PURE__ */ jsx("svg", { viewBox: "0 0 100 32", preserveAspectRatio: "none", className: "relative h-full w-full", children: /* @__PURE__ */ jsx("polyline", { points: "0,26 16,20 32,23 48,12 64,15 80,6 100,9", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinejoin: "round", strokeLinecap: "round", vectorEffect: "non-scaling-stroke", opacity: "0.6" }) }) : kind === "bars" ? /* @__PURE__ */ jsx("div", { className: "relative flex h-full w-full items-end gap-1.5", children: [40, 65, 50, 85, 60, 95].map((h, i) => /* @__PURE__ */ jsx("span", { className: "flex-1 rounded-sm bg-current opacity-40", style: { height: `${h}%` } }, i)) }) : kind === "list" ? /* @__PURE__ */ jsx("div", { className: "relative flex h-full w-full flex-col justify-between", children: [90, 70, 80].map((w, i) => /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-1.5", children: [
+      /* @__PURE__ */ jsx("span", { className: "h-1.5 w-1.5 rounded-full bg-current opacity-40" }),
+      /* @__PURE__ */ jsx("span", { className: "h-1.5 rounded-full bg-current opacity-30", style: { width: `${w}%` } })
+    ] }, i)) }) : /* @__PURE__ */ jsxs("div", { className: "relative flex w-full flex-col gap-1.5 self-center", children: [
+      /* @__PURE__ */ jsx("span", { className: "h-3 w-2/5 rounded-sm bg-current opacity-50" }),
+      /* @__PURE__ */ jsx("span", { className: "h-1.5 w-3/5 rounded-full bg-current opacity-25" })
+    ] })
+  ] });
 }
 function AddWidgetSheet({
   open,
@@ -27,6 +30,7 @@ function AddWidgetSheet({
   onPick,
   onClose,
   sheetClassName,
+  modalClassName = "rounded-2xl shadow-2xl",
   candidateClassName,
   scrimClassName = "bg-black/35",
   multiple = false,
@@ -96,7 +100,8 @@ function AddWidgetSheet({
   const allAdded = candidates.every((c) => c.added);
   const body = /* @__PURE__ */ jsxs(Fragment, { children: [
     multiple ? /* @__PURE__ */ jsx("p", { className: "mb-3 text-[13px] opacity-60", children: hint ?? "\u62BC\u3057\u3066\u9078\u3073\u3001\u300C\u8FFD\u52A0\u3059\u308B\u300D\u3067\u4E26\u3079\u307E\u3059\u3002\u3042\u3068\u304B\u3089\u300C\u7DE8\u96C6\u300D\u3067\u3044\u3064\u3067\u3082\u5909\u3048\u3089\u308C\u307E\u3059\u3002" }) : null,
-    allAdded ? /* @__PURE__ */ jsx("p", { className: "text-[13px] opacity-60", children: "\u3059\u3079\u3066\u306E\u30A6\u30A3\u30B8\u30A7\u30C3\u30C8\u3092\u8868\u793A\u4E2D\u3067\u3059\u3002" }) : /* @__PURE__ */ jsx("div", { className: `grid gap-2.5 ${wide ? "grid-cols-3" : "grid-cols-[repeat(auto-fill,minmax(150px,1fr))]"}`, children: candidates.map((c) => {
+    allAdded ? /* @__PURE__ */ jsx("p", { className: "mb-3 text-[13px] opacity-60", children: "\u3059\u3079\u3066\u306E\u30A6\u30A3\u30B8\u30A7\u30C3\u30C8\u3092\u8868\u793A\u4E2D\u3067\u3059\u3002" }) : null,
+    candidates.length > 0 ? /* @__PURE__ */ jsx("div", { className: `grid gap-2.5 ${wide ? "grid-cols-3" : "grid-cols-[repeat(auto-fill,minmax(150px,1fr))]"}`, children: candidates.map((c) => {
       const locked = !!c.disabled && !c.added;
       const inert = locked || !!c.added;
       return /* @__PURE__ */ jsxs(
@@ -124,8 +129,9 @@ function AddWidgetSheet({
                   c.badge ? /* @__PURE__ */ jsx("span", { className: "rounded-full border border-current px-1.5 py-px text-[10px] font-semibold leading-none opacity-70", children: c.badge }) : null,
                   c.recommended && !c.disabled && !c.added ? /* @__PURE__ */ jsx("span", { className: "rounded-full border border-current px-1.5 py-px text-[10px] font-semibold leading-none opacity-70", children: "\u304A\u3059\u3059\u3081" }) : null
                 ] }),
-                c.added ? /* @__PURE__ */ jsxs("span", { className: "inline-flex shrink-0 items-center gap-1 whitespace-nowrap rounded-full bg-current/10 px-2 py-0.5 text-[11px] font-semibold leading-none", children: [
-                  /* @__PURE__ */ jsx("svg", { viewBox: "0 0 12 12", width: "11", height: "11", "aria-hidden": true, children: /* @__PURE__ */ jsx("path", { d: "M2.5 6.5l2.5 2.5 4.5-5.5", fill: "none", stroke: "currentColor", strokeWidth: "1.8", strokeLinecap: "round", strokeLinejoin: "round" }) }),
+                c.added ? /* @__PURE__ */ jsxs("span", { className: "relative inline-flex shrink-0 items-center gap-1 overflow-hidden whitespace-nowrap rounded-full px-2 py-0.5 text-[11px] font-semibold leading-none", children: [
+                  /* @__PURE__ */ jsx("span", { "aria-hidden": true, className: "absolute inset-0 bg-current opacity-10" }),
+                  /* @__PURE__ */ jsx("svg", { viewBox: "0 0 12 12", width: "11", height: "11", "aria-hidden": true, className: "relative", children: /* @__PURE__ */ jsx("path", { d: "M2.5 6.5l2.5 2.5 4.5-5.5", fill: "none", stroke: "currentColor", strokeWidth: "1.8", strokeLinecap: "round", strokeLinejoin: "round" }) }),
                   "\u8FFD\u52A0\u6E08\u307F"
                 ] }) : null
               ] }),
@@ -135,7 +141,7 @@ function AddWidgetSheet({
         },
         c.id
       );
-    }) })
+    }) }) : null
   ] });
   const footer = multiple ? /* @__PURE__ */ jsxs("div", { className: `${wide ? "shrink-0 px-5 py-3" : "sticky bottom-0 -mx-4 mt-3.5 px-4 py-2"} flex justify-end gap-2 ${footerClassName}`, children: [
     /* @__PURE__ */ jsx("button", { type: "button", onClick: onClose, className: footerButtonClassName, children: cancelLabel }),
@@ -154,7 +160,7 @@ function AddWidgetSheet({
             "aria-modal": "true",
             "aria-label": heading,
             tabIndex: -1,
-            className: `fixed left-1/2 top-1/2 z-[41] flex h-[min(640px,80vh)] w-[min(768px,calc(100%-32px))] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden outline-none ${sheetClassName}`,
+            className: `fixed left-1/2 top-1/2 z-[41] flex h-[min(640px,80vh)] w-[min(768px,calc(100%-32px))] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden outline-none ${modalClassName}`,
             children: [
               /* @__PURE__ */ jsxs("div", { className: "flex shrink-0 items-center justify-between gap-3 px-5 pb-2 pt-4", children: [
                 /* @__PURE__ */ jsx("h4", { className: "text-base font-semibold", children: heading }),

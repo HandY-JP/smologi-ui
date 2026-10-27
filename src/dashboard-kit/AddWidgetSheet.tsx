@@ -20,17 +20,18 @@ function useIsWide(): boolean {
 /** データを使わず CSS だけで描く小さな見本。色は currentColor の濃淡だけ。 */
 function PreviewArt({ kind = 'stats' }: { kind?: WidgetPreview }) {
   return (
-    <div aria-hidden className="mb-2 flex h-14 items-end overflow-hidden rounded-lg bg-current/5 p-2">
+    <div aria-hidden className="relative mb-2 flex h-14 items-end overflow-hidden rounded-lg p-2">
+      <span className="absolute inset-0 bg-current opacity-5" />
       {kind === 'chart' ? (
-        <svg viewBox="0 0 100 32" preserveAspectRatio="none" className="h-full w-full">
+        <svg viewBox="0 0 100 32" preserveAspectRatio="none" className="relative h-full w-full">
           <polyline points="0,26 16,20 32,23 48,12 64,15 80,6 100,9" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" vectorEffect="non-scaling-stroke" opacity="0.6" />
         </svg>
       ) : kind === 'bars' ? (
-        <div className="flex h-full w-full items-end gap-1.5">
+        <div className="relative flex h-full w-full items-end gap-1.5">
           {[40, 65, 50, 85, 60, 95].map((h, i) => <span key={i} className="flex-1 rounded-sm bg-current opacity-40" style={{ height: `${h}%` }} />)}
         </div>
       ) : kind === 'list' ? (
-        <div className="flex h-full w-full flex-col justify-between">
+        <div className="relative flex h-full w-full flex-col justify-between">
           {[90, 70, 80].map((w, i) => (
             <div key={i} className="flex items-center gap-1.5">
               <span className="h-1.5 w-1.5 rounded-full bg-current opacity-40" />
@@ -39,7 +40,7 @@ function PreviewArt({ kind = 'stats' }: { kind?: WidgetPreview }) {
           ))}
         </div>
       ) : (
-        <div className="flex w-full flex-col gap-1.5 self-center">
+        <div className="relative flex w-full flex-col gap-1.5 self-center">
           <span className="h-3 w-2/5 rounded-sm bg-current opacity-50" />
           <span className="h-1.5 w-3/5 rounded-full bg-current opacity-25" />
         </div>
@@ -71,6 +72,8 @@ export interface AddWidgetSheetProps {
   onClose: () => void;
   /** シート本体のクラス（ガラス・角丸・背景）。 */
   sheetClassName: string;
+  /** PC 幅（640px 以上）の中央モーダル本体のクラス（角丸・背景・影）。既定は角丸と影だけ。 */
+  modalClassName?: string;
   /** 候補ボタンのクラス。 */
   candidateClassName: string;
   scrimClassName?: string;
@@ -102,6 +105,7 @@ export function AddWidgetSheet({
   onPick,
   onClose,
   sheetClassName,
+  modalClassName = 'rounded-2xl shadow-2xl',
   candidateClassName,
   scrimClassName = 'bg-black/35',
   multiple = false,
@@ -171,9 +175,8 @@ export function AddWidgetSheet({
       {multiple ? (
         <p className="mb-3 text-[13px] opacity-60">{hint ?? '押して選び、「追加する」で並べます。あとから「編集」でいつでも変えられます。'}</p>
       ) : null}
-      {allAdded ? (
-        <p className="text-[13px] opacity-60">すべてのウィジェットを表示中です。</p>
-      ) : (
+      {allAdded ? <p className="mb-3 text-[13px] opacity-60">すべてのウィジェットを表示中です。</p> : null}
+      {candidates.length > 0 ? (
         <div className={`grid gap-2.5 ${wide ? 'grid-cols-3' : 'grid-cols-[repeat(auto-fill,minmax(150px,1fr))]'}`}>
           {candidates.map((c) => {
             const locked = !!c.disabled && !c.added;
@@ -202,8 +205,9 @@ export function AddWidgetSheet({
                       {c.recommended && !c.disabled && !c.added ? <span className="rounded-full border border-current px-1.5 py-px text-[10px] font-semibold leading-none opacity-70">おすすめ</span> : null}
                     </span>
                     {c.added ? (
-                      <span className="inline-flex shrink-0 items-center gap-1 whitespace-nowrap rounded-full bg-current/10 px-2 py-0.5 text-[11px] font-semibold leading-none">
-                        <svg viewBox="0 0 12 12" width="11" height="11" aria-hidden><path d="M2.5 6.5l2.5 2.5 4.5-5.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                      <span className="relative inline-flex shrink-0 items-center gap-1 overflow-hidden whitespace-nowrap rounded-full px-2 py-0.5 text-[11px] font-semibold leading-none">
+                        <span aria-hidden className="absolute inset-0 bg-current opacity-10" />
+                        <svg viewBox="0 0 12 12" width="11" height="11" aria-hidden className="relative"><path d="M2.5 6.5l2.5 2.5 4.5-5.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
                         追加済み
                       </span>
                     ) : null}
@@ -214,7 +218,7 @@ export function AddWidgetSheet({
             );
           })}
         </div>
-      )}
+      ) : null}
     </>
   );
   const footer = multiple ? (
@@ -234,7 +238,7 @@ export function AddWidgetSheet({
           aria-modal="true"
           aria-label={heading}
           tabIndex={-1}
-          className={`fixed left-1/2 top-1/2 z-[41] flex h-[min(640px,80vh)] w-[min(768px,calc(100%-32px))] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden outline-none ${sheetClassName}`}
+          className={`fixed left-1/2 top-1/2 z-[41] flex h-[min(640px,80vh)] w-[min(768px,calc(100%-32px))] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden outline-none ${modalClassName}`}
         >
           <div className="flex shrink-0 items-center justify-between gap-3 px-5 pb-2 pt-4">
             <h4 className="text-base font-semibold">{heading}</h4>

@@ -21,6 +21,8 @@ export interface AddWidgetSheetProps {
     onClose: () => void;
     /** シート本体のクラス（ガラス・角丸・背景）。 */
     sheetClassName: string;
+    /** PC 幅（640px 以上）の中央モーダル本体のクラス（角丸・背景・影）。既定は角丸と影だけ。 */
+    modalClassName?: string;
     /** 候補ボタンのクラス。 */
     candidateClassName: string;
     scrimClassName?: string;
@@ -45,5 +47,5 @@ export interface AddWidgetSheetProps {
     /** 選択中の候補に足すクラス。 */
     selectedClassName?: string;
 }
-export declare function AddWidgetSheet({ open, candidates, onPick, onClose, sheetClassName, candidateClassName, scrimClassName, multiple, onPickMany, title, hint, confirmLabel, cancelLabel, footerButtonClassName, footerPrimaryClassName, selectedClassName, footerClassName, }: AddWidgetSheetProps): import("react").ReactPortal | null;
+export declare function AddWidgetSheet({ open, candidates, onPick, onClose, sheetClassName, modalClassName, candidateClassName, scrimClassName, multiple, onPickMany, title, hint, confirmLabel, cancelLabel, footerButtonClassName, footerPrimaryClassName, selectedClassName, footerClassName, }: AddWidgetSheetProps): import("react").ReactPortal | null;
 //# sourceMappingURL=AddWidgetSheet.d.ts.map
