@@ -420,7 +420,7 @@ CSS（`.hp-*`）は `styles.css` に入っている。色は `--sb-accent-bg`、
   props: `collapsed` / `persistedCollapsed` / `onToggle` / `hoverHandlers` / `hasNews` / `newsReason` /
   `home?: { href, active, dot?, dotTitle?, intent? }` / `workspaceSwitch?`（`WorkspaceSwitch` と同じ形）/
   `allPages?`（ReactNode スロット。`AllPagesDockButton` を渡す）/ `renderLink?`（ホームのリンク差し替え。`next/link` はここで）/
-  `activeClassName?`（家の選択中クラス。既定 `'sb-nav-active !shadow-none'`。CSS 変数では代用しない）。
+  `activeClassName?`（家の選択中クラス。既定 `'sb-nav-active !shadow-none'`。CSS 変数では代用しない）/ `newDotClassName?`（要対応ドットの色クラス。Smologi・Seller は `bg-danger-solid`、既定は red-500）。
 - `AllPagesDockButton` … `open` / `onToggle` / `panelId?`。`data-all-pages-trigger`・`aria-controls` を持つ。パネル本体と開閉ストアはアプリ側。
 - `DashboardAppRow` … アプリ列の見た目だけ。`apps`（`{ id, label, href, dot? }[]`）/ `currentAppId` / `loading` / `size`（'md' | 'sm'）/
   `renderIcon?` / `assetBase?`。別タブで開く、今いるアプリは `role="img"` ＋ outline。契約中アプリの取得はアプリ側。

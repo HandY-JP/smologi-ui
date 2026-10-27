@@ -91,6 +91,7 @@ export function SidebarToggleDock({
   allPages,
   renderLink,
   activeClassName = 'sb-nav-active !shadow-none',
+  newDotClassName,
 }: {
   /** 見た目の状態（折りたたみ中でも一時展開＝ピーク中は false）。 */
   collapsed: boolean;
@@ -161,6 +162,8 @@ export function SidebarToggleDock({
    * アプリごとのクラス名で渡す。
    */
   activeClassName?: string;
+  /** 要対応ドットの色クラスの差し替え（SidebarNewDot の colorClassName）。省略時は既定の赤。 */
+  newDotClassName?: string;
 }) {
   // collapsed は見た目の状態なので、ピーク（一時展開）中は false ＝ドットを出さない
   // （展開中はサイドバーの各行のドットが見えているため）。
@@ -232,7 +235,7 @@ export function SidebarToggleDock({
           {/* 折りたたみ中にサイドバー内のどれかに要対応があるとき、アイコン右上に重ねる。
               展開中は各項目の赤丸が見えているので出さない（冗長になるため）。
               クリック判定は邪魔しない（pointer-events-none）。読み上げはボタンの aria-label に含める。 */}
-          {showNewsDot && <SidebarNewDot placement="corner" label={null} ringColor="#ffffff" />}
+          {showNewsDot && <SidebarNewDot placement="corner" label={null} ringColor="#ffffff" colorClassName={newDotClassName} />}
         </button>
         {/* ホーム・画面切替は**展開中だけ**出す（ピーク中も展開扱い）。
             折りたたみ中に出すと、本文の上へ浮く道具バーのカプセルと重なるため（2026-09-15 修正）。 */}
@@ -258,7 +261,7 @@ export function SidebarToggleDock({
                       <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                       </svg>
-                      {home.dot && <SidebarNewDot placement="corner" label={null} />}
+                      {home.dot && <SidebarNewDot placement="corner" label={null} colorClassName={newDotClassName} />}
                     </>
                   ),
                 };

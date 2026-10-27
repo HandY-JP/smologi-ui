@@ -34,6 +34,7 @@ export function DashboardAppRow({
   renderIcon,
   ariaLabel = '契約中のアプリ',
   loadingText = '読み込み中…',
+  newDotClassName,
 }: {
   apps: DashboardAppRowItem[];
   /** 現在地アプリID。選択中の見た目になる。 */
@@ -48,6 +49,8 @@ export function DashboardAppRow({
   renderIcon?: (app: DashboardAppRowItem) => ReactNode;
   ariaLabel?: string;
   loadingText?: string;
+  /** 未読ドットの色クラスの差し替え（SidebarNewDot の colorClassName）。 */
+  newDotClassName?: string;
 }) {
   if (!loading && apps.length === 0) return null;
 
@@ -64,7 +67,7 @@ export function DashboardAppRow({
         const inner = (
           <>
             {renderIcon ? renderIcon(app) : <AppBrandIcon appId={app.id} assetBase={assetBase} className="block h-full w-full" />}
-            {app.dot && <SidebarNewDot placement="corner" />}
+            {app.dot && <SidebarNewDot placement="corner" colorClassName={newDotClassName} />}
           </>
         );
         return (

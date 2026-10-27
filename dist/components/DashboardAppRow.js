@@ -12,7 +12,8 @@ function DashboardAppRow({
   assetBase,
   renderIcon,
   ariaLabel = "\u5951\u7D04\u4E2D\u306E\u30A2\u30D7\u30EA",
-  loadingText = "\u8AAD\u307F\u8FBC\u307F\u4E2D\u2026"
+  loadingText = "\u8AAD\u307F\u8FBC\u307F\u4E2D\u2026",
+  newDotClassName
 }) {
   if (!loading && apps.length === 0) return null;
   const box = size === "sm" ? "h-10 w-10" : "h-14 w-14";
@@ -22,7 +23,7 @@ function DashboardAppRow({
       const tileClass = `relative block ${box} flex-shrink-0 rounded-[25%] transition-shadow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${current ? "outline outline-2 outline-offset-2 outline-accent" : "hover:ring-2 hover:ring-line"}`;
       const inner = /* @__PURE__ */ jsxs(Fragment, { children: [
         renderIcon ? renderIcon(app) : /* @__PURE__ */ jsx(AppBrandIcon, { appId: app.id, assetBase, className: "block h-full w-full" }),
-        app.dot && /* @__PURE__ */ jsx(SidebarNewDot, { placement: "corner" })
+        app.dot && /* @__PURE__ */ jsx(SidebarNewDot, { placement: "corner", colorClassName: newDotClassName })
       ] });
       return /* @__PURE__ */ jsx(Tooltip, { content: app.label, side: "bottom", children: current ? (
         // 今いるアプリは押しても遷移しない（リンクにしない）。

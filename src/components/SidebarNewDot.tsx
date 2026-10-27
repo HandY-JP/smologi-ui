@@ -17,6 +17,7 @@ export function SidebarNewDot({
   ringColor,
   label = '新着あり',
   tone = 'red',
+  colorClassName,
 }: {
   placement?: 'inline' | 'corner';
   /** 選択中の行（濃い背景）に載るときは白丸にして潰れないようにする。 */
@@ -32,6 +33,12 @@ export function SidebarNewDot({
    * onAccent=true のときは色調に関わらず白丸になる（濃い背景での視認性優先）。
    */
   tone?: 'red' | 'blue';
+  /**
+   * 色クラスの差し替え（例 'bg-danger-solid'）。省略時は tone と onAccent で決まる既定色
+   * （red-500 / blue-500 / white）。意味名トークン（palette）で色を決めているアプリが、
+   * 既存の見た目を変えずに使うための口。
+   */
+  colorClassName?: string;
 }) {
   return (
     <span
@@ -43,7 +50,7 @@ export function SidebarNewDot({
         placement === 'corner'
           ? 'pointer-events-none absolute right-1 top-1'
           : 'ml-1 inline-block flex-shrink-0'
-      } ${muted ? 'opacity-60' : ''} ${onAccent ? 'bg-white' : tone === 'blue' ? 'bg-blue-500' : 'bg-red-500'}`}
+      } ${muted ? 'opacity-60' : ''} ${colorClassName ?? (onAccent ? 'bg-white' : tone === 'blue' ? 'bg-blue-500' : 'bg-red-500')}`}
       style={ringColor ? { boxShadow: `0 0 0 2px ${ringColor}` } : undefined}
     />
   );

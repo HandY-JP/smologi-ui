@@ -13,7 +13,8 @@ function SidebarToggleDock({
   workspaceSwitch,
   allPages,
   renderLink,
-  activeClassName = "sb-nav-active !shadow-none"
+  activeClassName = "sb-nav-active !shadow-none",
+  newDotClassName
 }) {
   const showNewsDot = hasNews && collapsed;
   const base = persistedCollapsed ? "\u30B5\u30A4\u30C9\u30D0\u30FC\u3092\u958B\u304F" : "\u30B5\u30A4\u30C9\u30D0\u30FC\u3092\u9589\u3058\u308B";
@@ -67,7 +68,7 @@ function SidebarToggleDock({
                   ]
                 }
               ),
-              showNewsDot && /* @__PURE__ */ jsx(SidebarNewDot, { placement: "corner", label: null, ringColor: "#ffffff" })
+              showNewsDot && /* @__PURE__ */ jsx(SidebarNewDot, { placement: "corner", label: null, ringColor: "#ffffff", colorClassName: newDotClassName })
             ]
           }
         ),
@@ -86,7 +87,7 @@ function SidebarToggleDock({
               className: `relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--sb-accent-bg)] ${home.active ? activeClassName : "text-[var(--sb-text)] hover:bg-[var(--sb-hover)]"}`,
               children: /* @__PURE__ */ jsxs(Fragment, { children: [
                 /* @__PURE__ */ jsx("svg", { className: "h-4 w-4", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", "aria-hidden": "true", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" }) }),
-                home.dot && /* @__PURE__ */ jsx(SidebarNewDot, { placement: "corner", label: null })
+                home.dot && /* @__PURE__ */ jsx(SidebarNewDot, { placement: "corner", label: null, colorClassName: newDotClassName })
               ] })
             };
             return renderLink ? renderLink(linkProps) : /* @__PURE__ */ jsx("a", { ...linkProps });

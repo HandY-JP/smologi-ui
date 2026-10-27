@@ -18,7 +18,7 @@ export type DashboardAppRowItem = {
  * - 取得が終わって apps が空なら何も描画しない（loading 中は枠だけ出して「読み込み中…」）。
  * - 色は Tailwind の ink-muted / line / accent（Smologi・Seller 共通の意味名）。
  */
-export declare function DashboardAppRow({ apps, currentAppId, loading, size, className, assetBase, renderIcon, ariaLabel, loadingText, }: {
+export declare function DashboardAppRow({ apps, currentAppId, loading, size, className, assetBase, renderIcon, ariaLabel, loadingText, newDotClassName, }: {
     apps: DashboardAppRowItem[];
     /** 現在地アプリID。選択中の見た目になる。 */
     currentAppId: string;
@@ -32,5 +32,7 @@ export declare function DashboardAppRow({ apps, currentAppId, loading, size, cla
     renderIcon?: (app: DashboardAppRowItem) => ReactNode;
     ariaLabel?: string;
     loadingText?: string;
+    /** 未読ドットの色クラスの差し替え（SidebarNewDot の colorClassName）。 */
+    newDotClassName?: string;
 }): import("react").JSX.Element | null;
 //# sourceMappingURL=DashboardAppRow.d.ts.map

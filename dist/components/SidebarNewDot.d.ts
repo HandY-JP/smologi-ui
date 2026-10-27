@@ -8,7 +8,7 @@
  * - placement="inline": 展開中の行の右端に並べる
  * - placement="corner": 折りたたみ中のアイコン右上／開閉トグルの右上に重ねる
  */
-export declare function SidebarNewDot({ placement, onAccent, muted, ringColor, label, tone, }: {
+export declare function SidebarNewDot({ placement, onAccent, muted, ringColor, label, tone, colorClassName, }: {
     placement?: 'inline' | 'corner';
     /** 選択中の行（濃い背景）に載るときは白丸にして潰れないようにする。 */
     onAccent?: boolean;
@@ -23,5 +23,11 @@ export declare function SidebarNewDot({ placement, onAccent, muted, ringColor, l
      * onAccent=true のときは色調に関わらず白丸になる（濃い背景での視認性優先）。
      */
     tone?: 'red' | 'blue';
+    /**
+     * 色クラスの差し替え（例 'bg-danger-solid'）。省略時は tone と onAccent で決まる既定色
+     * （red-500 / blue-500 / white）。意味名トークン（palette）で色を決めているアプリが、
+     * 既存の見た目を変えずに使うための口。
+     */
+    colorClassName?: string;
 }): import("react").JSX.Element;
 //# sourceMappingURL=SidebarNewDot.d.ts.map
