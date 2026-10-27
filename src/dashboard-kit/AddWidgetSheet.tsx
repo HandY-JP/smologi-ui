@@ -72,7 +72,7 @@ export interface AddWidgetSheetProps {
   onClose: () => void;
   /** シート本体のクラス（ガラス・角丸・背景）。 */
   sheetClassName: string;
-  /** PC 幅（640px 以上）の中央モーダル本体のクラス（角丸・背景・影）。既定は角丸と影だけ。 */
+  /** PC 幅（640px 以上）の中央モーダル本体のクラス（角丸・背景・影）。既定は角丸・白背景・影。 */
   modalClassName?: string;
   /** 候補ボタンのクラス。 */
   candidateClassName: string;
@@ -105,7 +105,7 @@ export function AddWidgetSheet({
   onPick,
   onClose,
   sheetClassName,
-  modalClassName = 'rounded-2xl shadow-2xl',
+  modalClassName = 'rounded-2xl bg-white shadow-2xl',
   candidateClassName,
   scrimClassName = 'bg-black/35',
   multiple = false,

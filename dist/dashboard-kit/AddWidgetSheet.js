@@ -30,7 +30,7 @@ function AddWidgetSheet({
   onPick,
   onClose,
   sheetClassName,
-  modalClassName = "rounded-2xl shadow-2xl",
+  modalClassName = "rounded-2xl bg-white shadow-2xl",
   candidateClassName,
   scrimClassName = "bg-black/35",
   multiple = false,
