@@ -1,7 +1,7 @@
 'use client';
 import { useState, useRef } from 'react';
 
-function Tooltip({
+export function Tooltip({
   content,
   children,
   side = 'top',

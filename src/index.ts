@@ -77,6 +77,10 @@ export * from './components/SidebarNewDot';
 export * from './components/WorkspaceSwitch';
 export * from './components/AppLauncherPopover';
 export * from './components/SidebarAccountRow';
+export * from './components/SidebarToggleDock';
+export * from './components/AllPagesDockButton';
+export * from './components/DashboardAppRow';
+export * from './components/AppBrandIcon';
 
 // ---- ダッシュボード編集キット（ロジックと型だけ。UI はサブパス '@handy-jp/smologi-ui/dashboard-kit'） ----
 export * from './dashboard-kit/index';

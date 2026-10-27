@@ -64,6 +64,7 @@ function HelpHint({
   ) });
 }
 export {
-  HelpHint
+  HelpHint,
+  Tooltip
 };
 //# sourceMappingURL=Tooltip.js.map

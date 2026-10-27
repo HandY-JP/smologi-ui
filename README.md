@@ -412,6 +412,23 @@ CSS（`.hp-*`）は `styles.css` に入っている。色は `--sb-accent-bg`、
 `--hp-panel-border` / `--hp-panel-bg` / `--hp-inline-border` / `--hp-head-bg` で上書きできる
 （未指定は Logistic の見た目。B2B は `--sb-line` / `--sb-panel` などに向ける）。
 
+### サイドバー左上のドック・アプリ列・ブランドアイコン（v0.8.0）
+
+見た目と仕組みはパッケージ、データ・保存・遷移はアプリ。next/link・next/navigation・アプリの API には依存しない。
+
+- `SidebarToggleDock` … 固定ドック（▶ 開閉・家＝ダッシュボード・すべてのページ・画面切替）。
+  props: `collapsed` / `persistedCollapsed` / `onToggle` / `hoverHandlers` / `hasNews` / `newsReason` /
+  `home?: { href, active, dot?, dotTitle?, intent? }` / `workspaceSwitch?`（`WorkspaceSwitch` と同じ形）/
+  `allPages?`（ReactNode スロット。`AllPagesDockButton` を渡す）/ `renderLink?`（ホームのリンク差し替え。`next/link` はここで）/
+  `activeClassName?`（家の選択中クラス。既定 `'sb-nav-active !shadow-none'`。CSS 変数では代用しない）。
+- `AllPagesDockButton` … `open` / `onToggle` / `panelId?`。`data-all-pages-trigger`・`aria-controls` を持つ。パネル本体と開閉ストアはアプリ側。
+- `DashboardAppRow` … アプリ列の見た目だけ。`apps`（`{ id, label, href, dot? }[]`）/ `currentAppId` / `loading` / `size`（'md' | 'sm'）/
+  `renderIcon?` / `assetBase?`。別タブで開く、今いるアプリは `role="img"` ＋ outline。契約中アプリの取得はアプリ側。
+- `AppBrandIcon` … このパッケージが Smologi / Seller 向けの正典（元はポータルの `AppBrandLogos.tsx`）。ロゴ画像は
+  各アプリの `public/brand` に置き、`assetBase`（既定 `/brand`）で参照元を指す。
+- Tailwind は Seller でも存在する `ink` / `ink-muted` / `surface-subtle` / `line` / `accent` だけを使う。それ以外の色は `var(--sb-*)`。
+- `Tooltip` を export に追加（`DashboardAppRow` が使う）。
+
 ### ダッシュボード編集キット（v0.7.0、v0.7.1 で空から始める部品を追加、v0.7.2 で編集中の縁の光（.dash-edit-glow））
 
 ダッシュボードのウィジェットをその場で並べ替え・サイズ変更・追加・削除する部品。アプリの事情（データ・保存先・権限）は持たない。

@@ -1,0 +1,1 @@
+{"version":3,"file":"AllPagesDockButton.d.ts","sourceRoot":"","sources":["../../src/components/AllPagesDockButton.tsx"],"names":[],"mappings":"AAIA,mEAAmE;AACnE,eAAO,MAAM,kBAAkB,oBAAoB,CAAC;AAEpD;;;;;;;GAOG;AACH,wBAAgB,kBAAkB,CAAC,EACjC,IAAI,EACJ,QAAQ,EACR,OAA4B,GAC7B,EAAE;IACD,IAAI,EAAE,OAAO,CAAC;IACd,QAAQ,EAAE,MAAM,IAAI,CAAC;IACrB,OAAO,CAAC,EAAE,MAAM,CAAC;CAClB,+BAkBA"}
