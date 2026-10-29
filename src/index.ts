@@ -84,3 +84,4 @@ export * from './components/AppBrandIcon';
 
 // ---- ダッシュボード編集キット（ロジックと型だけ。UI はサブパス '@handy-jp/smologi-ui/dashboard-kit'） ----
 export * from './dashboard-kit/index';
+export * from './components/StoreAccountSwitcher';

@@ -58,4 +58,5 @@ export * from './components/AllPagesDockButton';
 export * from './components/DashboardAppRow';
 export * from './components/AppBrandIcon';
 export * from './dashboard-kit/index';
+export * from './components/StoreAccountSwitcher';
 //# sourceMappingURL=index.d.ts.map

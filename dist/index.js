@@ -58,4 +58,5 @@ export * from "./components/AllPagesDockButton.js";
 export * from "./components/DashboardAppRow.js";
 export * from "./components/AppBrandIcon.js";
 export * from "./dashboard-kit/index.js";
+export * from "./components/StoreAccountSwitcher.js";
 //# sourceMappingURL=index.js.map
