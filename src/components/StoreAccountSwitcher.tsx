@@ -247,6 +247,14 @@ export function StoreAccountSwitcher({
 
   const statusText = state === 'loading' ? loadingText : state === 'error' ? errorText : state === 'empty' ? emptyText : null;
   const lineStyle: CSSProperties = { borderColor: 'var(--sb-popover-line, var(--sb-border))' };
+  // 閉じた欄（ボタン）だけの見た目。アプリ側が次の変数を定義したときだけ変わる（未定義なら従来どおり）。
+  //   --sb-field-bg    : 欄の地色（既定は透明＝サイドバーの地色のまま）
+  //   --sb-field-line  : 欄の枠線の色（既定は --sb-popover-line → --sb-border）
+  //   --sb-field-hover : ホバー時の地色（既定は --sb-hover）
+  const fieldStyle: CSSProperties = {
+    backgroundColor: 'var(--sb-field-bg, transparent)',
+    borderColor: 'var(--sb-field-line, var(--sb-popover-line, var(--sb-border)))',
+  };
 
   return (
     <div ref={rootRef} className={`relative ${className ?? ''}`}>
@@ -259,8 +267,8 @@ export function StoreAccountSwitcher({
         aria-controls={open ? menuId : undefined}
         aria-label={`${ariaLabel}（現在: ${currentLabel}）`}
         title={ariaLabel}
-        className={`${FIELD_BASE} border hover:bg-[var(--sb-hover)]`}
-        style={{ ...lineStyle, color: 'var(--sb-text)' }}
+        className={`${FIELD_BASE} border hover:bg-[var(--sb-field-hover,var(--sb-hover))]`}
+        style={{ ...fieldStyle, color: 'var(--sb-text)' }}
       >
         <span className="min-w-0 flex-1 truncate text-sm font-semibold">{currentLabel}</span>
         <Chevron open={open} />

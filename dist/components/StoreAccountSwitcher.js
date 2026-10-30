@@ -140,6 +140,10 @@ function StoreAccountSwitcher({
   };
   const statusText = state === "loading" ? loadingText : state === "error" ? errorText : state === "empty" ? emptyText : null;
   const lineStyle = { borderColor: "var(--sb-popover-line, var(--sb-border))" };
+  const fieldStyle = {
+    backgroundColor: "var(--sb-field-bg, transparent)",
+    borderColor: "var(--sb-field-line, var(--sb-popover-line, var(--sb-border)))"
+  };
   return /* @__PURE__ */ jsxs("div", { ref: rootRef, className: `relative ${className ?? ""}`, children: [
     /* @__PURE__ */ jsxs(
       "button",
@@ -152,8 +156,8 @@ function StoreAccountSwitcher({
         "aria-controls": open ? menuId : void 0,
         "aria-label": `${ariaLabel}\uFF08\u73FE\u5728: ${currentLabel}\uFF09`,
         title: ariaLabel,
-        className: `${FIELD_BASE} border hover:bg-[var(--sb-hover)]`,
-        style: { ...lineStyle, color: "var(--sb-text)" },
+        className: `${FIELD_BASE} border hover:bg-[var(--sb-field-hover,var(--sb-hover))]`,
+        style: { ...fieldStyle, color: "var(--sb-text)" },
         children: [
           /* @__PURE__ */ jsx("span", { className: "min-w-0 flex-1 truncate text-sm font-semibold", children: currentLabel }),
           /* @__PURE__ */ jsx(Chevron, { open })
