@@ -32,7 +32,12 @@ export interface AppSidebarProps {
     lockBadge?: string;
     /** 行ごとに件数・点などを差し込む。 */
     decorate?: (item: SidebarNavItem) => SidebarNavItem;
-    /** 選択中の行の className。既定 'sb-nav-active font-semibold'（.sb-nav-active はアプリ CSS）。 */
+    /** 2つ目以降の区分の上余白 class（Seller は 'mt-4'）。 */
+    sectionGapClassName?: string;
+    /** 「＋」の通常時 / 選択中の色 class（Seller の旧見た目に合わせる用）。 */
+    quickActionClassName?: string;
+    quickActionActiveClassName?: string;
+    /** 選択中の行の className（太字は部品側で足す）。既定 'sb-nav-active'（.sb-nav-active はアプリ CSS）。 */
     activeClassName?: string;
     /** 開閉ドック（SidebarToggleDock）へ渡すもの。hasNews / newsReason は未指定なら sections の dot から作る。 */
     dock?: DockProps;
@@ -43,6 +48,6 @@ export interface AppSidebarProps {
     /** 左端ホバー帯の aria-label / title。 */
     openSidebarLabel?: string;
 }
-export declare function AppSidebar({ sections, pathname, top, accountMenu, storageKey, expandedWidth, collapsedWidth, renderLink, renderLocked, lockBadge, decorate, activeClassName, dock, navDimmed, closeMenuLabel, openSidebarLabel, }: AppSidebarProps): import("react").JSX.Element;
+export declare function AppSidebar({ sections, pathname, top, accountMenu, storageKey, expandedWidth, collapsedWidth, renderLink, renderLocked, lockBadge, decorate, activeClassName, sectionGapClassName, quickActionClassName, quickActionActiveClassName, dock, navDimmed, closeMenuLabel, openSidebarLabel, }: AppSidebarProps): import("react").JSX.Element;
 export {};
 //# sourceMappingURL=AppSidebar.d.ts.map

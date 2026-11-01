@@ -1,8 +1,9 @@
 "use client";
 import { Fragment, jsx, jsxs } from "react/jsx-runtime";
+import { useEffect, useState } from "react";
 import { isSidebarNavItemActive } from "../lib/sidebar-nav.js";
 import { SidebarNewDot } from "./SidebarNewDot.js";
-const DEFAULT_SIDEBAR_ACTIVE_CLASS = "sb-nav-active font-semibold";
+const DEFAULT_SIDEBAR_ACTIVE_CLASS = "sb-nav-active";
 const defaultRenderLink = (props) => /* @__PURE__ */ jsx("a", { ...props });
 const ROW_FOCUS = "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--sb-text)]";
 function SidebarNavSectionLabel({ label }) {
@@ -28,6 +29,8 @@ function SidebarNavLink({
   renderLink = defaultRenderLink,
   renderLocked,
   lockBadge = "PRO",
+  quickActionClassName,
+  quickActionActiveClassName,
   onNavigate
 }) {
   if (item.comingSoon) {
@@ -86,7 +89,7 @@ function SidebarNavLink({
       "aria-current": isActive ? "page" : void 0,
       onClick: onNavigate,
       "data-tour": item.dataTour,
-      className: `relative flex h-9 items-center rounded-md text-base transition-colors ${ROW_FOCUS} ${collapsed ? "justify-center px-0" : quickAction ? "gap-2.5 pl-3 pr-10" : "gap-2.5 px-3"} ${isActive ? activeClassName : "hover:bg-[var(--sb-hover)]"} ${item.dim && !isActive ? "opacity-55" : ""}`,
+      className: `relative flex h-9 items-center rounded-md text-base transition-colors ${ROW_FOCUS} ${collapsed ? "justify-center px-0" : quickAction ? "gap-2.5 pl-3 pr-10" : "gap-2.5 px-3"} ${isActive ? `${activeClassName} font-semibold` : "hover:bg-[var(--sb-hover)]"} ${item.dim && !isActive ? "opacity-55" : ""}`,
       style: isActive ? void 0 : { color: "var(--sb-text)" },
       children: /* @__PURE__ */ jsxs(Fragment, { children: [
         item.icon,
@@ -106,8 +109,8 @@ function SidebarNavLink({
         href: quickAction.href,
         title: quickAction.label,
         "aria-label": quickAction.label,
-        className: `absolute right-1 top-1 inline-flex h-7 w-7 items-center justify-center rounded-full transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--sb-accent-bg)] ${isActive ? "sb-nav-round-active" : "bg-[var(--sb-hover)] hover:shadow-[0_0_0_1px_var(--sb-label)]"}`,
-        style: isActive ? void 0 : { color: "var(--sb-text)" },
+        className: `absolute right-1 top-1 inline-flex h-7 w-7 items-center justify-center rounded-full transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--sb-accent-bg)] ${isActive ? quickActionActiveClassName ?? "sb-nav-round-active" : quickActionClassName ?? "bg-[var(--sb-hover)] hover:shadow-[0_0_0_1px_var(--sb-label)]"}`,
+        style: isActive || quickActionClassName ? void 0 : { color: "var(--sb-text)" },
         children: PLUS_ICON
       },
       { kind: "quickAction", item }
@@ -124,15 +127,68 @@ function SidebarNavLink({
     )
   ] });
 }
-function SidebarNavSections({
-  sections,
+function CollapsibleSectionHeader({ label, open, dot, onToggle }) {
+  return /* @__PURE__ */ jsxs(
+    "button",
+    {
+      type: "button",
+      onClick: onToggle,
+      "aria-expanded": open,
+      className: "mt-3 mb-1 flex h-7 w-full items-center gap-2 rounded-md px-3 text-left text-[10px] font-semibold tracking-wider transition-colors hover:bg-[var(--sb-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--sb-text)]",
+      style: { color: "var(--sb-label)" },
+      children: [
+        /* @__PURE__ */ jsx("span", { className: "min-w-0 flex-1 truncate", children: label }),
+        dot && !open && /* @__PURE__ */ jsx(SidebarNewDot, { label: "\u4E2D\u306B\u8981\u5BFE\u5FDC\u3042\u308A" }),
+        /* @__PURE__ */ jsx("svg", { className: `h-3.5 w-3.5 flex-shrink-0 transition-transform ${open ? "rotate-180" : ""}`, fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", strokeWidth: 2, "aria-hidden": "true", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "m6 9 6 6 6-6" }) })
+      ]
+    }
+  );
+}
+function SidebarNavSectionBlock({
+  section,
+  index,
+  gapClassName,
   decorate,
   ...rest
 }) {
-  return /* @__PURE__ */ jsx(Fragment, { children: sections.map((section, index) => /* @__PURE__ */ jsxs("div", { className: index === 0 ? "pt-1" : section.label ? "" : "mt-4", children: [
-    section.label && !rest.collapsed && /* @__PURE__ */ jsx(SidebarNavSectionLabel, { label: section.label }),
-    /* @__PURE__ */ jsx("div", { className: "space-y-0.5", children: section.items.map((item) => /* @__PURE__ */ jsx(SidebarNavLink, { item: decorate ? decorate(item) : item, ...rest }, item.href)) })
-  ] }, section.key)) });
+  const items = decorate ? section.items.map(decorate) : section.items;
+  const [expanded, setExpanded] = useState(section.defaultOpen ?? false);
+  useEffect(() => {
+    if (!section.collapsible || !section.storageKey) return;
+    try {
+      const v = window.localStorage.getItem(section.storageKey);
+      if (v === "1" || v === "0") setExpanded(v === "1");
+    } catch {
+    }
+  }, [section.collapsible, section.storageKey]);
+  const toggle = () => {
+    setExpanded((prev) => {
+      const next = !prev;
+      if (section.storageKey) {
+        try {
+          window.localStorage.setItem(section.storageKey, next ? "1" : "0");
+        } catch {
+        }
+      }
+      return next;
+    });
+  };
+  const sectionActive = items.some((item) => isSidebarNavItemActive(item, rest.pathname));
+  const open = !section.collapsible || sectionActive || expanded;
+  const hasDot = items.some((item) => item.dot);
+  const gap = index === 0 ? "pt-1" : gapClassName ?? (section.label ? "" : "mt-4");
+  return /* @__PURE__ */ jsxs("div", { className: gap, children: [
+    section.label && !rest.collapsed && (section.collapsible ? /* @__PURE__ */ jsx(CollapsibleSectionHeader, { label: section.label, open, dot: hasDot, onToggle: toggle }) : /* @__PURE__ */ jsx(SidebarNavSectionLabel, { label: section.label })),
+    open && /* @__PURE__ */ jsx("div", { className: "space-y-0.5", children: items.map((item, i) => /* @__PURE__ */ jsx(SidebarNavLink, { item, ...rest }, `${item.href}#${i}`)) })
+  ] });
+}
+function SidebarNavSections({
+  sections,
+  decorate,
+  sectionGapClassName,
+  ...rest
+}) {
+  return /* @__PURE__ */ jsx(Fragment, { children: sections.map((section, index) => /* @__PURE__ */ jsx(SidebarNavSectionBlock, { section, index, gapClassName: sectionGapClassName, decorate, ...rest }, section.key)) });
 }
 export {
   DEFAULT_SIDEBAR_ACTIVE_CLASS,

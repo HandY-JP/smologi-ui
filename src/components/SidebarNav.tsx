@@ -1,7 +1,7 @@
 'use client';
 // 共通サイドバーの「区分見出し＋行」。Seller の SellerNav と Smologi の CustomerSidebar の行を一本化したもの。
 // next/* には依存しない。リンクは renderLink で差し替える（既定は <a>）。
-import type { CSSProperties, ReactNode } from 'react';
+import { useEffect, useState, type CSSProperties, type ReactNode } from 'react';
 import { isSidebarNavItemActive, type SidebarNavItem, type SidebarNavSection } from '../lib/sidebar-nav';
 import { SidebarNewDot } from './SidebarNewDot';
 
@@ -15,6 +15,7 @@ export type SidebarLinkProps = {
   className: string;
   style?: CSSProperties;
   'data-tour'?: string;
+  role?: string;
   children: ReactNode;
 };
 
@@ -32,7 +33,8 @@ export type SidebarRenderLocked = (
   item: SidebarNavItem,
 ) => ReactNode;
 
-export const DEFAULT_SIDEBAR_ACTIVE_CLASS = 'sb-nav-active font-semibold';
+/** 選択中の行の既定 class。太字（font-semibold）は部品側で足すので、アプリは色・地の class だけ渡せばよい。 */
+export const DEFAULT_SIDEBAR_ACTIVE_CLASS = 'sb-nav-active';
 
 const defaultRenderLink: SidebarRenderLink = (props) => <a {...props} />;
 
@@ -81,6 +83,8 @@ export function SidebarNavLink({
   renderLink = defaultRenderLink,
   renderLocked,
   lockBadge = 'PRO',
+  quickActionClassName,
+  quickActionActiveClassName,
   onNavigate,
 }: {
   item: SidebarNavItem;
@@ -93,6 +97,10 @@ export function SidebarNavLink({
   renderLocked?: SidebarRenderLocked;
   /** locked 行に付けるバッジの文言。 */
   lockBadge?: string;
+  /** 「＋」の通常時の色 class（既定は --sb-hover 地）。Seller: 'bg-black/5 text-[#231F1C] hover:bg-black/10'。 */
+  quickActionClassName?: string;
+  /** 「＋」の選択中の色 class（既定 sb-nav-round-active）。Seller: 'bg-[#FFE5D1] text-[#C2560D] hover:bg-[#FFE5D1]/80'。 */
+  quickActionActiveClassName?: string;
   onNavigate?: () => void;
 }) {
   // ---- 今後実装予定（リンクにしない）----
@@ -167,7 +175,7 @@ export function SidebarNavLink({
       'data-tour': item.dataTour,
       className: `relative flex h-9 items-center rounded-md text-base transition-colors ${ROW_FOCUS} ${
         collapsed ? 'justify-center px-0' : quickAction ? 'gap-2.5 pl-3 pr-10' : 'gap-2.5 px-3'
-      } ${isActive ? activeClassName : 'hover:bg-[var(--sb-hover)]'} ${item.dim && !isActive ? 'opacity-55' : ''}`,
+      } ${isActive ? `${activeClassName} font-semibold` : 'hover:bg-[var(--sb-hover)]'} ${item.dim && !isActive ? 'opacity-55' : ''}`,
       style: isActive ? undefined : { color: 'var(--sb-text)' },
       children: (
         <>
@@ -203,9 +211,11 @@ export function SidebarNavLink({
             title: quickAction.label,
             'aria-label': quickAction.label,
             className: `absolute right-1 top-1 inline-flex h-7 w-7 items-center justify-center rounded-full transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--sb-accent-bg)] ${
-              isActive ? 'sb-nav-round-active' : 'bg-[var(--sb-hover)] hover:shadow-[0_0_0_1px_var(--sb-label)]'
+              isActive
+                ? quickActionActiveClassName ?? 'sb-nav-round-active'
+                : quickActionClassName ?? 'bg-[var(--sb-hover)] hover:shadow-[0_0_0_1px_var(--sb-label)]'
             }`,
-            style: isActive ? undefined : { color: 'var(--sb-text)' },
+            style: isActive || quickActionClassName ? undefined : { color: 'var(--sb-text)' },
             children: PLUS_ICON,
           },
           { kind: 'quickAction', item },
@@ -226,33 +236,100 @@ export function SidebarNavLink({
   );
 }
 
-/** 区分ごとの見出し＋行の並び。decorate で行ごとにバッジ等を差し込める。 */
-export function SidebarNavSections({
-  sections,
-  decorate,
-  ...rest
-}: {
-  sections: readonly SidebarNavSection[];
+function CollapsibleSectionHeader({ label, open, dot, onToggle }: { label: string; open: boolean; dot: boolean; onToggle: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      aria-expanded={open}
+      className="mt-3 mb-1 flex h-7 w-full items-center gap-2 rounded-md px-3 text-left text-[10px] font-semibold tracking-wider transition-colors hover:bg-[var(--sb-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--sb-text)]"
+      style={{ color: 'var(--sb-label)' }}
+    >
+      <span className="min-w-0 flex-1 truncate">{label}</span>
+      {/* 閉じていても中に要対応があると分かる赤丸（件数は出さない）。 */}
+      {dot && !open && <SidebarNewDot label="中に要対応あり" />}
+      <svg className={`h-3.5 w-3.5 flex-shrink-0 transition-transform ${open ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} aria-hidden="true">
+        <path strokeLinecap="round" strokeLinejoin="round" d="m6 9 6 6 6-6" />
+      </svg>
+    </button>
+  );
+}
+
+type NavRest = {
   pathname: string;
   collapsed?: boolean;
   activeClassName?: string;
   renderLink?: SidebarRenderLink;
   renderLocked?: SidebarRenderLocked;
   lockBadge?: string;
+  quickActionClassName?: string;
+  quickActionActiveClassName?: string;
   onNavigate?: () => void;
+};
+
+function SidebarNavSectionBlock({
+  section,
+  index,
+  gapClassName,
+  decorate,
+  ...rest
+}: { section: SidebarNavSection; index: number; gapClassName?: string; decorate?: (item: SidebarNavItem) => SidebarNavItem } & NavRest) {
+  const items = decorate ? section.items.map(decorate) : section.items;
+  const [expanded, setExpanded] = useState(section.defaultOpen ?? false);
+  useEffect(() => {
+    if (!section.collapsible || !section.storageKey) return;
+    try {
+      const v = window.localStorage.getItem(section.storageKey);
+      if (v === '1' || v === '0') setExpanded(v === '1');
+    } catch { /* ignore */ }
+  }, [section.collapsible, section.storageKey]);
+  const toggle = () => {
+    setExpanded((prev) => {
+      const next = !prev;
+      if (section.storageKey) {
+        try { window.localStorage.setItem(section.storageKey, next ? '1' : '0'); } catch { /* ignore */ }
+      }
+      return next;
+    });
+  };
+  const sectionActive = items.some((item) => isSidebarNavItemActive(item, rest.pathname));
+  const open = !section.collapsible || sectionActive || expanded;
+  const hasDot = items.some((item) => item.dot);
+  const gap = index === 0 ? 'pt-1' : gapClassName ?? (section.label ? '' : 'mt-4');
+  return (
+    <div className={gap}>
+      {section.label && !rest.collapsed && (
+        section.collapsible
+          ? <CollapsibleSectionHeader label={section.label} open={open} dot={hasDot} onToggle={toggle} />
+          : <SidebarNavSectionLabel label={section.label} />
+      )}
+      {open && (
+        <div className="space-y-0.5">
+          {items.map((item, i) => (
+            <SidebarNavLink key={`${item.href}#${i}`} item={item} {...rest} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** 区分ごとの見出し＋行の並び。decorate で行ごとにバッジ等を差し込める。 */
+export function SidebarNavSections({
+  sections,
+  decorate,
+  sectionGapClassName,
+  ...rest
+}: {
+  sections: readonly SidebarNavSection[];
+  /** 2つ目以降の区分の上余白 class。既定は Smologi 流（見出しあり＝なし、見出しなし＝mt-4）。Seller は 'mt-4'。 */
+  sectionGapClassName?: string;
   decorate?: (item: SidebarNavItem) => SidebarNavItem;
-}) {
+} & NavRest) {
   return (
     <>
       {sections.map((section, index) => (
-        <div key={section.key} className={index === 0 ? 'pt-1' : section.label ? '' : 'mt-4'}>
-          {section.label && !rest.collapsed && <SidebarNavSectionLabel label={section.label} />}
-          <div className="space-y-0.5">
-            {section.items.map((item) => (
-              <SidebarNavLink key={item.href} item={decorate ? decorate(item) : item} {...rest} />
-            ))}
-          </div>
-        </div>
+        <SidebarNavSectionBlock key={section.key} section={section} index={index} gapClassName={sectionGapClassName} decorate={decorate} {...rest} />
       ))}
     </>
   );

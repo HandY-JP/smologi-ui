@@ -439,13 +439,17 @@ import { AppSidebar, AppSidebarAccountMenu, SIDEBAR_MENU_ICONS, StoreAccountSwit
 - 行（`SidebarNavItem`）: `icon` `href` `label` `badge` `count`/`countTone`/`countLabel` `dot`＋`dotReason`（件数は出さず点＋title の理由）
   `quickAction`（＋）`quickActionCount` `unlockPill` `locked`（PRO バッジ・`renderLocked` で案内を付ける）`comingSoon` `dim` `activeMatch` `exactMatch`。
   Seller の `SellerNavItem` / `SellerNavSection` はそのまま渡せる（上位互換）。
-- 選択中の見た目は `activeClassName`（既定 `sb-nav-active font-semibold`。`.sb-nav-active` はアプリ CSS、これまでの `SidebarToggleDock` と同じ前提）。
+- 行: `isActive?: (pathname) => boolean`（あれば最優先。Smologi の「/customer は完全一致」など）／`excludeMatch?: string[]`（前方一致で光らせない。例 `[href + '/new']`）。
+- 区分（`SidebarNavSection`）: `collapsible`（見出しを押して開閉。閉じていても中の dot を見出しに出す。中の行が選択中なら開く）／`defaultOpen`／`storageKey`（任意・localStorage）。
+- **Seller が切り替えるときに渡す値**（旧見た目のまま）: `activeClassName="amazon-nav-active"`（楽天は `rakuten-nav-active`。太字は部品が足す）／`sectionGapClassName="mt-4"`／
+  `quickActionClassName="bg-black/5 text-[#231F1C] hover:bg-black/10"`／`quickActionActiveClassName="bg-[#FFE5D1] text-[#C2560D] hover:bg-[#FFE5D1]/80"`。
+- 選択中の見た目は `activeClassName`（既定 `sb-nav-active`。太字 `font-semibold` は部品側で付ける。`.sb-nav-active` はアプリ CSS、これまでの `SidebarToggleDock` と同じ前提）。
 - 閉じた幅（`collapsedWidth`）を 0 以外にすると、閉じ中は hidden/inert にならずアイコンだけのレール表示になる（将来用。既定は 0rem＝従来どおり完全に引っ込む）。
 - フック: `useSidebarCollapsed(expanded, collapsed, { storageKey })`（80ms の動き・peek 遅延 250/80ms・左端 15px 帯・`(hover:hover)` 判定・CSS 変数
   `--sidebar-width` `--sidebar-visual-width` `--sidebar-toggle-inset`）／`useSidebarDrawer(pathname)`（767px 以下のドロワー）／`useSidebarPeekHold(open)`。
   `lib/sidebar-peek`（`data-sidebar-peek-region`）も export。
 - 純関数（テスト済み）: `isSidebarNavItemActive` `isZeroCssLength` `summarizeSidebarNews`。
-- セクション見出しの上余白は Smologi 流（見出し `pt-4` のみ）。Seller の旧 `mt-4`＋`pt-4` より 16px 詰まる。
+- セクション見出しの上余白の既定は Smologi 流（見出し `pt-4` のみ）。Seller の旧 `mt-4`＋`pt-4` は `sectionGapClassName="mt-4"` で再現できる。
 
 ### サイドバー左上のドック・アプリ列・ブランドアイコン（v0.8.0）
 

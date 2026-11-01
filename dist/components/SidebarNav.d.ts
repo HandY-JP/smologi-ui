@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from 'react';
+import { type CSSProperties, type ReactNode } from 'react';
 import { type SidebarNavItem, type SidebarNavSection } from '../lib/sidebar-nav';
 /** renderLink に渡す、リンクへ付けるべき属性一式。そのまま展開して <Link> 等に渡す。 */
 export type SidebarLinkProps = {
@@ -10,6 +10,7 @@ export type SidebarLinkProps = {
     className: string;
     style?: CSSProperties;
     'data-tour'?: string;
+    role?: string;
     children: ReactNode;
 };
 export type SidebarLinkContext = {
@@ -24,11 +25,12 @@ export type SidebarRenderLocked = (props: {
     title: string;
     children: ReactNode;
 }, item: SidebarNavItem) => ReactNode;
-export declare const DEFAULT_SIDEBAR_ACTIVE_CLASS = "sb-nav-active font-semibold";
+/** 選択中の行の既定 class。太字（font-semibold）は部品側で足すので、アプリは色・地の class だけ渡せばよい。 */
+export declare const DEFAULT_SIDEBAR_ACTIVE_CLASS = "sb-nav-active";
 export declare function SidebarNavSectionLabel({ label }: {
     label: string;
 }): import("react").JSX.Element;
-export declare function SidebarNavLink({ item, pathname, collapsed, activeClassName, renderLink, renderLocked, lockBadge, onNavigate, }: {
+export declare function SidebarNavLink({ item, pathname, collapsed, activeClassName, renderLink, renderLocked, lockBadge, quickActionClassName, quickActionActiveClassName, onNavigate, }: {
     item: SidebarNavItem;
     pathname: string;
     /** アイコンだけのレール表示（折りたたみ幅が 0 でないとき）。 */
@@ -39,18 +41,29 @@ export declare function SidebarNavLink({ item, pathname, collapsed, activeClassN
     renderLocked?: SidebarRenderLocked;
     /** locked 行に付けるバッジの文言。 */
     lockBadge?: string;
+    /** 「＋」の通常時の色 class（既定は --sb-hover 地）。Seller: 'bg-black/5 text-[#231F1C] hover:bg-black/10'。 */
+    quickActionClassName?: string;
+    /** 「＋」の選択中の色 class（既定 sb-nav-round-active）。Seller: 'bg-[#FFE5D1] text-[#C2560D] hover:bg-[#FFE5D1]/80'。 */
+    quickActionActiveClassName?: string;
     onNavigate?: () => void;
 }): import("react").JSX.Element;
-/** 区分ごとの見出し＋行の並び。decorate で行ごとにバッジ等を差し込める。 */
-export declare function SidebarNavSections({ sections, decorate, ...rest }: {
-    sections: readonly SidebarNavSection[];
+type NavRest = {
     pathname: string;
     collapsed?: boolean;
     activeClassName?: string;
     renderLink?: SidebarRenderLink;
     renderLocked?: SidebarRenderLocked;
     lockBadge?: string;
+    quickActionClassName?: string;
+    quickActionActiveClassName?: string;
     onNavigate?: () => void;
+};
+/** 区分ごとの見出し＋行の並び。decorate で行ごとにバッジ等を差し込める。 */
+export declare function SidebarNavSections({ sections, decorate, sectionGapClassName, ...rest }: {
+    sections: readonly SidebarNavSection[];
+    /** 2つ目以降の区分の上余白 class。既定は Smologi 流（見出しあり＝なし、見出しなし＝mt-4）。Seller は 'mt-4'。 */
+    sectionGapClassName?: string;
     decorate?: (item: SidebarNavItem) => SidebarNavItem;
-}): import("react").JSX.Element;
+} & NavRest): import("react").JSX.Element;
+export {};
 //# sourceMappingURL=SidebarNav.d.ts.map

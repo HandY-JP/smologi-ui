@@ -3,9 +3,10 @@
 // 見た目・挙動を一本化したもの。アプリはデータ（sections）と slot を渡すだけ。
 //
 // 開閉・ピーク（左端 15px のホバー帯・遅延 250/80ms）・スマホドロワー・CSS 変数
-// （--sidebar-width / --sidebar-visual-width / --sidebar-toggle-inset / --sidebar-dock-inset）は
-// amazon-app a85522311 の AmazonSidebar と同じ数値のまま。next/* には依存しない
-// （現在のパスは pathname、リンクは renderLink で受ける）。
+// （--sidebar-width / --sidebar-visual-width / --sidebar-toggle-inset）は
+// amazon-app a85522311 の AmazonSidebar と同じ数値のまま。--sidebar-dock-inset はアプリの globals.css が
+// --sidebar-toggle-inset から橋渡しする（この部品は配らない）。
+// next/* には依存しない（現在のパスは pathname、リンクは renderLink で受ける）。
 import type { ReactNode } from 'react';
 import { isZeroCssLength, summarizeSidebarNews, type SidebarNavItem, type SidebarNavSection } from '../lib/sidebar-nav';
 import { useSidebarCollapsed } from './useSidebarCollapsed';
@@ -51,7 +52,12 @@ export interface AppSidebarProps {
   lockBadge?: string;
   /** 行ごとに件数・点などを差し込む。 */
   decorate?: (item: SidebarNavItem) => SidebarNavItem;
-  /** 選択中の行の className。既定 'sb-nav-active font-semibold'（.sb-nav-active はアプリ CSS）。 */
+  /** 2つ目以降の区分の上余白 class（Seller は 'mt-4'）。 */
+  sectionGapClassName?: string;
+  /** 「＋」の通常時 / 選択中の色 class（Seller の旧見た目に合わせる用）。 */
+  quickActionClassName?: string;
+  quickActionActiveClassName?: string;
+  /** 選択中の行の className（太字は部品側で足す）。既定 'sb-nav-active'（.sb-nav-active はアプリ CSS）。 */
   activeClassName?: string;
   /** 開閉ドック（SidebarToggleDock）へ渡すもの。hasNews / newsReason は未指定なら sections の dot から作る。 */
   dock?: DockProps;
@@ -78,6 +84,9 @@ export function AppSidebar({
   lockBadge,
   decorate,
   activeClassName = DEFAULT_SIDEBAR_ACTIVE_CLASS,
+  sectionGapClassName,
+  quickActionClassName,
+  quickActionActiveClassName,
   dock,
   navDimmed = false,
   closeMenuLabel = 'メニューを閉じる',
@@ -167,6 +176,9 @@ export function AppSidebar({
             renderLink={renderLink}
             renderLocked={renderLocked}
             lockBadge={lockBadge}
+            sectionGapClassName={sectionGapClassName}
+            quickActionClassName={quickActionClassName}
+            quickActionActiveClassName={quickActionActiveClassName}
             decorate={decorate}
             onNavigate={closeDrawer}
           />

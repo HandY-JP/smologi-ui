@@ -20,6 +20,19 @@ test('アクティブ判定: href 配下・activeMatch・exactMatch', () => {
   assert.equal(isSidebarNavItemActive(home, '/amazon/x'), false, 'exactMatch は activeMatch も見ない');
 });
 
+test('アクティブ判定: isActive 優先・excludeMatch（Smologi の /new 除外・/customer 完全一致）', () => {
+  const orders = { href: '/customer/orders', excludeMatch: ['/customer/orders/new'] };
+  assert.equal(isSidebarNavItemActive(orders, '/customer/orders/5'), true);
+  assert.equal(isSidebarNavItemActive(orders, '/customer/orders/new'), false);
+  assert.equal(isSidebarNavItemActive(orders, '/customer/orders/new/x'), false, '前方一致で除外');
+  const dash = { href: '/customer', isActive: (p) => p === '/customer', exactMatch: false };
+  assert.equal(isSidebarNavItemActive(dash, '/customer'), true);
+  assert.equal(isSidebarNavItemActive(dash, '/customer/orders'), false);
+  const custom = { href: '/x', exactMatch: true, excludeMatch: [], isActive: (p) => p.startsWith('/y') };
+  assert.equal(isSidebarNavItemActive(custom, '/y/1'), true, 'isActive は exactMatch より優先');
+  assert.equal(isSidebarNavItemActive(custom, '/x'), false);
+});
+
 test('閉じた幅が 0 か', () => {
   for (const v of ['0rem', '0px', '0']) assert.equal(isZeroCssLength(v), true, v);
   for (const v of ['3.5rem', '56px']) assert.equal(isZeroCssLength(v), false, v);
@@ -95,4 +108,26 @@ test('AppSidebar: renderLocked で包める / navDimmed', () => {
 test('AppSidebar: 上部 slot は関数でも受ける', () => {
   const html = render({ top: ({ collapsed }) => h('div', null, `collapsed=${collapsed}`) });
   assert.match(html, /collapsed=false/);
+});
+
+test('AppSidebar: 開閉できる区分（閉じていても dot を見出しに・選択中なら開く）', () => {
+  const secs = [{ key: 'int', label: '連携', collapsible: true, items: [
+    { href: '/a', label: 'Aアプリ', icon: null, dot: true, dotReason: '要対応' },
+  ] }];
+  const closed = renderToStaticMarkup(h(AppSidebar, { sections: secs, pathname: '/other' }));
+  assert.match(closed, /aria-expanded="false"/);
+  assert.doesNotMatch(closed, />Aアプリ</);
+  assert.match(closed, /aria-label="中に要対応あり"/);
+  const active = renderToStaticMarkup(h(AppSidebar, { sections: secs, pathname: '/a/1' }));
+  assert.match(active, /aria-expanded="true"/);
+  assert.match(active, />Aアプリ</);
+  const open = renderToStaticMarkup(h(AppSidebar, { sections: [{ ...secs[0], defaultOpen: true }], pathname: '/other' }));
+  assert.match(open, />Aアプリ</);
+});
+
+test('AppSidebar: 選択中に font-semibold を足す・＋の色と区分余白を上書きできる', () => {
+  const html = render({ activeClassName: 'amazon-nav-active', quickActionActiveClassName: 'QA-ACTIVE', quickActionClassName: 'QA-IDLE', sectionGapClassName: 'mt-4' });
+  assert.match(html, /amazon-nav-active font-semibold/);
+  assert.match(html, /QA-ACTIVE/);
+  assert.match(html, /<div class="mt-4"><div class="truncate/);
 });

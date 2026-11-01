@@ -38,6 +38,10 @@ export interface SidebarNavItem {
   activeMatch?: string[];
   /** true のとき完全一致だけでアクティブ判定する（ダッシュボード行用）。 */
   exactMatch?: boolean;
+  /** これらで始まるパスでは光らせない（前方一致。例 [href + '/new']）。isActive があれば無視。 */
+  excludeMatch?: string[];
+  /** 判定を丸ごと差し替える（あればこれを優先。exactMatch / activeMatch / excludeMatch は見ない）。 */
+  isActive?: (pathname: string) => boolean;
 }
 
 export interface SidebarNavSection {
@@ -45,16 +49,24 @@ export interface SidebarNavSection {
   /** 空文字なら見出しを描かない。 */
   label: string;
   items: SidebarNavItem[];
+  /** true なら見出しを押して開閉できる（閉じていても中の dot を見出しに出す。中の行が選択中なら開く）。 */
+  collapsible?: boolean;
+  /** collapsible の初期状態。既定 false（閉じる）。 */
+  defaultOpen?: boolean;
+  /** 開閉状態の保存キー（localStorage）。省略時は保存しない。 */
+  storageKey?: string;
 }
 
 const matchesPath = (pathname: string, base: string) => pathname === base || pathname.startsWith(base + '/');
 
 /** 行がアクティブか。exactMatch は完全一致のみ。それ以外は href 配下か activeMatch 配下。 */
 export function isSidebarNavItemActive(
-  item: Pick<SidebarNavItem, 'href' | 'exactMatch' | 'activeMatch'>,
+  item: Pick<SidebarNavItem, 'href' | 'exactMatch' | 'activeMatch' | 'excludeMatch' | 'isActive'>,
   pathname: string,
 ): boolean {
+  if (item.isActive) return item.isActive(pathname);
   if (item.exactMatch) return pathname === item.href;
+  if (item.excludeMatch?.some((m) => pathname.startsWith(m))) return false;
   return matchesPath(pathname, item.href) || (item.activeMatch?.some((match) => matchesPath(pathname, match)) ?? false);
 }
 

@@ -81,7 +81,7 @@ export function AppSidebarAccountMenu({
   }, [open]);
 
   const display = name ?? email ?? 'ユーザー';
-  const avatar = <SidebarAccountAvatar src={image} name={(name ?? email ?? '?').toUpperCase()} />;
+  const avatar = <SidebarAccountAvatar src={image} name={name ?? email} />;
 
   return (
     <div className="relative" ref={ref}>
@@ -124,12 +124,13 @@ export function AppSidebarAccountMenu({
                   title: item.label,
                   onClick: () => { setOpen(false); item.onSelect?.(); },
                   className: ITEM_CLASS,
+                  role: 'menuitem',
                   children: body,
                 };
                 return renderLink ? (
-                  <div key={item.key} role="menuitem">{renderLink(linkProps, { kind: 'item', item: { href: item.href, label: item.label, icon: item.icon } })}</div>
+                  <div key={item.key}>{renderLink(linkProps, { kind: 'item', item: { href: item.href, label: item.label, icon: item.icon } })}</div>
                 ) : (
-                  <a key={item.key} role="menuitem" {...linkProps} />
+                  <a key={item.key} {...linkProps} />
                 );
               }
               return (

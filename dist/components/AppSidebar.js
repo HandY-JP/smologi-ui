@@ -22,6 +22,9 @@ function AppSidebar({
   lockBadge,
   decorate,
   activeClassName = DEFAULT_SIDEBAR_ACTIVE_CLASS,
+  sectionGapClassName,
+  quickActionClassName,
+  quickActionActiveClassName,
   dock,
   navDimmed = false,
   closeMenuLabel = "\u30E1\u30CB\u30E5\u30FC\u3092\u9589\u3058\u308B",
@@ -102,6 +105,9 @@ function AppSidebar({
                   renderLink,
                   renderLocked,
                   lockBadge,
+                  sectionGapClassName,
+                  quickActionClassName,
+                  quickActionActiveClassName,
                   decorate,
                   onNavigate: closeDrawer
                 }

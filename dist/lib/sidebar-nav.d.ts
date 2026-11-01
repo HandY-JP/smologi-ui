@@ -42,15 +42,25 @@ export interface SidebarNavItem {
     activeMatch?: string[];
     /** true のとき完全一致だけでアクティブ判定する（ダッシュボード行用）。 */
     exactMatch?: boolean;
+    /** これらで始まるパスでは光らせない（前方一致。例 [href + '/new']）。isActive があれば無視。 */
+    excludeMatch?: string[];
+    /** 判定を丸ごと差し替える（あればこれを優先。exactMatch / activeMatch / excludeMatch は見ない）。 */
+    isActive?: (pathname: string) => boolean;
 }
 export interface SidebarNavSection {
     key: string;
     /** 空文字なら見出しを描かない。 */
     label: string;
     items: SidebarNavItem[];
+    /** true なら見出しを押して開閉できる（閉じていても中の dot を見出しに出す。中の行が選択中なら開く）。 */
+    collapsible?: boolean;
+    /** collapsible の初期状態。既定 false（閉じる）。 */
+    defaultOpen?: boolean;
+    /** 開閉状態の保存キー（localStorage）。省略時は保存しない。 */
+    storageKey?: string;
 }
 /** 行がアクティブか。exactMatch は完全一致のみ。それ以外は href 配下か activeMatch 配下。 */
-export declare function isSidebarNavItemActive(item: Pick<SidebarNavItem, 'href' | 'exactMatch' | 'activeMatch'>, pathname: string): boolean;
+export declare function isSidebarNavItemActive(item: Pick<SidebarNavItem, 'href' | 'exactMatch' | 'activeMatch' | 'excludeMatch' | 'isActive'>, pathname: string): boolean;
 /** 渡された CSS 長さが 0 か（'0rem' '0px' '0'）。0 のサイドバーは閉じると完全に消え、0 以外はレールとして残る。 */
 export declare function isZeroCssLength(value: string): boolean;
 /** 区分のどこかに要対応の点がある場合の「内訳」文。無ければ null。 */

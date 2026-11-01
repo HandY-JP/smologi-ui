@@ -41,7 +41,7 @@ function AppSidebarAccountMenu({
     };
   }, [open]);
   const display = name ?? email ?? "\u30E6\u30FC\u30B6\u30FC";
-  const avatar = /* @__PURE__ */ jsx(SidebarAccountAvatar, { src: image, name: (name ?? email ?? "?").toUpperCase() });
+  const avatar = /* @__PURE__ */ jsx(SidebarAccountAvatar, { src: image, name: name ?? email });
   return /* @__PURE__ */ jsxs("div", { className: "relative", ref, children: [
     /* @__PURE__ */ jsxs(
       "button",
@@ -90,9 +90,10 @@ function AppSidebarAccountMenu({
                     item.onSelect?.();
                   },
                   className: ITEM_CLASS,
+                  role: "menuitem",
                   children: body
                 };
-                return renderLink ? /* @__PURE__ */ jsx("div", { role: "menuitem", children: renderLink(linkProps, { kind: "item", item: { href: item.href, label: item.label, icon: item.icon } }) }, item.key) : /* @__PURE__ */ jsx("a", { role: "menuitem", ...linkProps }, item.key);
+                return renderLink ? /* @__PURE__ */ jsx("div", { children: renderLink(linkProps, { kind: "item", item: { href: item.href, label: item.label, icon: item.icon } }) }, item.key) : /* @__PURE__ */ jsx("a", { ...linkProps }, item.key);
               }
               return /* @__PURE__ */ jsx("button", { type: "button", role: "menuitem", onClick: () => {
                 setOpen(false);
