@@ -78,6 +78,16 @@ export * from './components/WorkspaceSwitch';
 export * from './components/AppLauncherPopover';
 export * from './components/SidebarAccountRow';
 export * from './components/SidebarToggleDock';
+
+// ---- 共通サイドバー本体（v0.10.0。データで渡す sections／renderLink／slot） ----
+export * from './lib/sidebar-nav';
+export * from './lib/sidebar-peek';
+export * from './components/SidebarNav';
+export * from './components/AppSidebar';
+export * from './components/AppSidebarAccountMenu';
+export * from './components/useSidebarCollapsed';
+export * from './components/useSidebarDrawer';
+export * from './components/useSidebarPeekHold';
 export * from './components/AllPagesDockButton';
 export * from './components/DashboardAppRow';
 export * from './components/AppBrandIcon';

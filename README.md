@@ -412,6 +412,41 @@ CSS（`.hp-*`）は `styles.css` に入っている。色は `--sb-accent-bg`、
 `--hp-panel-border` / `--hp-panel-bg` / `--hp-inline-border` / `--hp-head-bg` で上書きできる
 （未指定は Logistic の見た目。B2B は `--sb-line` / `--sb-panel` などに向ける）。
 
+### 共通サイドバー本体 `AppSidebar`（v0.10.0）
+
+Seller（AmazonSidebar / SellerNav）と Smologi（CustomerSidebar / AdminSidebar）を一本化した部品。**この版ではどのアプリも切り替えていない**（部品を足しただけ）。
+next/* には依存しない。現在のパスは `pathname`、リンクは `renderLink`（既定は `<a>`）で受ける。
+
+```tsx
+import { AppSidebar, AppSidebarAccountMenu, SIDEBAR_MENU_ICONS, StoreAccountSwitcher } from '@handy-jp/smologi-ui';
+
+<AppSidebar
+  pathname={usePathname()}
+  sections={[{ key: 'work', label: '業務', items: [
+    { href: '/orders', label: '受注', icon, quickAction: { href: '/orders/new', label: '受注を作る' },
+      dot: true, dotReason: '未対応 2件', activeMatch: ['/shipments'] },
+    { href: '/pro', label: '分析', icon, locked: true },        // Pro ロック（リンクにしない）
+  ] }]}
+  top={<StoreAccountSwitcher ... />}                              // 上部 slot（関数 ({collapsed}) => node も可）
+  accountMenu={<AppSidebarAccountMenu name email image items={[...]} signOut={{ onSelect }} extra={<ThemeToggle />} />}
+  renderLink={(props, { kind, item }) => <Link {...props} prefetch={false} />}
+  renderLocked={(props, item) => <ProLockedFeatureNotice ...><div {...props} /></ProLockedFeatureNotice>}
+  storageKey="handy-sidebar-collapsed-v1"   // 既定。開いた幅 expandedWidth=14rem・閉じた幅 collapsedWidth=0rem
+  dock={{ home, allPages, workspaceSwitch, renderLink }}          // SidebarToggleDock へそのまま渡す
+/>
+```
+
+- 行（`SidebarNavItem`）: `icon` `href` `label` `badge` `count`/`countTone`/`countLabel` `dot`＋`dotReason`（件数は出さず点＋title の理由）
+  `quickAction`（＋）`quickActionCount` `unlockPill` `locked`（PRO バッジ・`renderLocked` で案内を付ける）`comingSoon` `dim` `activeMatch` `exactMatch`。
+  Seller の `SellerNavItem` / `SellerNavSection` はそのまま渡せる（上位互換）。
+- 選択中の見た目は `activeClassName`（既定 `sb-nav-active font-semibold`。`.sb-nav-active` はアプリ CSS、これまでの `SidebarToggleDock` と同じ前提）。
+- 閉じた幅（`collapsedWidth`）を 0 以外にすると、閉じ中は hidden/inert にならずアイコンだけのレール表示になる（将来用。既定は 0rem＝従来どおり完全に引っ込む）。
+- フック: `useSidebarCollapsed(expanded, collapsed, { storageKey })`（80ms の動き・peek 遅延 250/80ms・左端 15px 帯・`(hover:hover)` 判定・CSS 変数
+  `--sidebar-width` `--sidebar-visual-width` `--sidebar-toggle-inset`）／`useSidebarDrawer(pathname)`（767px 以下のドロワー）／`useSidebarPeekHold(open)`。
+  `lib/sidebar-peek`（`data-sidebar-peek-region`）も export。
+- 純関数（テスト済み）: `isSidebarNavItemActive` `isZeroCssLength` `summarizeSidebarNews`。
+- セクション見出しの上余白は Smologi 流（見出し `pt-4` のみ）。Seller の旧 `mt-4`＋`pt-4` より 16px 詰まる。
+
 ### サイドバー左上のドック・アプリ列・ブランドアイコン（v0.8.0）
 
 見た目と仕組みはパッケージ、データ・保存・遷移はアプリ。next/link・next/navigation・アプリの API には依存しない。
@@ -454,12 +489,12 @@ CSS（`.hp-*`）は `styles.css` に入っている。色は `--sb-accent-bg`、
 | 部品 | 残す理由 |
 | --- | --- |
 | `AdminTopBar` / `CustomerTopBar` / `PortalTopBar` / `AmazonTopBar` | 通知ドロワー・ヘルプ・フィードバックを直に持つ。**中の並びは同じ**なので、各アプリでパッケージの部品を組み合わせて作る |
-| `SidebarToggleDock` / `SidebarFooter` | next-auth のセッション、契約アプリランチャー、通知バッジに依存 |
+| `SidebarFooter`（のうち next-auth・契約ランチャー・通知バッジに触る部分） | next-auth のセッション、契約アプリランチャー、通知バッジに依存。開閉・peek は `useSidebarCollapsed` として v0.10.0 で入った |
 | `use-notification-badge` / `use-workspace-switch` | お客様キャッシュ・権限・ルーティングに依存 |
 | `CommandPalette` | 検索対象がアプリ固有（ページ一覧） |
 | `RowContextMenu` | コピー項目の定義がアプリ固有 |
 | `CompletionPulse` | ジョブ完了イベントの購読がアプリ固有 |
-| `use-intent-prefetch` / `sidebar-peek` | サイドバーの挙動と組。サイドバー本体が入っていないので 0.2.0 で判断 |
+| `use-intent-prefetch` | 先読みは `renderLink` の第2引数（item）でアプリ側が付ける。`sidebar-peek` は v0.10.0 で入った |
 
 ---
 
