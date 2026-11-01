@@ -397,6 +397,18 @@ import { Modal, LargeModal, ConfirmDialog } from '@handy-jp/smologi-ui';
 `SearchableSelect`、`GuideTour`、`SummaryTile`、`EmptyState`、`ErrorBanner`、
 `SortIndicator`、`Skeleton`、`ProductThumb`。
 
+### 受信箱・クーポン向け（v0.12.0）
+
+トークンだけで塗る（`--accent-subtle` / `--sb-accent-bg` / gray ほか）。生の色・絵文字なし。
+
+- `TonePill` — `tone: 'accent'|'ok'|'warn'|'info'|'mute'`、`icon?`、`children`、`title?`。状態の小ピル。
+- `MessageThread` — `messages: {id, direction:'in'|'out', body, sender?, at?}[]`、`empty?`。吹き出しと日付区切り。スクロールは親。
+- `ReplyComposer` — `value` / `onChange(next)` / `onSend`、`id?`、`tools?`（上）、`footer?`（送信の左）、`label?`、`busy?`、`disabled?`、`placeholder?`、`rows?`。
+- `SplitInbox` — `list` / `detail` / `aside?`、`selected`、`onBack`、`backLabel?`、`emptyDetail?`、`listWidth?` / `asideWidth?`（幅クラス）。md 以上は 一覧｜詳細、lg 以上で補助列。md 未満は `selected` で一覧／詳細を切替え、詳細に戻るボタン。高さは親いっぱい・各列が独立スクロール。
+- `DiscountTicket` — `big`、`small?`、`muted?`、`notchColor?`（載せる面の色。既定は不透明ガラス面）。
+- `PeriodProgress` — `start?` / `end?` / `now?`、`showLabel?`。細い進み線＋「あと◯日」「本日まで」「◯日後に開始」「終了」。計算は純関数 `computePeriodState`（`lib/period`）。
+- `SettingsToggle` のつまみの白指定を `--accent-on`（入）／`bg-white`（切）に変更。
+
 ### 読み込み表示（v0.6.0）
 
 ```tsx
