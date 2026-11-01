@@ -79,7 +79,7 @@ export * from './components/AppLauncherPopover';
 export * from './components/SidebarAccountRow';
 export * from './components/SidebarToggleDock';
 
-// ---- 共通サイドバー本体（v0.10.0。データで渡す sections／renderLink／slot） ----
+// ---- 共通サイドバー本体（v0.11.0。データで渡す sections／renderLink／slot） ----
 export * from './lib/sidebar-nav';
 export * from './lib/sidebar-peek';
 export * from './components/SidebarNav';

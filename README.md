@@ -412,7 +412,7 @@ CSS（`.hp-*`）は `styles.css` に入っている。色は `--sb-accent-bg`、
 `--hp-panel-border` / `--hp-panel-bg` / `--hp-inline-border` / `--hp-head-bg` で上書きできる
 （未指定は Logistic の見た目。B2B は `--sb-line` / `--sb-panel` などに向ける）。
 
-### 共通サイドバー本体 `AppSidebar`（v0.10.0）
+### 共通サイドバー本体 `AppSidebar`（v0.11.0）
 
 Seller（AmazonSidebar / SellerNav）と Smologi（CustomerSidebar / AdminSidebar）を一本化した部品。**この版ではどのアプリも切り替えていない**（部品を足しただけ）。
 next/* には依存しない。現在のパスは `pathname`、リンクは `renderLink`（既定は `<a>`）で受ける。
@@ -493,12 +493,12 @@ import { AppSidebar, AppSidebarAccountMenu, SIDEBAR_MENU_ICONS, StoreAccountSwit
 | 部品 | 残す理由 |
 | --- | --- |
 | `AdminTopBar` / `CustomerTopBar` / `PortalTopBar` / `AmazonTopBar` | 通知ドロワー・ヘルプ・フィードバックを直に持つ。**中の並びは同じ**なので、各アプリでパッケージの部品を組み合わせて作る |
-| `SidebarFooter`（のうち next-auth・契約ランチャー・通知バッジに触る部分） | next-auth のセッション、契約アプリランチャー、通知バッジに依存。開閉・peek は `useSidebarCollapsed` として v0.10.0 で入った |
+| `SidebarFooter`（のうち next-auth・契約ランチャー・通知バッジに触る部分） | next-auth のセッション、契約アプリランチャー、通知バッジに依存。開閉・peek は `useSidebarCollapsed` として v0.11.0 で入った |
 | `use-notification-badge` / `use-workspace-switch` | お客様キャッシュ・権限・ルーティングに依存 |
 | `CommandPalette` | 検索対象がアプリ固有（ページ一覧） |
 | `RowContextMenu` | コピー項目の定義がアプリ固有 |
 | `CompletionPulse` | ジョブ完了イベントの購読がアプリ固有 |
-| `use-intent-prefetch` | 先読みは `renderLink` の第2引数（item）でアプリ側が付ける。`sidebar-peek` は v0.10.0 で入った |
+| `use-intent-prefetch` | 先読みは `renderLink` の第2引数（item）でアプリ側が付ける。`sidebar-peek` は v0.11.0 で入った |
 
 ---
 
