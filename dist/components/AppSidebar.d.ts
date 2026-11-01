@@ -39,6 +39,30 @@ export interface AppSidebarProps {
     quickActionActiveClassName?: string;
     /** 選択中の行の className（太字は部品側で足す）。既定 'sb-nav-active'（.sb-nav-active はアプリ CSS）。 */
     activeClassName?: string;
+    /** 要対応の点の色 class（既定 red-500。Smologi は 'bg-danger-solid'）。 */
+    dotClassName?: string;
+    /** 最初の区分の上余白 class。既定 'pt-1'（Smologi は ''）。 */
+    firstSectionGapClassName?: string;
+    /** 最上段の余白行の class。既定 'mt-4 h-8'（Smologi はトップバーと同じ 'h-16'）。 */
+    topSpacerClassName?: string;
+    /** top slot を包む div の class。既定 'mt-3 mb-2 pb-1'（Smologi は ''）。 */
+    topWrapperClassName?: string;
+    /** true なら中身を expandedWidth で固定し、外側の幅アニメでクリップされるだけにする（閉じた幅 0 のとき。Smologi 流）。既定 false。 */
+    fixedContentWidth?: boolean;
+    /** true なら aside の transition に box-shadow も含める（ピーク時の影を幅と同じ尺で出し入れ。Smologi 流）。既定 false。 */
+    shadowTransition?: boolean;
+    /** false にすると 767px 以下でもドロワーにせず、デスクトップと同じ描画のまま。既定 true。 */
+    mobileDrawer?: boolean;
+    /** true なら --sidebar-dock-inset（畳み時のカプセルの避け幅。ピーク中は 0）も配る。Smologi が使う。 */
+    syncDockInset?: boolean;
+    /** 左端の当たり判定帯がキーボードフォーカスされたときの背景 class。既定 'focus-visible:bg-orange-300/30'。 */
+    edgeTriggerFocusClassName?: string;
+    /** nav の状態 class を丸ごと差し替える（既定は navDimmed で opacity-40 / なし）。例 Smologi の画面切替中 'opacity-60'・通常 'opacity-100'。 */
+    navStateClassName?: string;
+    /** 区分 nav の代わりに出すもの（設定モードで設定メニューに差し替える等）。指定すると <nav> ごと置き換わる。 */
+    navOverride?: ReactNode;
+    /** アカウント欄の下に出す slot（「Logisticに戻る」など）。 */
+    footer?: SidebarSlot;
     /** 開閉ドック（SidebarToggleDock）へ渡すもの。hasNews / newsReason は未指定なら sections の dot から作る。 */
     dock?: DockProps;
     /** メニューを薄く無効風にする（アカウント未登録など）。 */
@@ -48,6 +72,6 @@ export interface AppSidebarProps {
     /** 左端ホバー帯の aria-label / title。 */
     openSidebarLabel?: string;
 }
-export declare function AppSidebar({ sections, pathname, top, accountMenu, storageKey, expandedWidth, collapsedWidth, renderLink, renderLocked, lockBadge, decorate, activeClassName, sectionGapClassName, quickActionClassName, quickActionActiveClassName, dock, navDimmed, closeMenuLabel, openSidebarLabel, }: AppSidebarProps): import("react").JSX.Element;
+export declare function AppSidebar({ sections, pathname, top, accountMenu, storageKey, expandedWidth, collapsedWidth, renderLink, renderLocked, lockBadge, decorate, activeClassName, sectionGapClassName, quickActionClassName, quickActionActiveClassName, dotClassName, firstSectionGapClassName, topSpacerClassName, topWrapperClassName, fixedContentWidth, shadowTransition, mobileDrawer, syncDockInset, edgeTriggerFocusClassName, navStateClassName, navOverride, footer, dock, navDimmed, closeMenuLabel, openSidebarLabel, }: AppSidebarProps): import("react").JSX.Element;
 export {};
 //# sourceMappingURL=AppSidebar.d.ts.map

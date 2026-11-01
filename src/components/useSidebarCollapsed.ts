@@ -59,9 +59,10 @@ function canHoverPeek() {
 export function useSidebarCollapsed(
   expandedWidth = '14rem',
   collapsedWidth = '3.5rem',
-  options: { storageKey?: string } = {},
+  options: { storageKey?: string; syncDockInset?: boolean } = {},
 ) {
   const storageKey = options.storageKey ?? DEFAULT_SIDEBAR_STORAGE_KEY;
+  const syncDockInset = options.syncDockInset ?? false;
   // collapsed = ユーザーが選んだ永続状態。peek = ホバー中の一時展開。
   const [collapsed, setCollapsed] = useState(false);
   const [storageReady, setStorageReady] = useState(false);
@@ -124,7 +125,12 @@ export function useSidebarCollapsed(
   const displayCollapsed = collapsed && !peek;
   useEffect(() => {
     document.documentElement.style.setProperty('--sidebar-visual-width', displayCollapsed ? collapsedWidth : expandedWidth);
-  }, [collapsedWidth, displayCollapsed, expandedWidth]);
+    // 畳み時に本文の上へ浮くカプセルが左上の開閉ドックと重ならないための専有幅（smologi の --sidebar-dock-inset）。
+    // --sidebar-toggle-inset と違い、ピーク中は 0。options.syncDockInset を付けたアプリだけが受け取る。
+    if (syncDockInset) {
+      document.documentElement.style.setProperty('--sidebar-dock-inset', displayCollapsed ? SIDEBAR_TOGGLE_INSET : '0px');
+    }
+  }, [collapsedWidth, displayCollapsed, expandedWidth, syncDockInset]);
 
   const updateCollapsed = useCallback((next: SetStateAction<boolean>) => {
     setCollapsed((prev) => {

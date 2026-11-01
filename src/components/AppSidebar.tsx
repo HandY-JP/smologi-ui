@@ -59,6 +59,30 @@ export interface AppSidebarProps {
   quickActionActiveClassName?: string;
   /** 選択中の行の className（太字は部品側で足す）。既定 'sb-nav-active'（.sb-nav-active はアプリ CSS）。 */
   activeClassName?: string;
+  /** 要対応の点の色 class（既定 red-500。Smologi は 'bg-danger-solid'）。 */
+  dotClassName?: string;
+  /** 最初の区分の上余白 class。既定 'pt-1'（Smologi は ''）。 */
+  firstSectionGapClassName?: string;
+  /** 最上段の余白行の class。既定 'mt-4 h-8'（Smologi はトップバーと同じ 'h-16'）。 */
+  topSpacerClassName?: string;
+  /** top slot を包む div の class。既定 'mt-3 mb-2 pb-1'（Smologi は ''）。 */
+  topWrapperClassName?: string;
+  /** true なら中身を expandedWidth で固定し、外側の幅アニメでクリップされるだけにする（閉じた幅 0 のとき。Smologi 流）。既定 false。 */
+  fixedContentWidth?: boolean;
+  /** true なら aside の transition に box-shadow も含める（ピーク時の影を幅と同じ尺で出し入れ。Smologi 流）。既定 false。 */
+  shadowTransition?: boolean;
+  /** false にすると 767px 以下でもドロワーにせず、デスクトップと同じ描画のまま。既定 true。 */
+  mobileDrawer?: boolean;
+  /** true なら --sidebar-dock-inset（畳み時のカプセルの避け幅。ピーク中は 0）も配る。Smologi が使う。 */
+  syncDockInset?: boolean;
+  /** 左端の当たり判定帯がキーボードフォーカスされたときの背景 class。既定 'focus-visible:bg-orange-300/30'。 */
+  edgeTriggerFocusClassName?: string;
+  /** nav の状態 class を丸ごと差し替える（既定は navDimmed で opacity-40 / なし）。例 Smologi の画面切替中 'opacity-60'・通常 'opacity-100'。 */
+  navStateClassName?: string;
+  /** 区分 nav の代わりに出すもの（設定モードで設定メニューに差し替える等）。指定すると <nav> ごと置き換わる。 */
+  navOverride?: ReactNode;
+  /** アカウント欄の下に出す slot（「Logisticに戻る」など）。 */
+  footer?: SidebarSlot;
   /** 開閉ドック（SidebarToggleDock）へ渡すもの。hasNews / newsReason は未指定なら sections の dot から作る。 */
   dock?: DockProps;
   /** メニューを薄く無効風にする（アカウント未登録など）。 */
@@ -87,6 +111,18 @@ export function AppSidebar({
   sectionGapClassName,
   quickActionClassName,
   quickActionActiveClassName,
+  dotClassName,
+  firstSectionGapClassName,
+  topSpacerClassName = 'mt-4 h-8',
+  topWrapperClassName = 'mt-3 mb-2 pb-1',
+  fixedContentWidth = false,
+  shadowTransition = false,
+  mobileDrawer = true,
+  syncDockInset = false,
+  edgeTriggerFocusClassName = 'focus-visible:bg-orange-300/30',
+  navStateClassName,
+  navOverride,
+  footer,
   dock,
   navDimmed = false,
   closeMenuLabel = 'メニューを閉じる',
@@ -100,8 +136,11 @@ export function AppSidebar({
     setCollapsed,
     edgeTriggerHandlers,
     peekHandlers,
-  } = useSidebarCollapsed(expandedWidth, collapsedWidth, { storageKey });
-  const { isMobile, mobileOpen, setMobileOpen } = useSidebarDrawer(pathname);
+  } = useSidebarCollapsed(expandedWidth, collapsedWidth, { storageKey, syncDockInset });
+  const drawer = useSidebarDrawer(pathname);
+  const isMobile = mobileDrawer && drawer.isMobile;
+  const mobileOpen = mobileDrawer && drawer.mobileOpen;
+  const { setMobileOpen } = drawer;
 
   // 閉じた幅が 0 のときだけ、閉じ中のサイドバーを隠す（aria-hidden / inert）。レールなら残す。
   const zeroWidthWhenClosed = isZeroCssLength(collapsedWidth);
@@ -112,6 +151,50 @@ export function AppSidebar({
   const news = summarizeSidebarNews(decorate ? sections.map((s) => ({ ...s, items: s.items.map(decorate) })) : sections);
   const ctx = { collapsed: zeroWidthWhenClosed ? false : collapsed };
   const closeDrawer = () => setMobileOpen(false);
+
+  const spacer = <div className={`${topSpacerClassName} flex-shrink-0`} aria-hidden="true" />;
+  const topNode = top != null && (topWrapperClassName ? <div className={topWrapperClassName}>{resolve(top, ctx)}</div> : resolve(top, ctx));
+  const navNode =
+    navOverride != null ? (
+      navOverride
+    ) : (
+      <nav
+        className={`flex min-h-0 flex-1 flex-col overflow-y-auto px-2 py-2 transition-opacity duration-150 motion-reduce:transition-none ${navStateClassName ?? (navDimmed ? 'opacity-40' : '')}`}
+      >
+        <SidebarNavSections
+          sections={sections}
+          pathname={pathname}
+          collapsed={ctx.collapsed}
+          activeClassName={activeClassName}
+          renderLink={renderLink}
+          renderLocked={renderLocked}
+          lockBadge={lockBadge}
+          sectionGapClassName={sectionGapClassName}
+          firstSectionGapClassName={firstSectionGapClassName}
+          dotClassName={dotClassName}
+          quickActionClassName={quickActionClassName}
+          quickActionActiveClassName={quickActionActiveClassName}
+          decorate={decorate}
+          onNavigate={closeDrawer}
+        />
+      </nav>
+    );
+  const body = (
+    <>
+      {/* 最上段の余白行。<aside> の外に固定表示されるドックのぶんの高さを確保する。 */}
+      {spacer}
+      {topNode}
+      {navNode}
+      {accountMenu != null && (
+        <div className="flex-shrink-0 px-2 pb-2 pt-1">
+          <div className="mt-1 border-t pt-1" style={{ borderColor: 'var(--sb-border)' }}>
+            {resolve(accountMenu, ctx)}
+          </div>
+        </div>
+      )}
+      {footer != null && resolve(footer, ctx)}
+    </>
+  );
 
   return (
     <>
@@ -124,7 +207,7 @@ export function AppSidebar({
           title={openSidebarLabel}
           onClick={() => setCollapsed(false)}
           {...edgeTriggerHandlers}
-          className={`fixed inset-y-0 left-0 z-[60] w-[15px] bg-transparent focus-visible:bg-orange-300/30 focus-visible:outline-none ${peeking ? 'pointer-events-none' : ''}`}
+          className={`fixed inset-y-0 left-0 z-[60] w-[15px] bg-transparent ${edgeTriggerFocusClassName} focus-visible:outline-none ${peeking ? 'pointer-events-none' : ''}`}
         />
       )}
 
@@ -155,41 +238,19 @@ export function AppSidebar({
         inert={asideHidden ? true : undefined}
         // サイドバーと本文の境界は色面の差（--sb-bg と本文の背景）だけで示す。
         // ホバーでかぶさる peeking のときだけ、本文の上に浮いていることが分かるよう影を残す。
-        className={`fixed inset-y-0 left-0 z-50 flex w-[var(--sidebar-visual-width)] flex-col overflow-hidden transition-[width] ${widthMotionClass} motion-reduce:transition-none ${peeking ? 'shadow-2xl' : ''} max-md:w-56 max-md:transition-transform max-md:duration-200 ${
-          mobileOpen ? 'max-md:translate-x-0 max-md:shadow-2xl' : 'max-md:-translate-x-full'
+        className={`fixed inset-y-0 left-0 z-50 flex w-[var(--sidebar-visual-width)] flex-col overflow-hidden ${shadowTransition ? 'transition-[width,box-shadow]' : 'transition-[width]'} ${widthMotionClass} motion-reduce:transition-none ${peeking ? 'shadow-2xl' : ''} ${
+          mobileDrawer
+            ? `max-md:w-56 max-md:transition-transform max-md:duration-200 ${mobileOpen ? 'max-md:translate-x-0 max-md:shadow-2xl' : 'max-md:-translate-x-full'}`
+            : ''
         }`}
         style={{ backgroundColor: 'var(--sb-bg)' }}
       >
-        {/* 最上段の余白行。<aside> の外に固定表示されるドックのぶんの高さ（left-2 top-4 h-8）を確保する。 */}
-        <div className="mt-4 h-8 flex-shrink-0" aria-hidden="true" />
-
-        {top != null && <div className="mt-3 mb-2 pb-1">{resolve(top, ctx)}</div>}
-
-        <nav
-          className={`flex min-h-0 flex-1 flex-col overflow-y-auto px-2 py-2 transition-opacity duration-150 motion-reduce:transition-none ${navDimmed ? 'opacity-40' : ''}`}
-        >
-          <SidebarNavSections
-            sections={sections}
-            pathname={pathname}
-            collapsed={ctx.collapsed}
-            activeClassName={activeClassName}
-            renderLink={renderLink}
-            renderLocked={renderLocked}
-            lockBadge={lockBadge}
-            sectionGapClassName={sectionGapClassName}
-            quickActionClassName={quickActionClassName}
-            quickActionActiveClassName={quickActionActiveClassName}
-            decorate={decorate}
-            onNavigate={closeDrawer}
-          />
-        </nav>
-
-        {accountMenu != null && (
-          <div className="flex-shrink-0 px-2 pb-2 pt-1">
-            <div className="mt-1 border-t pt-1" style={{ borderColor: 'var(--sb-border)' }}>
-              {resolve(accountMenu, ctx)}
-            </div>
+        {fixedContentWidth && zeroWidthWhenClosed ? (
+          <div className="flex h-full flex-col overflow-hidden" style={{ width: expandedWidth }}>
+            {body}
           </div>
+        ) : (
+          body
         )}
       </aside>
     </>

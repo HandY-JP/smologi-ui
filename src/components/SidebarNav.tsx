@@ -41,10 +41,18 @@ const defaultRenderLink: SidebarRenderLink = (props) => <a {...props} />;
 const ROW_FOCUS =
   'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--sb-text)]';
 
-export function SidebarNavSectionLabel({ label }: { label: string }) {
+export function SidebarNavSectionLabel({ label, badge }: { label: string; badge?: string }) {
   return (
     <div className="truncate px-3 pt-4 pb-1 text-[10px] font-semibold tracking-wider" style={{ color: 'var(--sb-label)' }}>
       {label}
+      {badge && (
+        <span
+          className="ml-1.5 rounded-sm border px-1 py-px align-middle text-[9px] font-semibold leading-none"
+          style={{ borderColor: 'var(--sb-border)' }}
+        >
+          {badge}
+        </span>
+      )}
     </div>
   );
 }
@@ -85,6 +93,7 @@ export function SidebarNavLink({
   lockBadge = 'PRO',
   quickActionClassName,
   quickActionActiveClassName,
+  dotClassName,
   onNavigate,
 }: {
   item: SidebarNavItem;
@@ -101,8 +110,11 @@ export function SidebarNavLink({
   quickActionClassName?: string;
   /** 「＋」の選択中の色 class（既定 sb-nav-round-active）。Seller: 'bg-[#FFE5D1] text-[#C2560D] hover:bg-[#FFE5D1]/80'。 */
   quickActionActiveClassName?: string;
+  /** 要対応の点の色 class（既定 red-500。Smologi は 'bg-danger-solid'）。 */
+  dotClassName?: string;
   onNavigate?: () => void;
 }) {
+  if (item.custom != null) return <>{item.custom}</>;
   // ---- 今後実装予定（リンクにしない）----
   if (item.comingSoon) {
     return (
@@ -191,9 +203,16 @@ export function SidebarNavLink({
               {item.badge}
             </span>
           )}
+          {!collapsed && item.trailing}
           {/* 要対応の赤丸。置き場所は常に行の右端＝開閉で飛ばない（レールでは角）。 */}
           {item.dot && (
-            <SidebarNewDot placement={collapsed ? 'corner' : 'inline'} label={item.dotReason ?? '新着あり'} onAccent={false} />
+            <SidebarNewDot
+              placement={collapsed ? 'corner' : 'inline'}
+              label={item.dotReason ?? '新着あり'}
+              muted={item.dotMuted}
+              onAccent={false}
+              colorClassName={dotClassName}
+            />
           )}
         </>
       ),
@@ -236,7 +255,7 @@ export function SidebarNavLink({
   );
 }
 
-function CollapsibleSectionHeader({ label, open, dot, onToggle }: { label: string; open: boolean; dot: boolean; onToggle: () => void }) {
+function CollapsibleSectionHeader({ label, open, dot, dotLabel, dotClassName, onToggle }: { label: string; open: boolean; dot: boolean; dotLabel?: string; dotClassName?: string; onToggle: () => void }) {
   return (
     <button
       type="button"
@@ -247,7 +266,7 @@ function CollapsibleSectionHeader({ label, open, dot, onToggle }: { label: strin
     >
       <span className="min-w-0 flex-1 truncate">{label}</span>
       {/* 閉じていても中に要対応があると分かる赤丸（件数は出さない）。 */}
-      {dot && <SidebarNewDot label="中に要対応あり" />}
+      {dot && <SidebarNewDot label={dotLabel ?? '中に要対応あり'} colorClassName={dotClassName} />}
       <svg className={`h-3.5 w-3.5 flex-shrink-0 transition-transform ${open ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} aria-hidden="true">
         <path strokeLinecap="round" strokeLinejoin="round" d="m6 9 6 6 6-6" />
       </svg>
@@ -264,6 +283,7 @@ type NavRest = {
   lockBadge?: string;
   quickActionClassName?: string;
   quickActionActiveClassName?: string;
+  dotClassName?: string;
   onNavigate?: () => void;
 };
 
@@ -271,9 +291,10 @@ function SidebarNavSectionBlock({
   section,
   index,
   gapClassName,
+  firstGapClassName,
   decorate,
   ...rest
-}: { section: SidebarNavSection; index: number; gapClassName?: string; decorate?: (item: SidebarNavItem) => SidebarNavItem } & NavRest) {
+}: { section: SidebarNavSection; index: number; gapClassName?: string; firstGapClassName?: string; decorate?: (item: SidebarNavItem) => SidebarNavItem } & NavRest) {
   const items = decorate ? section.items.map(decorate) : section.items;
   const [expanded, setExpanded] = useState(section.defaultOpen ?? false);
   useEffect(() => {
@@ -295,13 +316,15 @@ function SidebarNavSectionBlock({
   const sectionActive = items.some((item) => isSidebarNavItemActive(item, rest.pathname));
   const open = !section.collapsible || sectionActive || expanded;
   const hasDot = items.some((item) => item.dot);
-  const gap = index === 0 ? 'pt-1' : gapClassName ?? (section.label ? '' : 'mt-4');
+  const gap = index === 0 ? firstGapClassName ?? 'pt-1' : gapClassName ?? (section.label ? '' : 'mt-4');
+  const { onExpandedChange } = section;
+  useEffect(() => { if (section.collapsible) onExpandedChange?.(expanded); }, [section.collapsible, expanded, onExpandedChange]);
   return (
-    <div className={gap}>
+    <div className={gap} data-tour={section.dataTour}>
       {section.label && !rest.collapsed && (
         section.collapsible
-          ? <CollapsibleSectionHeader label={section.label} open={open} dot={hasDot} onToggle={toggle} />
-          : <SidebarNavSectionLabel label={section.label} />
+          ? <CollapsibleSectionHeader label={section.label} open={open} dot={hasDot} dotLabel={section.dotLabel} dotClassName={rest.dotClassName} onToggle={toggle} />
+          : <SidebarNavSectionLabel label={section.label} badge={section.labelBadge} />
       )}
       {open && (
         <div className="space-y-0.5">
@@ -319,17 +342,20 @@ export function SidebarNavSections({
   sections,
   decorate,
   sectionGapClassName,
+  firstSectionGapClassName,
   ...rest
 }: {
   sections: readonly SidebarNavSection[];
   /** 2つ目以降の区分の上余白 class。既定は Smologi 流（見出しあり＝なし、見出しなし＝mt-4）。Seller は 'mt-4'。 */
   sectionGapClassName?: string;
+  /** 最初の区分の上余白 class。既定 'pt-1'。Smologi は ''。 */
+  firstSectionGapClassName?: string;
   decorate?: (item: SidebarNavItem) => SidebarNavItem;
 } & NavRest) {
   return (
     <>
       {sections.map((section, index) => (
-        <SidebarNavSectionBlock key={section.key} section={section} index={index} gapClassName={sectionGapClassName} decorate={decorate} {...rest} />
+        <SidebarNavSectionBlock key={section.key} section={section} index={index} gapClassName={sectionGapClassName} firstGapClassName={firstSectionGapClassName} decorate={decorate} {...rest} />
       ))}
     </>
   );

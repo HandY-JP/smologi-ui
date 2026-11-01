@@ -4,6 +4,7 @@ export declare const DEFAULT_SIDEBAR_STORAGE_KEY = "handy-sidebar-collapsed-v1";
 export declare const SIDEBAR_TOGGLE_INSET = "3.5rem";
 export declare function useSidebarCollapsed(expandedWidth?: string, collapsedWidth?: string, options?: {
     storageKey?: string;
+    syncDockInset?: boolean;
 }): {
     collapsed: boolean;
     persistedCollapsed: boolean;

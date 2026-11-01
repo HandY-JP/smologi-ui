@@ -449,6 +449,7 @@ import { AppSidebar, AppSidebarAccountMenu, SIDEBAR_MENU_ICONS, StoreAccountSwit
   `--sidebar-width` `--sidebar-visual-width` `--sidebar-toggle-inset`）／`useSidebarDrawer(pathname)`（767px 以下のドロワー）／`useSidebarPeekHold(open)`。
   `lib/sidebar-peek`（`data-sidebar-peek-region`）も export。
 - 純関数（テスト済み）: `isSidebarNavItemActive` `isZeroCssLength` `summarizeSidebarNews`。
+- **v0.11.1（Smologi が切り替えるときの口。どれも既定は v0.11.0 と同じ）**: AppSidebar に `dotClassName`（点の色）`firstSectionGapClassName` `topSpacerClassName` `topWrapperClassName` `fixedContentWidth`（中身を展開幅で固定）`shadowTransition` `mobileDrawer={false}`（スマホでもドロワーにしない）`syncDockInset`（`--sidebar-dock-inset`）`edgeTriggerFocusClassName` `navStateClassName` `navOverride`（設定モードの差し替え）`footer`。行に `dotMuted` `trailing` `custom`（アプリ部品にそのまま差し替え）、区分に `onExpandedChange` `labelBadge` `dataTour` `dotLabel`。
 - セクション見出しの上余白の既定は Smologi 流（見出し `pt-4` のみ）。Seller の旧 `mt-4`＋`pt-4` は `sectionGapClassName="mt-4"` で再現できる。
 
 ### サイドバー左上のドック・アプリ列・ブランドアイコン（v0.8.0）

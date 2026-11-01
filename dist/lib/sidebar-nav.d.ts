@@ -44,6 +44,12 @@ export interface SidebarNavItem {
     exactMatch?: boolean;
     /** これら（と配下）のパスでは光らせない（境界つき前方一致。例 [href + '/new']）。isActive があれば無視。 */
     excludeMatch?: string[];
+    /** 要対応の点を件数取得中などで薄く出す。 */
+    dotMuted?: boolean;
+    /** 行末（点の左）に置く任意の要素（実行中スピナーなど）。 */
+    trailing?: ReactNode;
+    /** 行ごとアプリの部品に差し替える（インライン展開グループなど）。あれば他の描画はせず、active 判定だけ区分の開閉に使う。 */
+    custom?: ReactNode;
     /** 判定を丸ごと差し替える（あればこれを優先。exactMatch / activeMatch / excludeMatch は見ない）。 */
     isActive?: (pathname: string) => boolean;
 }
@@ -58,6 +64,14 @@ export interface SidebarNavSection {
     defaultOpen?: boolean;
     /** 開閉状態の保存キー（localStorage）。省略時は保存しない。 */
     storageKey?: string;
+    /** collapsible の開閉が変わったとき（初回も含む）に呼ばれる。中身の取得を開いたときだけにする用。 */
+    onExpandedChange?: (expanded: boolean) => void;
+    /** 見出しの右に付ける小さな縁つき札（「Beta」など）。 */
+    labelBadge?: string;
+    /** 区分を囲む div に付ける data-tour（ガイドツアー用）。 */
+    dataTour?: string;
+    /** collapsible の見出しの点の読み上げ・title。既定「中に要対応あり」。 */
+    dotLabel?: string;
 }
 /** 行がアクティブか。exactMatch は完全一致のみ。それ以外は href 配下か activeMatch 配下。 */
 export declare function isSidebarNavItemActive(item: Pick<SidebarNavItem, 'href' | 'exactMatch' | 'activeMatch' | 'excludeMatch' | 'isActive'>, pathname: string): boolean;

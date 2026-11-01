@@ -27,10 +27,11 @@ export type SidebarRenderLocked = (props: {
 }, item: SidebarNavItem) => ReactNode;
 /** 選択中の行の既定 class。太字（font-semibold）は部品側で足すので、アプリは色・地の class だけ渡せばよい。 */
 export declare const DEFAULT_SIDEBAR_ACTIVE_CLASS = "sb-nav-active";
-export declare function SidebarNavSectionLabel({ label }: {
+export declare function SidebarNavSectionLabel({ label, badge }: {
     label: string;
+    badge?: string;
 }): import("react").JSX.Element;
-export declare function SidebarNavLink({ item, pathname, collapsed, activeClassName, renderLink, renderLocked, lockBadge, quickActionClassName, quickActionActiveClassName, onNavigate, }: {
+export declare function SidebarNavLink({ item, pathname, collapsed, activeClassName, renderLink, renderLocked, lockBadge, quickActionClassName, quickActionActiveClassName, dotClassName, onNavigate, }: {
     item: SidebarNavItem;
     pathname: string;
     /** アイコンだけのレール表示（折りたたみ幅が 0 でないとき）。 */
@@ -45,6 +46,8 @@ export declare function SidebarNavLink({ item, pathname, collapsed, activeClassN
     quickActionClassName?: string;
     /** 「＋」の選択中の色 class（既定 sb-nav-round-active）。Seller: 'bg-[#FFE5D1] text-[#C2560D] hover:bg-[#FFE5D1]/80'。 */
     quickActionActiveClassName?: string;
+    /** 要対応の点の色 class（既定 red-500。Smologi は 'bg-danger-solid'）。 */
+    dotClassName?: string;
     onNavigate?: () => void;
 }): import("react").JSX.Element;
 type NavRest = {
@@ -56,13 +59,16 @@ type NavRest = {
     lockBadge?: string;
     quickActionClassName?: string;
     quickActionActiveClassName?: string;
+    dotClassName?: string;
     onNavigate?: () => void;
 };
 /** 区分ごとの見出し＋行の並び。decorate で行ごとにバッジ等を差し込める。 */
-export declare function SidebarNavSections({ sections, decorate, sectionGapClassName, ...rest }: {
+export declare function SidebarNavSections({ sections, decorate, sectionGapClassName, firstSectionGapClassName, ...rest }: {
     sections: readonly SidebarNavSection[];
     /** 2つ目以降の区分の上余白 class。既定は Smologi 流（見出しあり＝なし、見出しなし＝mt-4）。Seller は 'mt-4'。 */
     sectionGapClassName?: string;
+    /** 最初の区分の上余白 class。既定 'pt-1'。Smologi は ''。 */
+    firstSectionGapClassName?: string;
     decorate?: (item: SidebarNavItem) => SidebarNavItem;
 } & NavRest): import("react").JSX.Element;
 export {};

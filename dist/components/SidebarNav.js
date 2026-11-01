@@ -6,8 +6,18 @@ import { SidebarNewDot } from "./SidebarNewDot.js";
 const DEFAULT_SIDEBAR_ACTIVE_CLASS = "sb-nav-active";
 const defaultRenderLink = (props) => /* @__PURE__ */ jsx("a", { ...props });
 const ROW_FOCUS = "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--sb-text)]";
-function SidebarNavSectionLabel({ label }) {
-  return /* @__PURE__ */ jsx("div", { className: "truncate px-3 pt-4 pb-1 text-[10px] font-semibold tracking-wider", style: { color: "var(--sb-label)" }, children: label });
+function SidebarNavSectionLabel({ label, badge }) {
+  return /* @__PURE__ */ jsxs("div", { className: "truncate px-3 pt-4 pb-1 text-[10px] font-semibold tracking-wider", style: { color: "var(--sb-label)" }, children: [
+    label,
+    badge && /* @__PURE__ */ jsx(
+      "span",
+      {
+        className: "ml-1.5 rounded-sm border px-1 py-px align-middle text-[9px] font-semibold leading-none",
+        style: { borderColor: "var(--sb-border)" },
+        children: badge
+      }
+    )
+  ] });
 }
 function CountBadge({ item }) {
   if (typeof item.count !== "number" || item.count <= 0) return null;
@@ -31,8 +41,10 @@ function SidebarNavLink({
   lockBadge = "PRO",
   quickActionClassName,
   quickActionActiveClassName,
+  dotClassName,
   onNavigate
 }) {
+  if (item.custom != null) return /* @__PURE__ */ jsx(Fragment, { children: item.custom });
   if (item.comingSoon) {
     return /* @__PURE__ */ jsxs(
       "div",
@@ -97,7 +109,17 @@ function SidebarNavLink({
         !collapsed && /* @__PURE__ */ jsx(CountBadge, { item }),
         !collapsed && item.unlockPill && /* @__PURE__ */ jsx("span", { className: pillClass, style: { color: "var(--sb-label)" }, children: item.unlockPill }),
         !collapsed && item.badge && /* @__PURE__ */ jsx("span", { className: "rounded-full border border-orange-300 bg-white px-1.5 py-0.5 text-[11px] font-bold leading-none text-orange-700", children: item.badge }),
-        item.dot && /* @__PURE__ */ jsx(SidebarNewDot, { placement: collapsed ? "corner" : "inline", label: item.dotReason ?? "\u65B0\u7740\u3042\u308A", onAccent: false })
+        !collapsed && item.trailing,
+        item.dot && /* @__PURE__ */ jsx(
+          SidebarNewDot,
+          {
+            placement: collapsed ? "corner" : "inline",
+            label: item.dotReason ?? "\u65B0\u7740\u3042\u308A",
+            muted: item.dotMuted,
+            onAccent: false,
+            colorClassName: dotClassName
+          }
+        )
       ] })
     },
     { kind: "item", item }
@@ -127,7 +149,7 @@ function SidebarNavLink({
     )
   ] });
 }
-function CollapsibleSectionHeader({ label, open, dot, onToggle }) {
+function CollapsibleSectionHeader({ label, open, dot, dotLabel, dotClassName, onToggle }) {
   return /* @__PURE__ */ jsxs(
     "button",
     {
@@ -138,7 +160,7 @@ function CollapsibleSectionHeader({ label, open, dot, onToggle }) {
       style: { color: "var(--sb-label)" },
       children: [
         /* @__PURE__ */ jsx("span", { className: "min-w-0 flex-1 truncate", children: label }),
-        dot && /* @__PURE__ */ jsx(SidebarNewDot, { label: "\u4E2D\u306B\u8981\u5BFE\u5FDC\u3042\u308A" }),
+        dot && /* @__PURE__ */ jsx(SidebarNewDot, { label: dotLabel ?? "\u4E2D\u306B\u8981\u5BFE\u5FDC\u3042\u308A", colorClassName: dotClassName }),
         /* @__PURE__ */ jsx("svg", { className: `h-3.5 w-3.5 flex-shrink-0 transition-transform ${open ? "rotate-180" : ""}`, fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", strokeWidth: 2, "aria-hidden": "true", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "m6 9 6 6 6-6" }) })
       ]
     }
@@ -148,6 +170,7 @@ function SidebarNavSectionBlock({
   section,
   index,
   gapClassName,
+  firstGapClassName,
   decorate,
   ...rest
 }) {
@@ -176,9 +199,13 @@ function SidebarNavSectionBlock({
   const sectionActive = items.some((item) => isSidebarNavItemActive(item, rest.pathname));
   const open = !section.collapsible || sectionActive || expanded;
   const hasDot = items.some((item) => item.dot);
-  const gap = index === 0 ? "pt-1" : gapClassName ?? (section.label ? "" : "mt-4");
-  return /* @__PURE__ */ jsxs("div", { className: gap, children: [
-    section.label && !rest.collapsed && (section.collapsible ? /* @__PURE__ */ jsx(CollapsibleSectionHeader, { label: section.label, open, dot: hasDot, onToggle: toggle }) : /* @__PURE__ */ jsx(SidebarNavSectionLabel, { label: section.label })),
+  const gap = index === 0 ? firstGapClassName ?? "pt-1" : gapClassName ?? (section.label ? "" : "mt-4");
+  const { onExpandedChange } = section;
+  useEffect(() => {
+    if (section.collapsible) onExpandedChange?.(expanded);
+  }, [section.collapsible, expanded, onExpandedChange]);
+  return /* @__PURE__ */ jsxs("div", { className: gap, "data-tour": section.dataTour, children: [
+    section.label && !rest.collapsed && (section.collapsible ? /* @__PURE__ */ jsx(CollapsibleSectionHeader, { label: section.label, open, dot: hasDot, dotLabel: section.dotLabel, dotClassName: rest.dotClassName, onToggle: toggle }) : /* @__PURE__ */ jsx(SidebarNavSectionLabel, { label: section.label, badge: section.labelBadge })),
     open && /* @__PURE__ */ jsx("div", { className: "space-y-0.5", children: items.map((item, i) => /* @__PURE__ */ jsx(SidebarNavLink, { item, ...rest }, `${item.href}#${i}`)) })
   ] });
 }
@@ -186,9 +213,10 @@ function SidebarNavSections({
   sections,
   decorate,
   sectionGapClassName,
+  firstSectionGapClassName,
   ...rest
 }) {
-  return /* @__PURE__ */ jsx(Fragment, { children: sections.map((section, index) => /* @__PURE__ */ jsx(SidebarNavSectionBlock, { section, index, gapClassName: sectionGapClassName, decorate, ...rest }, section.key)) });
+  return /* @__PURE__ */ jsx(Fragment, { children: sections.map((section, index) => /* @__PURE__ */ jsx(SidebarNavSectionBlock, { section, index, gapClassName: sectionGapClassName, firstGapClassName: firstSectionGapClassName, decorate, ...rest }, section.key)) });
 }
 export {
   DEFAULT_SIDEBAR_ACTIVE_CLASS,

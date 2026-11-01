@@ -28,6 +28,7 @@ function canHoverPeek() {
 }
 function useSidebarCollapsed(expandedWidth = "14rem", collapsedWidth = "3.5rem", options = {}) {
   const storageKey = options.storageKey ?? DEFAULT_SIDEBAR_STORAGE_KEY;
+  const syncDockInset = options.syncDockInset ?? false;
   const [collapsed, setCollapsed] = useState(false);
   const [storageReady, setStorageReady] = useState(false);
   const [peek, setPeek] = useState(false);
@@ -74,7 +75,10 @@ function useSidebarCollapsed(expandedWidth = "14rem", collapsedWidth = "3.5rem",
   const displayCollapsed = collapsed && !peek;
   useEffect(() => {
     document.documentElement.style.setProperty("--sidebar-visual-width", displayCollapsed ? collapsedWidth : expandedWidth);
-  }, [collapsedWidth, displayCollapsed, expandedWidth]);
+    if (syncDockInset) {
+      document.documentElement.style.setProperty("--sidebar-dock-inset", displayCollapsed ? SIDEBAR_TOGGLE_INSET : "0px");
+    }
+  }, [collapsedWidth, displayCollapsed, expandedWidth, syncDockInset]);
   const updateCollapsed = useCallback((next) => {
     setCollapsed((prev) => {
       const value = typeof next === "function" ? next(prev) : next;

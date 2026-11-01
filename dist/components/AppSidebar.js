@@ -25,6 +25,18 @@ function AppSidebar({
   sectionGapClassName,
   quickActionClassName,
   quickActionActiveClassName,
+  dotClassName,
+  firstSectionGapClassName,
+  topSpacerClassName = "mt-4 h-8",
+  topWrapperClassName = "mt-3 mb-2 pb-1",
+  fixedContentWidth = false,
+  shadowTransition = false,
+  mobileDrawer = true,
+  syncDockInset = false,
+  edgeTriggerFocusClassName = "focus-visible:bg-orange-300/30",
+  navStateClassName,
+  navOverride,
+  footer,
   dock,
   navDimmed = false,
   closeMenuLabel = "\u30E1\u30CB\u30E5\u30FC\u3092\u9589\u3058\u308B",
@@ -38,8 +50,11 @@ function AppSidebar({
     setCollapsed,
     edgeTriggerHandlers,
     peekHandlers
-  } = useSidebarCollapsed(expandedWidth, collapsedWidth, { storageKey });
-  const { isMobile, mobileOpen, setMobileOpen } = useSidebarDrawer(pathname);
+  } = useSidebarCollapsed(expandedWidth, collapsedWidth, { storageKey, syncDockInset });
+  const drawer = useSidebarDrawer(pathname);
+  const isMobile = mobileDrawer && drawer.isMobile;
+  const mobileOpen = mobileDrawer && drawer.mobileOpen;
+  const { setMobileOpen } = drawer;
   const zeroWidthWhenClosed = isZeroCssLength(collapsedWidth);
   const sidebarHidden = zeroWidthWhenClosed && persistedCollapsed && !peeking;
   const dockCollapsed = isMobile ? !mobileOpen : sidebarHidden;
@@ -47,6 +62,40 @@ function AppSidebar({
   const news = summarizeSidebarNews(decorate ? sections.map((s) => ({ ...s, items: s.items.map(decorate) })) : sections);
   const ctx = { collapsed: zeroWidthWhenClosed ? false : collapsed };
   const closeDrawer = () => setMobileOpen(false);
+  const spacer = /* @__PURE__ */ jsx("div", { className: `${topSpacerClassName} flex-shrink-0`, "aria-hidden": "true" });
+  const topNode = top != null && (topWrapperClassName ? /* @__PURE__ */ jsx("div", { className: topWrapperClassName, children: resolve(top, ctx) }) : resolve(top, ctx));
+  const navNode = navOverride != null ? navOverride : /* @__PURE__ */ jsx(
+    "nav",
+    {
+      className: `flex min-h-0 flex-1 flex-col overflow-y-auto px-2 py-2 transition-opacity duration-150 motion-reduce:transition-none ${navStateClassName ?? (navDimmed ? "opacity-40" : "")}`,
+      children: /* @__PURE__ */ jsx(
+        SidebarNavSections,
+        {
+          sections,
+          pathname,
+          collapsed: ctx.collapsed,
+          activeClassName,
+          renderLink,
+          renderLocked,
+          lockBadge,
+          sectionGapClassName,
+          firstSectionGapClassName,
+          dotClassName,
+          quickActionClassName,
+          quickActionActiveClassName,
+          decorate,
+          onNavigate: closeDrawer
+        }
+      )
+    }
+  );
+  const body = /* @__PURE__ */ jsxs(Fragment, { children: [
+    spacer,
+    topNode,
+    navNode,
+    accountMenu != null && /* @__PURE__ */ jsx("div", { className: "flex-shrink-0 px-2 pb-2 pt-1", children: /* @__PURE__ */ jsx("div", { className: "mt-1 border-t pt-1", style: { borderColor: "var(--sb-border)" }, children: resolve(accountMenu, ctx) }) }),
+    footer != null && resolve(footer, ctx)
+  ] });
   return /* @__PURE__ */ jsxs(Fragment, { children: [
     persistedCollapsed && !isMobile && zeroWidthWhenClosed && /* @__PURE__ */ jsx(
       "button",
@@ -56,7 +105,7 @@ function AppSidebar({
         title: openSidebarLabel,
         onClick: () => setCollapsed(false),
         ...edgeTriggerHandlers,
-        className: `fixed inset-y-0 left-0 z-[60] w-[15px] bg-transparent focus-visible:bg-orange-300/30 focus-visible:outline-none ${peeking ? "pointer-events-none" : ""}`
+        className: `fixed inset-y-0 left-0 z-[60] w-[15px] bg-transparent ${edgeTriggerFocusClassName} focus-visible:outline-none ${peeking ? "pointer-events-none" : ""}`
       }
     ),
     mobileOpen && /* @__PURE__ */ jsx(
@@ -80,42 +129,15 @@ function AppSidebar({
         hoverHandlers: isMobile ? void 0 : peekHandlers
       }
     ),
-    /* @__PURE__ */ jsxs(
+    /* @__PURE__ */ jsx(
       "aside",
       {
         ...peekHandlers,
         "aria-hidden": asideHidden,
         inert: asideHidden ? true : void 0,
-        className: `fixed inset-y-0 left-0 z-50 flex w-[var(--sidebar-visual-width)] flex-col overflow-hidden transition-[width] ${widthMotionClass} motion-reduce:transition-none ${peeking ? "shadow-2xl" : ""} max-md:w-56 max-md:transition-transform max-md:duration-200 ${mobileOpen ? "max-md:translate-x-0 max-md:shadow-2xl" : "max-md:-translate-x-full"}`,
+        className: `fixed inset-y-0 left-0 z-50 flex w-[var(--sidebar-visual-width)] flex-col overflow-hidden ${shadowTransition ? "transition-[width,box-shadow]" : "transition-[width]"} ${widthMotionClass} motion-reduce:transition-none ${peeking ? "shadow-2xl" : ""} ${mobileDrawer ? `max-md:w-56 max-md:transition-transform max-md:duration-200 ${mobileOpen ? "max-md:translate-x-0 max-md:shadow-2xl" : "max-md:-translate-x-full"}` : ""}`,
         style: { backgroundColor: "var(--sb-bg)" },
-        children: [
-          /* @__PURE__ */ jsx("div", { className: "mt-4 h-8 flex-shrink-0", "aria-hidden": "true" }),
-          top != null && /* @__PURE__ */ jsx("div", { className: "mt-3 mb-2 pb-1", children: resolve(top, ctx) }),
-          /* @__PURE__ */ jsx(
-            "nav",
-            {
-              className: `flex min-h-0 flex-1 flex-col overflow-y-auto px-2 py-2 transition-opacity duration-150 motion-reduce:transition-none ${navDimmed ? "opacity-40" : ""}`,
-              children: /* @__PURE__ */ jsx(
-                SidebarNavSections,
-                {
-                  sections,
-                  pathname,
-                  collapsed: ctx.collapsed,
-                  activeClassName,
-                  renderLink,
-                  renderLocked,
-                  lockBadge,
-                  sectionGapClassName,
-                  quickActionClassName,
-                  quickActionActiveClassName,
-                  decorate,
-                  onNavigate: closeDrawer
-                }
-              )
-            }
-          ),
-          accountMenu != null && /* @__PURE__ */ jsx("div", { className: "flex-shrink-0 px-2 pb-2 pt-1", children: /* @__PURE__ */ jsx("div", { className: "mt-1 border-t pt-1", style: { borderColor: "var(--sb-border)" }, children: resolve(accountMenu, ctx) }) })
-        ]
+        children: fixedContentWidth && zeroWidthWhenClosed ? /* @__PURE__ */ jsx("div", { className: "flex h-full flex-col overflow-hidden", style: { width: expandedWidth }, children: body }) : body
       }
     )
   ] });
