@@ -247,7 +247,7 @@ function CollapsibleSectionHeader({ label, open, dot, onToggle }: { label: strin
     >
       <span className="min-w-0 flex-1 truncate">{label}</span>
       {/* 閉じていても中に要対応があると分かる赤丸（件数は出さない）。 */}
-      {dot && !open && <SidebarNewDot label="中に要対応あり" />}
+      {dot && <SidebarNewDot label="中に要対応あり" />}
       <svg className={`h-3.5 w-3.5 flex-shrink-0 transition-transform ${open ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} aria-hidden="true">
         <path strokeLinecap="round" strokeLinejoin="round" d="m6 9 6 6 6-6" />
       </svg>

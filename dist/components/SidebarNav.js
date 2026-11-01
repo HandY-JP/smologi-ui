@@ -138,7 +138,7 @@ function CollapsibleSectionHeader({ label, open, dot, onToggle }) {
       style: { color: "var(--sb-label)" },
       children: [
         /* @__PURE__ */ jsx("span", { className: "min-w-0 flex-1 truncate", children: label }),
-        dot && !open && /* @__PURE__ */ jsx(SidebarNewDot, { label: "\u4E2D\u306B\u8981\u5BFE\u5FDC\u3042\u308A" }),
+        dot && /* @__PURE__ */ jsx(SidebarNewDot, { label: "\u4E2D\u306B\u8981\u5BFE\u5FDC\u3042\u308A" }),
         /* @__PURE__ */ jsx("svg", { className: `h-3.5 w-3.5 flex-shrink-0 transition-transform ${open ? "rotate-180" : ""}`, fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", strokeWidth: 2, "aria-hidden": "true", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "m6 9 6 6 6-6" }) })
       ]
     }

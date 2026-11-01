@@ -25,6 +25,7 @@ test('アクティブ判定: isActive 優先・excludeMatch（Smologi の /new �
   assert.equal(isSidebarNavItemActive(orders, '/customer/orders/5'), true);
   assert.equal(isSidebarNavItemActive(orders, '/customer/orders/new'), false);
   assert.equal(isSidebarNavItemActive(orders, '/customer/orders/new/x'), false, '前方一致で除外');
+  assert.equal(isSidebarNavItemActive({ href: '/o', excludeMatch: ['/o/new'] }, '/o/newest'), true, '/new は /newest を除外しない');
   const dash = { href: '/customer', isActive: (p) => p === '/customer', exactMatch: false };
   assert.equal(isSidebarNavItemActive(dash, '/customer'), true);
   assert.equal(isSidebarNavItemActive(dash, '/customer/orders'), false);

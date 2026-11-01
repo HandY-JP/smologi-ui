@@ -38,7 +38,7 @@ export interface SidebarNavItem {
   activeMatch?: string[];
   /** true のとき完全一致だけでアクティブ判定する（ダッシュボード行用）。 */
   exactMatch?: boolean;
-  /** これらで始まるパスでは光らせない（前方一致。例 [href + '/new']）。isActive があれば無視。 */
+  /** これら（と配下）のパスでは光らせない（境界つき前方一致。例 [href + '/new']）。isActive があれば無視。 */
   excludeMatch?: string[];
   /** 判定を丸ごと差し替える（あればこれを優先。exactMatch / activeMatch / excludeMatch は見ない）。 */
   isActive?: (pathname: string) => boolean;
@@ -66,7 +66,7 @@ export function isSidebarNavItemActive(
 ): boolean {
   if (item.isActive) return item.isActive(pathname);
   if (item.exactMatch) return pathname === item.href;
-  if (item.excludeMatch?.some((m) => pathname.startsWith(m))) return false;
+  if (item.excludeMatch?.some((m) => matchesPath(pathname, m))) return false;
   return matchesPath(pathname, item.href) || (item.activeMatch?.some((match) => matchesPath(pathname, match)) ?? false);
 }
 

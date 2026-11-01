@@ -2,7 +2,7 @@ const matchesPath = (pathname, base) => pathname === base || pathname.startsWith
 function isSidebarNavItemActive(item, pathname) {
   if (item.isActive) return item.isActive(pathname);
   if (item.exactMatch) return pathname === item.href;
-  if (item.excludeMatch?.some((m) => pathname.startsWith(m))) return false;
+  if (item.excludeMatch?.some((m) => matchesPath(pathname, m))) return false;
   return matchesPath(pathname, item.href) || (item.activeMatch?.some((match) => matchesPath(pathname, match)) ?? false);
 }
 function isZeroCssLength(value) {
