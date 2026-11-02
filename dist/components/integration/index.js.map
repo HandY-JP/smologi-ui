@@ -1,7 +1,1 @@
-{
-  "version": 3,
-  "sources": ["components/integration/index.ts"],
-  "sourcesContent": ["export * from './types';\nexport * from './IntegrationHeader';\nexport * from './StatusTile';\nexport * from './IntegrationAlert';\nexport * from './ProcessToggleList';\nexport * from './DeliveryHistoryTable';\nexport * from './OutOfScopeList';\nexport * from './ShopCard';\nexport * from './ProviderPicker';\n"],
-  "mappings": "AAAA,cAAc;AACd,cAAc;AACd,cAAc;AACd,cAAc;AACd,cAAc;AACd,cAAc;AACd,cAAc;AACd,cAAc;AACd,cAAc;",
-  "names": []
-}
+{"version":3,"sources":["../../../src/components/integration/index.ts"],"sourcesContent":["export * from './types';\nexport * from './IntegrationHeader';\nexport * from './StatusTile';\nexport * from './IntegrationAlert';\nexport * from './ProcessToggleList';\nexport * from './DeliveryHistoryTable';\nexport * from './OutOfScopeList';\nexport * from './ShopCard';\nexport * from './ProviderPicker';\n"],"mappings":"AAAA,cAAc;AACd,cAAc;AACd,cAAc;AACd,cAAc;AACd,cAAc;AACd,cAAc;AACd,cAAc;AACd,cAAc;AACd,cAAc;","names":[]}

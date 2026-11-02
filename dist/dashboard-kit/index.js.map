@@ -1,7 +1,1 @@
-{
-  "version": 3,
-  "sources": ["dashboard-kit/index.ts"],
-  "sourcesContent": ["// \u30C0\u30C3\u30B7\u30E5\u30DC\u30FC\u30C9\u7DE8\u96C6\u30AD\u30C3\u30C8\u306E\u30ED\u30B8\u30C3\u30AF\u3068\u578B\u3060\u3051\uFF08\u30B5\u30FC\u30D0\u30FC\u304B\u3089\u3082 import \u3067\u304D\u308B\u30FBdnd \u4E0D\u8981\uFF09\u3002\n// UI \u90E8\u54C1\uFF08WidgetGrid / EditToolbar / AddWidgetSheet / useLayoutEditor\uFF09\u306F '@handy-jp/smologi-ui/dashboard-kit' \u304B\u3089\u3002\nexport * from './types';\nexport * from './sizes';\nexport * from './layout';\nexport * from './selection';\n"],
-  "mappings": "AAEA,cAAc;AACd,cAAc;AACd,cAAc;AACd,cAAc;",
-  "names": []
-}
+{"version":3,"sources":["../../src/dashboard-kit/index.ts"],"sourcesContent":["// ダッシュボード編集キットのロジックと型だけ（サーバーからも import できる・dnd 不要）。\n// UI 部品（WidgetGrid / EditToolbar / AddWidgetSheet / useLayoutEditor）は '@handy-jp/smologi-ui/dashboard-kit' から。\nexport * from './types';\nexport * from './sizes';\nexport * from './layout';\nexport * from './selection';\n"],"mappings":"AAEA,cAAc;AACd,cAAc;AACd,cAAc;AACd,cAAc;","names":[]}

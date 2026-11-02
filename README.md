@@ -416,7 +416,7 @@ import { Modal, LargeModal, ConfirmDialog } from '@handy-jp/smologi-ui';
 `ShopCard`／`ShopCardList`（印は 3 つまで）、`ProviderPicker`（`comingSoon` は押せない。外枠は `Modal` の中身に入れる）。
 `TonePill` に `bad`（赤）を追加。テストは `tests/*.test.tsx`（vitest、`npm test` に含む）。
 
-### 受信箱・クーポン向け（v0.12.0）
+### 受信箱・クーポン向け（v0.16.0）
 
 トークンだけで塗る（`--accent-subtle` / `--sb-accent-bg` / gray ほか）。生の色・絵文字なし。
 
