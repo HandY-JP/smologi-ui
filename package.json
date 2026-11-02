@@ -30,6 +30,7 @@
       "import": "./dist/dashboard-kit/ui.js"
     },
     "./styles.css": "./dist/styles/components.css",
+    "./integration.css": "./dist/styles/integration.css",
     "./dark-compat.css": "./dist/styles/dark-compat.css",
     "./dark-compat-core.css": "./dist/styles/dark-compat-core.css",
     "./dark-compat-fields.css": "./dist/styles/dark-compat-fields.css",

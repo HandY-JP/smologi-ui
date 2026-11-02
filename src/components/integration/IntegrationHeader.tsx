@@ -38,7 +38,7 @@ export function IntegrationHeader({
   return (
     <header className="sb-int flex flex-wrap items-start gap-4">
       <IntegrationLogo meta={meta} />
-      <div className="min-w-[220px] flex-1">
+      <div className="min-w-0 flex-1 basis-[220px]">
         <h2 className="flex flex-wrap items-center gap-2.5 text-xl font-semibold">
           {meta.label}
           {statusLabel && <TonePill tone={PILL_TONE[statusTone]}>{statusLabel}</TonePill>}

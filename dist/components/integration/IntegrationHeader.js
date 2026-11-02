@@ -22,7 +22,7 @@ function IntegrationHeader({
 }) {
   return /* @__PURE__ */ jsxs("header", { className: "sb-int flex flex-wrap items-start gap-4", children: [
     /* @__PURE__ */ jsx(IntegrationLogo, { meta }),
-    /* @__PURE__ */ jsxs("div", { className: "min-w-[220px] flex-1", children: [
+    /* @__PURE__ */ jsxs("div", { className: "min-w-0 flex-1 basis-[220px]", children: [
       /* @__PURE__ */ jsxs("h2", { className: "flex flex-wrap items-center gap-2.5 text-xl font-semibold", children: [
         meta.label,
         statusLabel && /* @__PURE__ */ jsx(TonePill, { tone: PILL_TONE[statusTone], children: statusLabel })

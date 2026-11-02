@@ -18,6 +18,9 @@
  *              細いスクロールバー／第2行スロット／sticky 見出し／列見出し／セクションジャンプ
  */
 
+/* 連携ページ・ショップ設定の部品（v0.14.0）。単独でも '@handy-jp/smologi-ui/integration.css' で読める。 */
+@import './integration.css';
+
 @keyframes toast-enter {
   from { opacity: 0; transform: translateY(8px) scale(0.96); }
   to   { opacity: 1; transform: translateY(0) scale(1); }
@@ -1164,76 +1167,6 @@ html.theme-dark .sb-nav-round-active { color: var(--sb-active-ink, color-mix(in 
     grid-column: 2;
   }
 }
-
-/* ===== 連携ページ・ショップ設定の部品（v0.14.0）=====
- * 色は意味名トークン（tokens/palette.css の success / warning / danger / surface / ink / line / accent）だけで書く。
- * palette を読んでいないアプリでもライトで崩れないよう、var() の第 2 引数にライトの値を置く。
- * ダークで palette 未読込のときは html.theme-dark の指定が効く（palette を読んでいればそちらが勝つ）。 */
-.sb-int {
-  --sb-int-ok-bg: rgb(var(--success-soft, 230 247 238));
-  --sb-int-ok-ink: rgb(var(--success-ink, 4 120 87));
-  --sb-int-ok-solid: rgb(var(--success-solid, 5 150 105));
-  --sb-int-warn-bg: rgb(var(--warning-soft, 255 246 224));
-  --sb-int-warn-ink: rgb(var(--warning-ink, 161 98 7));
-  --sb-int-warn-solid: rgb(var(--warning-solid, 217 119 6));
-  --sb-int-bad-bg: rgb(var(--danger-soft, 254 236 236));
-  --sb-int-bad-ink: rgb(var(--danger-ink, 185 28 28));
-  --sb-int-bad-solid: rgb(var(--danger-solid, 220 38 38));
-  --sb-int-off-bg: rgb(var(--surface-subtle, 243 244 248));
-  --sb-int-off-ink: rgb(var(--ink-muted, 91 101 117));
-  --sb-int-off-solid: rgb(var(--ink-faint, 150 158 172));
-  --sb-int-line: rgb(var(--line, 229 232 238));
-  --sb-int-surface: rgb(var(--surface, 255 255 255));
-  --sb-int-ink: rgb(var(--ink, 31 41 55));
-  --sb-int-accent: rgb(var(--accent, 37 99 235));
-  --sb-int-accent-soft: rgb(var(--accent-soft, 234 241 254));
-}
-html.theme-dark .sb-int {
-  --sb-int-ok-bg: rgb(var(--success-soft, 18 46 36));
-  --sb-int-ok-ink: rgb(var(--success-ink, 110 231 183));
-  --sb-int-ok-solid: rgb(var(--success-solid, 16 185 129));
-  --sb-int-warn-bg: rgb(var(--warning-soft, 58 43 12));
-  --sb-int-warn-ink: rgb(var(--warning-ink, 252 211 77));
-  --sb-int-warn-solid: rgb(var(--warning-solid, 245 158 11));
-  --sb-int-bad-bg: rgb(var(--danger-soft, 64 24 28));
-  --sb-int-bad-ink: rgb(var(--danger-ink, 252 165 165));
-  --sb-int-bad-solid: rgb(var(--danger-solid, 239 68 68));
-  --sb-int-off-bg: rgb(var(--surface-subtle, 28 33 44));
-  --sb-int-off-ink: rgb(var(--ink-muted, 160 170 185));
-  --sb-int-off-solid: rgb(var(--ink-faint, 110 120 135));
-  --sb-int-line: rgb(var(--line, 45 52 66));
-  --sb-int-surface: rgb(var(--surface, 22 27 37));
-  --sb-int-ink: rgb(var(--ink, 229 232 240));
-  --sb-int-accent: rgb(var(--accent, 120 160 255));
-  --sb-int-accent-soft: rgb(var(--accent-soft, 27 39 71));
-}
-.sb-int-muted { color: var(--sb-int-off-ink); }
-.sb-int-bad-text { color: var(--sb-int-bad-ink); }
-.sb-int-logo { color: rgb(var(--on-accent, 255 255 255)); }
-.sb-int-tile { background: var(--sb-int-off-bg); }
-.sb-int-tile--bad { background: var(--sb-int-bad-bg); }
-.sb-int-tile--warn { background: var(--sb-int-warn-bg); }
-.sb-int-tile--ok .sb-int-tile-value { color: var(--sb-int-ok-ink); }
-.sb-int-tile--warn .sb-int-tile-value { color: var(--sb-int-warn-ink); }
-.sb-int-tile--bad .sb-int-tile-value { color: var(--sb-int-bad-ink); }
-.sb-int-tile--off .sb-int-tile-value { color: var(--sb-int-off-ink); }
-.sb-int-dot--ok { background: var(--sb-int-ok-solid); }
-.sb-int-dot--warn { background: var(--sb-int-warn-solid); }
-.sb-int-dot--bad { background: var(--sb-int-bad-solid); }
-.sb-int-dot--off { background: var(--sb-int-off-solid); }
-.sb-int-alert--bad { background: var(--sb-int-bad-bg); color: var(--sb-int-bad-ink); }
-.sb-int-alert--warn { background: var(--sb-int-warn-bg); color: var(--sb-int-warn-ink); }
-.sb-int-alert--ok { background: var(--sb-int-ok-bg); color: var(--sb-int-ok-ink); }
-.sb-int-alert--off { background: var(--sb-int-off-bg); color: var(--sb-int-off-ink); }
-.sb-int-card { border: 1px solid var(--sb-int-line); background: var(--sb-int-surface); color: var(--sb-int-ink); }
-.sb-int-pick:not(:disabled):hover { background: var(--sb-int-accent-soft); }
-.sb-int-pick:focus-visible, .sb-int-filter:focus-visible { outline: 2px solid var(--sb-int-accent); outline-offset: 2px; }
-.sb-int-chip { font-size: 11px; font-weight: 600; padding: 1px 8px; border-radius: 999px; background: var(--sb-int-off-bg); color: var(--sb-int-off-ink); white-space: nowrap; }
-.sb-int-filter { font-size: 12px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--sb-int-line); background: transparent; color: var(--sb-int-ink); cursor: pointer; }
-.sb-int-filter[aria-pressed="true"] { background: var(--sb-int-accent-soft); border-color: var(--sb-int-accent); color: var(--sb-int-accent); }
-.sb-int-table-wrap { border: 1px solid var(--sb-int-line); }
-.sb-int-th { background: var(--sb-int-off-bg); color: var(--sb-int-off-ink); }
-.sb-int-td { border-top: 1px solid var(--sb-int-line); }
 
 /* ===== StoreAccountSwitcher の一覧パネル（v0.15.0）=====
  * サイドバーの地色（ベージュ等）を引かず、palette の面トークンで白（ダークでは既存の面の色）にする。
