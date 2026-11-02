@@ -397,6 +397,18 @@ import { Modal, LargeModal, ConfirmDialog } from '@handy-jp/smologi-ui';
 `SearchableSelect`、`GuideTour`、`SummaryTile`、`EmptyState`、`ErrorBanner`、
 `SortIndicator`、`Skeleton`、`ProductThumb`。
 
+### 連携ページ・ショップ設定向け（v0.14.0）
+
+見た目と props／コールバックだけの部品（`src/components/integration/*`）。fetch・保存・巻き戻しはアプリ側。
+`SettingsSection` の中に置ける。色は palette の意味名（success / warning / danger / surface / ink / line / accent）だけ。
+ロゴ色は `IntegrationProviderMeta.accentVar`（CSS 変数名）で受ける。
+
+`IntegrationHeader`（ロゴ・名前・状態ピル・説明・操作枠）、`StatusTileGrid`／`StatusTile`（tone `ok|warn|bad|off`）、
+`IntegrationAlert`（文＋対処ボタン 1 つ）、`ProcessToggleList`（`readOnly` 行はスイッチなしで「常に行います」）、
+`DeliveryHistoryTable`（「失敗だけ」切替・再送／まとめて再送・横スクロール枠）、`OutOfScopeList`、
+`ShopCard`／`ShopCardList`（印は 3 つまで）、`ProviderPicker`（`comingSoon` は押せない。外枠は `Modal` の中身に入れる）。
+`TonePill` に `bad`（赤）を追加。テストは `tests/*.test.tsx`（vitest、`npm test` に含む）。
+
 ### 受信箱・クーポン向け（v0.12.0）
 
 トークンだけで塗る（`--accent-subtle` / `--sb-accent-bg` / gray ほか）。生の色・絵文字なし。

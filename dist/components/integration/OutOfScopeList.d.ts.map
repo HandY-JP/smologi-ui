@@ -1,0 +1,1 @@
+{"version":3,"file":"OutOfScopeList.d.ts","sourceRoot":"","sources":["../../../src/components/integration/OutOfScopeList.tsx"],"names":[],"mappings":"AAEA,2CAA2C;AAC3C,wBAAgB,cAAc,CAAC,EAC7B,KAAK,EACL,KAAyB,EACzB,IAAsB,GACvB,EAAE;IACD,KAAK,EAAE,MAAM,EAAE,CAAC;IAChB,KAAK,CAAC,EAAE,MAAM,CAAC;IACf,IAAI,CAAC,EAAE,MAAM,CAAC;CACf,sCAeA"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"StatusTile.d.ts","sourceRoot":"","sources":["../../../src/components/integration/StatusTile.tsx"],"names":[],"mappings":"AAEA,OAAO,KAAK,EAAE,eAAe,EAAE,MAAM,SAAS,CAAC;AAE/C,wBAAgB,UAAU,CAAC,EAAE,KAAK,EAAE,IAAI,EAAE,KAAK,EAAE,GAAG,EAAE,aAAa,EAAE,EAAE,eAAe,+BAYrF;AAED,oCAAoC;AACpC,wBAAgB,cAAc,CAAC,EAAE,KAAK,EAAE,EAAE;IAAE,KAAK,EAAE,eAAe,EAAE,CAAA;CAAE,sCASrE"}

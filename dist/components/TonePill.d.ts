@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-export type TonePillTone = 'accent' | 'ok' | 'warn' | 'info' | 'mute';
+export type TonePillTone = 'accent' | 'ok' | 'warn' | 'bad' | 'info' | 'mute';
 export declare function TonePill({ tone, icon, children, className, title, }: {
     tone?: TonePillTone;
     /** 左に出す小さなアイコン（14px 程度）。 */
