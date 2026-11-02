@@ -55,6 +55,7 @@ export * from "./components/SortIndicator.js";
 export * from "./components/Skeleton.js";
 export * from "./components/HandyPortalLoader.js";
 export * from "./components/ProductThumb.js";
+export * from "./components/ProductCells.js";
 export * from "./components/ThemeIcon.js";
 export * from "./components/AppSwitcherIcon.js";
 export * from "./components/SidebarNewDot.js";

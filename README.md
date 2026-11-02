@@ -344,6 +344,13 @@ import {
 `SectionJumpNav` は見出しの一覧へ飛ぶチップ列。`useLastStuckSection` は
 「いま追従している見出し」を返すので、現在地チップの表示に使う。
 
+### 商品行のセル（v0.14.0）
+
+`ProductCodeStack`（上段=商品コード/ASIN、下段=JAN/SKU）と `ProductNameStack`（商品名2行＋バッジ＋下段補助行）は
+**td の中身**だけを返す。td・sticky・幅・クリック処理はアプリ側。コードは等幅をやめゴシック＋`tabular-nums`。
+寸法は `FLAT_IMAGE_COL_PX`(64)・`FLAT_CODE_COL_PX`(168)、クラスは `FLAT_CODE_*` / `FLAT_NAME_*`（色は `var()` 形）。
+`ProductThumb` は変更なし（画像は各アプリの自前サムネのまま）。
+
 ### 絞り込み
 
 ```tsx

@@ -1,1 +1,7 @@
-{"version":3,"sources":["../../src/dashboard-kit/ui.ts"],"sourcesContent":["// UI 部品（いずれも 'use client'）。WidgetGrid が @dnd-kit/core を使うので、メインの index からは出さない\n// （dnd を入れていないアプリのビルドを壊さないため）。サブパス '@handy-jp/smologi-ui/dashboard-kit' から import する。\nexport * from './WidgetGrid';\nexport * from './AddWidgetSheet';\nexport * from './EditToolbar';\nexport * from './useLayoutEditor';\nexport * from './index';\nexport * from './DashboardStarter';\n"],"mappings":"AAEA,cAAc;AACd,cAAc;AACd,cAAc;AACd,cAAc;AACd,cAAc;AACd,cAAc;","names":[]}
+{
+  "version": 3,
+  "sources": ["dashboard-kit/ui.ts"],
+  "sourcesContent": ["// UI \u90E8\u54C1\uFF08\u3044\u305A\u308C\u3082 'use client'\uFF09\u3002WidgetGrid \u304C @dnd-kit/core \u3092\u4F7F\u3046\u306E\u3067\u3001\u30E1\u30A4\u30F3\u306E index \u304B\u3089\u306F\u51FA\u3055\u306A\u3044\n// \uFF08dnd \u3092\u5165\u308C\u3066\u3044\u306A\u3044\u30A2\u30D7\u30EA\u306E\u30D3\u30EB\u30C9\u3092\u58CA\u3055\u306A\u3044\u305F\u3081\uFF09\u3002\u30B5\u30D6\u30D1\u30B9 '@handy-jp/smologi-ui/dashboard-kit' \u304B\u3089 import \u3059\u308B\u3002\nexport * from './WidgetGrid';\nexport * from './AddWidgetSheet';\nexport * from './EditToolbar';\nexport * from './useLayoutEditor';\nexport * from './index';\nexport * from './DashboardStarter';\n"],
+  "mappings": "AAEA,cAAc;AACd,cAAc;AACd,cAAc;AACd,cAAc;AACd,cAAc;AACd,cAAc;",
+  "names": []
+}

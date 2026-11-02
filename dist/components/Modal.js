@@ -40,7 +40,7 @@ function useEscapeDismiss(enabled, onDismiss) {
   });
   useEffect(() => {
     if (!enabled) return;
-    const token = /* @__PURE__ */ Symbol("modal");
+    const token = Symbol("modal");
     escapeStack.push(token);
     const onKeyDown = (event) => {
       if (event.key !== "Escape") return;
