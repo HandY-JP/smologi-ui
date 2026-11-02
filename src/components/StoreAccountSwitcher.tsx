@@ -70,7 +70,7 @@ const FIELD_BASE =
   'group flex h-10 w-full items-center gap-2 rounded-md px-2.5 text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--sb-text)]';
 
 const ROW_BASE =
-  'flex w-full items-center gap-2 px-3 py-2 text-left text-sm transition-colors hover:bg-[var(--sb-popover-current-bg,var(--accent-subtle))] focus-visible:bg-[var(--sb-popover-current-bg,var(--accent-subtle))] focus-visible:outline-none disabled:cursor-default disabled:opacity-50';
+  'flex w-full items-center gap-2 px-3 py-2 text-left text-sm transition-colors hover:bg-[var(--sb-popover-hover,var(--sb-popover-current-bg,var(--accent-subtle)))] focus-visible:bg-[var(--sb-popover-hover,var(--sb-popover-current-bg,var(--accent-subtle)))] focus-visible:outline-none disabled:cursor-default disabled:opacity-50';
 
 function Chevron({ open }: { open: boolean }) {
   return (
@@ -279,8 +279,8 @@ export function StoreAccountSwitcher({
           id={menuId}
           role="menu"
           aria-label={ariaLabel}
-          className="absolute left-0 right-0 top-full z-30 mt-1 max-h-[70vh] overflow-y-auto rounded-md border py-1 shadow-lg"
-          style={{ ...lineStyle, backgroundColor: 'var(--sb-popover-bg, var(--sb-bg))' }}
+          className="sb-store-panel absolute left-0 right-0 top-full z-30 mt-1 max-h-[70vh] overflow-y-auto rounded-md border py-1 shadow-lg"
+          style={{ ...lineStyle, backgroundColor: 'var(--sb-popover-bg)' }}
         >
           {statusText ? (
             <div

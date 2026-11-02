@@ -1234,3 +1234,25 @@ html.theme-dark .sb-int {
 .sb-int-table-wrap { border: 1px solid var(--sb-int-line); }
 .sb-int-th { background: var(--sb-int-off-bg); color: var(--sb-int-off-ink); }
 .sb-int-td { border-top: 1px solid var(--sb-int-line); }
+
+/* ===== StoreAccountSwitcher の一覧パネル（v0.15.0）=====
+ * サイドバーの地色（ベージュ等）を引かず、palette の面トークンで白（ダークでは既存の面の色）にする。
+ * ホバー行は surface-subtle、今の画面の行は accent-soft（文字は accent-ink）で見分ける。 */
+.sb-store-panel {
+  --sb-popover-bg: rgb(var(--surface, 255 255 255));
+  --sb-popover-ink: rgb(var(--ink, 31 41 55));
+  --sb-popover-muted: rgb(var(--ink-muted, 91 101 117));
+  --sb-popover-line: rgb(var(--line, 229 232 238));
+  --sb-popover-hover: rgb(var(--surface-subtle, 243 244 248));
+  --sb-popover-current-bg: rgb(var(--accent-soft, 234 241 254));
+  --sb-popover-current-ink: rgb(var(--accent-ink, 29 78 216));
+}
+html.theme-dark .sb-store-panel {
+  --sb-popover-bg: rgb(var(--surface, 22 27 37));
+  --sb-popover-ink: rgb(var(--ink, 229 232 240));
+  --sb-popover-muted: rgb(var(--ink-muted, 160 170 185));
+  --sb-popover-line: rgb(var(--line, 45 52 66));
+  --sb-popover-hover: rgb(var(--surface-subtle, 28 33 44));
+  --sb-popover-current-bg: rgb(var(--accent-soft, 27 39 71));
+  --sb-popover-current-ink: rgb(var(--accent-ink, 150 180 255));
+}
