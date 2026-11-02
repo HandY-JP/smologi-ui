@@ -66,9 +66,12 @@ export function SidebarNavSectionLabel({ label, badge }: { label: string; badge?
 export function SidebarRailTip({ text, children }: { text: string; children: ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
+  // portal 先は <aside> の親（アプリのテーマ class を持つ外枠。楽天版の .rakuten-theme など）。無ければ body。
+  const portalRoot = useRef<HTMLElement | null>(null);
   const show = () => {
     const el = ref.current;
     if (!el) return;
+    portalRoot.current = el.closest('aside')?.parentElement ?? null;
     const r = el.getBoundingClientRect();
     setPos({ top: r.top + r.height / 2, left: r.right + 6 });
   };
@@ -111,7 +114,7 @@ export function SidebarRailTip({ text, children }: { text: string; children: Rea
             />
             <span className="relative">{text}</span>
           </span>,
-          document.body,
+          portalRoot.current ?? document.body,
         )}
     </div>
   );

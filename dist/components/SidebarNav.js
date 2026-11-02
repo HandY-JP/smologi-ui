@@ -23,9 +23,11 @@ function SidebarNavSectionLabel({ label, badge }) {
 function SidebarRailTip({ text, children }) {
   const ref = useRef(null);
   const [pos, setPos] = useState(null);
+  const portalRoot = useRef(null);
   const show = () => {
     const el = ref.current;
     if (!el) return;
+    portalRoot.current = el.closest("aside")?.parentElement ?? null;
     const r = el.getBoundingClientRect();
     setPos({ top: r.top + r.height / 2, left: r.right + 6 });
   };
@@ -73,7 +75,7 @@ function SidebarRailTip({ text, children }) {
               ]
             }
           ),
-          document.body
+          portalRoot.current ?? document.body
         )
       ]
     }

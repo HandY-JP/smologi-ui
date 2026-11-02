@@ -41,8 +41,7 @@ function SettingsToggle({
         "span",
         {
           "aria-hidden": true,
-          style: { backgroundColor: "#fff" },
-          className: `inline-block h-3.5 w-3.5 transform rounded-full shadow transition-transform ${checked ? "translate-x-[18px]" : "translate-x-0.5"}`
+          className: `inline-block h-3.5 w-3.5 transform rounded-full shadow transition-transform ${checked ? "translate-x-[18px] bg-[var(--accent-on)]" : "translate-x-0.5 bg-white"}`
         }
       )
     }
