@@ -51,3 +51,25 @@ export const ADMIN_FLAT_LIST = 'bg-white';
  * `admin-page-tight-top`（トップバーとの間を 12px に詰める・globals.css）と併せて使う。
  */
 export const ADMIN_FLAT_PAGE = 'admin-page-tight-top sm:-mx-2';
+
+// ---- 商品行のセル（コード欄・名前欄・画像列）の共通寸法とクラス（v0.14.0） ----
+// コード（商品コード・JAN・ASIN・SKU）は等幅フォントをやめ、本文のゴシック + tabular-nums（桁がそろう）。
+// 色は var() 形で書く（amazon-app は Tailwind preset が無く `text-accent-hover` 形が使えない）。
+
+/** 画像列の幅（px）。画像は余白を詰めてこの幅いっぱいに出す。 */
+export const FLAT_IMAGE_COL_PX = 64;
+/** コード欄の幅（px）。 */
+export const FLAT_CODE_COL_PX = 168;
+
+/** コード欄の上段（商品コード・ASIN）。アクセント色。 */
+export const FLAT_CODE_PRIMARY_CLASS = 'text-base tabular-nums text-[var(--accent-hover)]';
+/** コード欄の下段（JAN・SKU）。薄色・小さめ。 */
+export const FLAT_CODE_SECONDARY_CLASS = 'text-sm tabular-nums text-[rgb(var(--ink-muted))]';
+/** 名前欄の上段（商品名）。2 行まで。 */
+export const FLAT_NAME_PRIMARY_CLASS = 'min-w-0 flex-1 font-medium text-[15px] line-clamp-2 break-words';
+/** 名前欄の上段の既定色（`ProductNameStack` の `primaryColorClassName` で差し替え可）。 */
+export const FLAT_NAME_PRIMARY_COLOR_CLASS = 'text-[rgb(var(--ink))]';
+/** 名前欄の下段（システム商品名・ブランドなど）。 */
+export const FLAT_NAME_SECONDARY_CLASS = 'mt-auto pt-0.5 text-[13px] truncate';
+/** 名前欄の下段の既定色。 */
+export const FLAT_NAME_SECONDARY_COLOR_CLASS = 'text-[rgb(var(--ink-muted))]';

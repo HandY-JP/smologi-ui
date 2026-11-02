@@ -78,6 +78,7 @@ export * from './components/SortIndicator';
 export * from './components/Skeleton';
 export * from './components/HandyPortalLoader';
 export * from './components/ProductThumb';
+export * from './components/ProductCells';
 export * from './components/ThemeIcon';
 export * from './components/AppSwitcherIcon';
 export * from './components/SidebarNewDot';
