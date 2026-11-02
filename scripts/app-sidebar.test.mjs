@@ -132,3 +132,40 @@ test('AppSidebar: 選択中に font-semibold を足す・＋の色と区分余�
   assert.match(html, /QA-ACTIVE/);
   assert.match(html, /<div class="mt-4"><div class="truncate/);
 });
+
+test('レール: 見出し・件数・＋を隠し、区分の間に線、件数は角の点、title は空', async () => {
+  const { SidebarNavSections } = await import('../dist/components/SidebarNav.js');
+  const secs = [
+    { key: 'a', label: '業務', items: [{ href: '/o', label: '注文', icon: null, quickAction: { href: '/o/new', label: '注文を作る' } }] },
+    { key: 'b', label: '商品', collapsible: true, items: [{ href: '/l', label: '倉庫連携', icon: null, count: 184 }] },
+  ];
+  const rail = renderToStaticMarkup(h(SidebarNavSections, { sections: secs, pathname: '/o', collapsed: true }));
+  assert.doesNotMatch(rail, />業務</);
+  assert.doesNotMatch(rail, />商品</);
+  assert.doesNotMatch(rail, />184</, '件数は隠す');
+  assert.doesNotMatch(rail, /注文を作る/, '＋は隠す');
+  assert.match(rail, /h-px w-6/, '区分の間の線');
+  assert.match(rail, /aria-label="倉庫連携（184）"/);
+  assert.match(rail, /title=""/);
+  assert.match(rail, /aria-label="倉庫連携（184）"/);
+  const withCustom = [{ key: 'c', label: '', items: [{ href: '/p', label: '商品', icon: null, custom: h('div', null, 'GROUP') }] }];
+  assert.doesNotMatch(renderToStaticMarkup(h(SidebarNavSections, { sections: withCustom, pathname: '/', collapsed: true })), /GROUP/, 'レールでは custom を出さず親の行だけ');
+  assert.match(renderToStaticMarkup(h(SidebarNavSections, { sections: withCustom, pathname: '/' })), /GROUP/);
+  assert.match(rail, /倉庫連携/, '閉じられる区分もレールでは全部出す');
+  assert.match(rail, /absolute right-1 top-1/, '件数のある行は角に点');
+  const open = renderToStaticMarkup(h(SidebarNavSections, { sections: secs.map((x) => ({ ...x, defaultOpen: true })), pathname: '/o' }));
+  assert.match(open, />業務</);
+  assert.match(open, />184</);
+  assert.doesNotMatch(open, /h-px w-6/);
+});
+
+test('レール: ドックは縦並びで ▶・ホームが出る / 既定は変わらない', async () => {
+  const { SidebarToggleDock } = await import('../dist/components/SidebarToggleDock.js');
+  const base = { persistedCollapsed: true, onToggle() {}, home: { href: '/', active: false } };
+  const rail = renderToStaticMarkup(h(SidebarToggleDock, { ...base, collapsed: true, rail: true }));
+  assert.match(rail, /flex-col/);
+  assert.match(rail, /aria-label="ダッシュボード"/);
+  const zero = renderToStaticMarkup(h(SidebarToggleDock, { ...base, collapsed: true }));
+  assert.doesNotMatch(zero, /flex-col/);
+  assert.doesNotMatch(zero, /ダッシュボード"/, '幅0の閉じ状態は ▶ だけ');
+});

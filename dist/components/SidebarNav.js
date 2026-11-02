@@ -1,6 +1,7 @@
 "use client";
 import { Fragment, jsx, jsxs } from "react/jsx-runtime";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { isSidebarNavItemActive } from "../lib/sidebar-nav.js";
 import { SidebarNewDot } from "./SidebarNewDot.js";
 const DEFAULT_SIDEBAR_ACTIVE_CLASS = "sb-nav-active";
@@ -19,6 +20,65 @@ function SidebarNavSectionLabel({ label, badge }) {
     )
   ] });
 }
+function SidebarRailTip({ text, children }) {
+  const ref = useRef(null);
+  const [pos, setPos] = useState(null);
+  const show = () => {
+    const el = ref.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    setPos({ top: r.top + r.height / 2, left: r.right + 6 });
+  };
+  const hide = () => setPos(null);
+  return /* @__PURE__ */ jsxs(
+    "div",
+    {
+      ref,
+      className: "relative",
+      onPointerEnter: (e) => {
+        if (e.pointerType !== "touch") show();
+      },
+      onPointerLeave: hide,
+      onPointerDown: hide,
+      onFocus: (e) => {
+        let visible = false;
+        try {
+          visible = e.target.matches(":focus-visible");
+        } catch {
+          visible = true;
+        }
+        if (visible) show();
+      },
+      onBlur: hide,
+      children: [
+        children,
+        pos && typeof document !== "undefined" && createPortal(
+          /* @__PURE__ */ jsxs(
+            "span",
+            {
+              role: "tooltip",
+              "data-sidebar-rail-tip": true,
+              className: "pointer-events-none fixed z-[80] -translate-y-1/2 whitespace-nowrap rounded-md px-2.5 py-1 text-xs font-medium shadow-lg",
+              style: { top: pos.top, left: pos.left, backgroundColor: "var(--sb-text)", color: "var(--sb-bg)" },
+              children: [
+                /* @__PURE__ */ jsx(
+                  "span",
+                  {
+                    "aria-hidden": "true",
+                    className: "absolute -left-1 top-1/2 h-2 w-2 -translate-y-1/2 rotate-45",
+                    style: { backgroundColor: "var(--sb-text)" }
+                  }
+                ),
+                /* @__PURE__ */ jsx("span", { className: "relative", children: text })
+              ]
+            }
+          ),
+          document.body
+        )
+      ]
+    }
+  );
+}
 function CountBadge({ item }) {
   if (typeof item.count !== "number" || item.count <= 0) return null;
   return /* @__PURE__ */ jsx(
@@ -30,6 +90,12 @@ function CountBadge({ item }) {
     }
   );
 }
+const COUNT_DOT_CLASS = {
+  danger: "bg-red-600",
+  info: "bg-blue-600",
+  accent: "bg-[var(--sb-accent-bg)]",
+  default: "bg-[#C2560D]"
+};
 const PLUS_ICON = /* @__PURE__ */ jsx("svg", { className: "h-4 w-4", fill: "none", stroke: "currentColor", strokeWidth: 2, viewBox: "0 0 24 24", "aria-hidden": "true", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M12 5v14M5 12h14" }) });
 function SidebarNavLink({
   item,
@@ -44,9 +110,9 @@ function SidebarNavLink({
   dotClassName,
   onNavigate
 }) {
-  if (item.custom != null) return /* @__PURE__ */ jsx(Fragment, { children: item.custom });
+  if (item.custom != null && !collapsed) return /* @__PURE__ */ jsx(Fragment, { children: item.custom });
   if (item.comingSoon) {
-    return /* @__PURE__ */ jsxs(
+    const soon = /* @__PURE__ */ jsxs(
       "div",
       {
         className: `flex h-9 items-center rounded-md text-base cursor-not-allowed opacity-50 select-none ${collapsed ? "justify-center" : "gap-2.5 px-3"}`,
@@ -68,6 +134,7 @@ function SidebarNavLink({
         ]
       }
     );
+    return collapsed ? /* @__PURE__ */ jsx(SidebarRailTip, { text: `${item.label}\uFF08\u6E96\u5099\u4E2D\uFF09`, children: soon }) : soon;
   }
   if (item.locked) {
     const title2 = item.lockedReason ?? `${item.label}\uFF08\u5229\u7528\u3067\u304D\u307E\u305B\u3093\uFF09`;
@@ -86,18 +153,22 @@ function SidebarNavLink({
       ] })
     ] });
     const className = `flex h-9 w-full items-center rounded-md text-left text-base text-[var(--sb-text)] opacity-50 transition-opacity hover:opacity-90 ${collapsed ? "justify-center" : "gap-2.5 px-3"} focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sb-accent-bg)]`;
-    return renderLocked ? /* @__PURE__ */ jsx(Fragment, { children: renderLocked({ className, title: title2, children: body }, item) }) : /* @__PURE__ */ jsx("div", { className: `${className} cursor-not-allowed`, title: title2, "aria-disabled": "true", children: body });
+    const lockedNode = renderLocked ? /* @__PURE__ */ jsx(Fragment, { children: renderLocked({ className, title: collapsed ? "" : title2, children: body }, item) }) : /* @__PURE__ */ jsx("div", { className: `${className} cursor-not-allowed`, title: collapsed ? void 0 : title2, "aria-disabled": "true", children: body });
+    return collapsed ? /* @__PURE__ */ jsx(SidebarRailTip, { text: title2, children: lockedNode }) : lockedNode;
   }
   const isActive = isSidebarNavItemActive(item, pathname);
   const baseLabel = item.badge ? `${item.label} (${item.badge}\u7248)` : item.label;
+  const hasCount = typeof item.count === "number" && item.count > 0;
+  const qaCount = item.quickActionCount && typeof item.quickActionCount.count === "number" && item.quickActionCount.count > 0 ? item.quickActionCount : null;
   const title = item.dot && item.dotReason ? `${baseLabel}\uFF08${item.dotReason}\uFF09` : item.dim && !isActive ? `${baseLabel}\uFF08\u672A\u8A2D\u5B9A\uFF09` : baseLabel;
+  const railText = hasCount ? `${baseLabel}\uFF08${item.count}\uFF09` : qaCount ? `${baseLabel}\uFF08${qaCount.label} ${qaCount.count}\u4EF6\uFF09` : title;
   const quickAction = !collapsed ? item.quickAction : void 0;
   const pillClass = "sb-glass-surface-ringed whitespace-nowrap rounded-full px-1.5 py-0.5 text-[10px] font-medium leading-none";
   const main = renderLink(
     {
       href: item.href,
-      title,
-      "aria-label": item.badge || item.dot && item.dotReason ? title : item.label,
+      title: collapsed ? "" : title,
+      "aria-label": collapsed ? railText : item.badge || item.dot && item.dotReason ? title : item.label,
       "aria-current": isActive ? "page" : void 0,
       onClick: onNavigate,
       "data-tour": item.dataTour,
@@ -110,21 +181,21 @@ function SidebarNavLink({
         !collapsed && item.unlockPill && /* @__PURE__ */ jsx("span", { className: pillClass, style: { color: "var(--sb-label)" }, children: item.unlockPill }),
         !collapsed && item.badge && /* @__PURE__ */ jsx("span", { className: "rounded-full border border-orange-300 bg-white px-1.5 py-0.5 text-[11px] font-bold leading-none text-orange-700", children: item.badge }),
         !collapsed && item.trailing,
-        item.dot && /* @__PURE__ */ jsx(
+        (item.dot || collapsed && (hasCount || qaCount)) && /* @__PURE__ */ jsx(
           SidebarNewDot,
           {
             placement: collapsed ? "corner" : "inline",
-            label: item.dotReason ?? "\u65B0\u7740\u3042\u308A",
+            label: collapsed ? null : item.dotReason ?? "\u65B0\u7740\u3042\u308A",
             muted: item.dotMuted,
             onAccent: false,
-            colorClassName: dotClassName
+            colorClassName: item.dot ? dotClassName : COUNT_DOT_CLASS[item.countTone ?? "default"]
           }
         )
       ] })
     },
     { kind: "item", item }
   );
-  return /* @__PURE__ */ jsxs("div", { className: "relative", children: [
+  const inner = /* @__PURE__ */ jsxs(Fragment, { children: [
     main,
     quickAction && renderLink(
       {
@@ -148,6 +219,7 @@ function SidebarNavLink({
       { kind: "quickActionCount", item }
     )
   ] });
+  return collapsed ? /* @__PURE__ */ jsx(SidebarRailTip, { text: railText, children: inner }) : /* @__PURE__ */ jsx("div", { className: "relative", children: inner });
 }
 function CollapsibleSectionHeader({ label, open, dot, dotLabel, dotClassName, onToggle }) {
   return /* @__PURE__ */ jsxs(
@@ -197,15 +269,17 @@ function SidebarNavSectionBlock({
     });
   };
   const sectionActive = items.some((item) => isSidebarNavItemActive(item, rest.pathname));
-  const open = !section.collapsible || sectionActive || expanded;
+  const rail = !!rest.collapsed;
+  const open = !section.collapsible || sectionActive || expanded || rail;
   const hasDot = items.some((item) => item.dot);
-  const gap = index === 0 ? firstGapClassName ?? "pt-1" : gapClassName ?? (section.label ? "" : "mt-4");
+  const gap = rail ? "" : index === 0 ? firstGapClassName ?? "pt-1" : gapClassName ?? (section.label ? "" : "mt-4");
   const { onExpandedChange } = section;
   useEffect(() => {
     if (section.collapsible) onExpandedChange?.(expanded);
   }, [section.collapsible, expanded, onExpandedChange]);
   return /* @__PURE__ */ jsxs("div", { className: gap, "data-tour": section.dataTour, children: [
-    section.label && !rest.collapsed && (section.collapsible ? /* @__PURE__ */ jsx(CollapsibleSectionHeader, { label: section.label, open, dot: hasDot, dotLabel: section.dotLabel, dotClassName: rest.dotClassName, onToggle: toggle }) : /* @__PURE__ */ jsx(SidebarNavSectionLabel, { label: section.label, badge: section.labelBadge })),
+    rail && index > 0 && items.length > 0 && /* @__PURE__ */ jsx("div", { className: "mx-auto my-2 h-px w-6", style: { backgroundColor: "color-mix(in srgb, var(--sb-label) 35%, transparent)" }, "aria-hidden": "true" }),
+    section.label && !rail && (section.collapsible ? /* @__PURE__ */ jsx(CollapsibleSectionHeader, { label: section.label, open, dot: hasDot, dotLabel: section.dotLabel, dotClassName: rest.dotClassName, onToggle: toggle }) : /* @__PURE__ */ jsx(SidebarNavSectionLabel, { label: section.label, badge: section.labelBadge })),
     open && /* @__PURE__ */ jsx("div", { className: "space-y-0.5", children: items.map((item, i) => /* @__PURE__ */ jsx(SidebarNavLink, { item, ...rest }, `${item.href}#${i}`)) })
   ] });
 }
@@ -222,6 +296,7 @@ export {
   DEFAULT_SIDEBAR_ACTIVE_CLASS,
   SidebarNavLink,
   SidebarNavSectionLabel,
-  SidebarNavSections
+  SidebarNavSections,
+  SidebarRailTip
 };
 //# sourceMappingURL=SidebarNav.js.map

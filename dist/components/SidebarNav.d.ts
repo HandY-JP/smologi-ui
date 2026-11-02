@@ -31,6 +31,15 @@ export declare function SidebarNavSectionLabel({ label, badge }: {
     label: string;
     badge?: string;
 }): import("react").JSX.Element;
+/**
+ * レール（アイコンだけ）表示中の行に、カーソル・キーボードフォーカスで右に名前の吹き出しを出す。
+ * サイドバー（overflow-hidden の <aside>）で切れないよう document.body に portal して fixed 配置する。
+ * 色は --sb-text / --sb-bg の反転（ライト・ダークとも読める）。
+ */
+export declare function SidebarRailTip({ text, children }: {
+    text: string;
+    children: ReactNode;
+}): import("react").JSX.Element;
 export declare function SidebarNavLink({ item, pathname, collapsed, activeClassName, renderLink, renderLocked, lockBadge, quickActionClassName, quickActionActiveClassName, dotClassName, onNavigate, }: {
     item: SidebarNavItem;
     pathname: string;

@@ -92,6 +92,7 @@ export function SidebarToggleDock({
   renderLink,
   activeClassName = 'sb-nav-active !shadow-none',
   newDotClassName,
+  rail = false,
 }: {
   /** 見た目の状態（折りたたみ中でも一時展開＝ピーク中は false）。 */
   collapsed: boolean;
@@ -164,10 +165,16 @@ export function SidebarToggleDock({
   activeClassName?: string;
   /** 要対応ドットの色クラスの差し替え（SidebarNewDot の colorClassName）。省略時は既定の赤。 */
   newDotClassName?: string;
+  /**
+   * サイドバーが閉じてアイコンの列（レール）になっているとき true（AppSidebar が渡す）。
+   * ▶・ホーム・すべてのページを縦に並べ、サイドバーの上に載る配色（--sb-*）にする。
+   * 要対応の集約ドットは各行の角の点が見えているので出さない。画面切替は出さない。
+   */
+  rail?: boolean;
 }) {
   // collapsed は見た目の状態なので、ピーク（一時展開）中は false ＝ドットを出さない
   // （展開中はサイドバーの各行のドットが見えているため）。
-  const showNewsDot = hasNews && collapsed;
+  const showNewsDot = hasNews && collapsed && !rail;
   const base = persistedCollapsed ? 'サイドバーを開く' : 'サイドバーを閉じる';
   const newsDotReason = newsReason ?? '要対応あり';
   const label = showNewsDot ? `${base}（${newsDotReason}）` : base;
@@ -188,9 +195,12 @@ export function SidebarToggleDock({
         // ▶ からホーム／画面切替へマウスを動かすと「サイドバーの外へ出た」と判定されて
         // 引っ込み、アイコンを押せなかった。畳み時の中身は ▶ だけなので当たり判定は変わらない。
         {...hoverHandlers}
-        className="fixed left-2 top-4 z-[70] flex h-8 flex-row items-center gap-1 rounded-md transition-colors duration-150 motion-reduce:transition-none print:hidden"
+        data-sidebar-rail-dock={rail ? '' : undefined}
+        className={`fixed left-2 top-4 z-[70] flex gap-1 rounded-md transition-colors duration-150 motion-reduce:transition-none print:hidden ${
+          rail ? 'w-10 flex-col items-center' : 'h-8 flex-row items-center'
+        }`}
         style={
-          collapsed
+          collapsed || rail
             ? undefined
             : {
                 backgroundColor: 'var(--sb-bg)',
@@ -209,7 +219,7 @@ export function SidebarToggleDock({
           aria-label={label}
           title={showNewsDot ? `${hint} / ${newsDotReason}` : hint}
           className={`relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--sb-accent-bg)] ${
-            collapsed
+            collapsed && !rail
               // 明るいトップバーの上に素で載るので、既定の字面を gray-600 まで濃くして視認性を確保する。
               ? 'text-ink-muted hover:bg-surface-subtle hover:text-ink'
               : 'text-[var(--sb-text)] hover:bg-[var(--sb-hover)]'
@@ -239,7 +249,7 @@ export function SidebarToggleDock({
         </button>
         {/* ホーム・画面切替は**展開中だけ**出す（ピーク中も展開扱い）。
             折りたたみ中に出すと、本文の上へ浮く道具バーのカプセルと重なるため（2026-09-15 修正）。 */}
-        {!collapsed && (
+        {(!collapsed || rail) && (
           <>
             {home && (
               (() => {
@@ -275,7 +285,7 @@ export function SidebarToggleDock({
                 サイドバー幅いっぱいに広げてあるので、ml-auto の押し出し先がある）。
                 折りたたみ中は出さない。2026-09-23: 以前はここも他ボタンと同じ横並びの
                 延長でドックの内容量ぶんの位置に出ていたが、サイドバー右端に寄せる決定により変更。 */}
-            {workspaceSwitch && (
+            {workspaceSwitch && !rail && (
               <div className="ml-auto flex-shrink-0">
                 <WorkspaceSwitch
                   current={workspaceSwitch.current}

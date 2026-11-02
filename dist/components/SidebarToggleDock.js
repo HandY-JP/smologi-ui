@@ -14,9 +14,10 @@ function SidebarToggleDock({
   allPages,
   renderLink,
   activeClassName = "sb-nav-active !shadow-none",
-  newDotClassName
+  newDotClassName,
+  rail = false
 }) {
-  const showNewsDot = hasNews && collapsed;
+  const showNewsDot = hasNews && collapsed && !rail;
   const base = persistedCollapsed ? "\u30B5\u30A4\u30C9\u30D0\u30FC\u3092\u958B\u304F" : "\u30B5\u30A4\u30C9\u30D0\u30FC\u3092\u9589\u3058\u308B";
   const newsDotReason = newsReason ?? "\u8981\u5BFE\u5FDC\u3042\u308A";
   const label = showNewsDot ? `${base}\uFF08${newsDotReason}\uFF09` : base;
@@ -25,8 +26,9 @@ function SidebarToggleDock({
     "div",
     {
       ...hoverHandlers,
-      className: "fixed left-2 top-4 z-[70] flex h-8 flex-row items-center gap-1 rounded-md transition-colors duration-150 motion-reduce:transition-none print:hidden",
-      style: collapsed ? void 0 : {
+      "data-sidebar-rail-dock": rail ? "" : void 0,
+      className: `fixed left-2 top-4 z-[70] flex gap-1 rounded-md transition-colors duration-150 motion-reduce:transition-none print:hidden ${rail ? "w-10 flex-col items-center" : "h-8 flex-row items-center"}`,
+      style: collapsed || rail ? void 0 : {
         backgroundColor: "var(--sb-bg)",
         // ドック幅をサイドバー幅いっぱいに広げ、右端の画面切替（ml-auto、下記）を
         // サイドバー本体の右余白（px-2 = 0.5rem、拠点セレクタ等と同じ）に揃える。
@@ -43,7 +45,7 @@ function SidebarToggleDock({
             "aria-pressed": persistedCollapsed,
             "aria-label": label,
             title: showNewsDot ? `${hint} / ${newsDotReason}` : hint,
-            className: `relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--sb-accent-bg)] ${collapsed ? "text-ink-muted hover:bg-surface-subtle hover:text-ink" : "text-[var(--sb-text)] hover:bg-[var(--sb-hover)]"}`,
+            className: `relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--sb-accent-bg)] ${collapsed && !rail ? "text-ink-muted hover:bg-surface-subtle hover:text-ink" : "text-[var(--sb-text)] hover:bg-[var(--sb-hover)]"}`,
             children: [
               /* @__PURE__ */ jsxs(
                 "svg",
@@ -72,7 +74,7 @@ function SidebarToggleDock({
             ]
           }
         ),
-        !collapsed && /* @__PURE__ */ jsxs(Fragment, { children: [
+        (!collapsed || rail) && /* @__PURE__ */ jsxs(Fragment, { children: [
           home && (() => {
             const linkProps = {
               href: home.href,
@@ -93,7 +95,7 @@ function SidebarToggleDock({
             return renderLink ? renderLink(linkProps) : /* @__PURE__ */ jsx("a", { ...linkProps });
           })(),
           allPages,
-          workspaceSwitch && /* @__PURE__ */ jsx("div", { className: "ml-auto flex-shrink-0", children: /* @__PURE__ */ jsx(
+          workspaceSwitch && !rail && /* @__PURE__ */ jsx("div", { className: "ml-auto flex-shrink-0", children: /* @__PURE__ */ jsx(
             WorkspaceSwitch,
             {
               current: workspaceSwitch.current,

@@ -1,7 +1,8 @@
 'use client';
 // 共通サイドバーの「区分見出し＋行」。Seller の SellerNav と Smologi の CustomerSidebar の行を一本化したもの。
 // next/* には依存しない。リンクは renderLink で差し替える（既定は <a>）。
-import { useEffect, useState, type CSSProperties, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import { isSidebarNavItemActive, type SidebarNavItem, type SidebarNavSection } from '../lib/sidebar-nav';
 import { SidebarNewDot } from './SidebarNewDot';
 
@@ -57,6 +58,65 @@ export function SidebarNavSectionLabel({ label, badge }: { label: string; badge?
   );
 }
 
+/**
+ * レール（アイコンだけ）表示中の行に、カーソル・キーボードフォーカスで右に名前の吹き出しを出す。
+ * サイドバー（overflow-hidden の <aside>）で切れないよう document.body に portal して fixed 配置する。
+ * 色は --sb-text / --sb-bg の反転（ライト・ダークとも読める）。
+ */
+export function SidebarRailTip({ text, children }: { text: string; children: ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
+  const show = () => {
+    const el = ref.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    setPos({ top: r.top + r.height / 2, left: r.right + 6 });
+  };
+  const hide = () => setPos(null);
+  return (
+    <div
+      ref={ref}
+      className="relative"
+      onPointerEnter={(e) => {
+        if (e.pointerType !== 'touch') show();
+      }}
+      onPointerLeave={hide}
+      onPointerDown={hide}
+      onFocus={(e) => {
+        // クリック後に残るフォーカスでは出さない（キーボード操作のときだけ）。
+        let visible = false;
+        try {
+          visible = e.target.matches(':focus-visible');
+        } catch {
+          visible = true;
+        }
+        if (visible) show();
+      }}
+      onBlur={hide}
+    >
+      {children}
+      {pos &&
+        typeof document !== 'undefined' &&
+        createPortal(
+          <span
+            role="tooltip"
+            data-sidebar-rail-tip
+            className="pointer-events-none fixed z-[80] -translate-y-1/2 whitespace-nowrap rounded-md px-2.5 py-1 text-xs font-medium shadow-lg"
+            style={{ top: pos.top, left: pos.left, backgroundColor: 'var(--sb-text)', color: 'var(--sb-bg)' }}
+          >
+            <span
+              aria-hidden="true"
+              className="absolute -left-1 top-1/2 h-2 w-2 -translate-y-1/2 rotate-45"
+              style={{ backgroundColor: 'var(--sb-text)' }}
+            />
+            <span className="relative">{text}</span>
+          </span>,
+          document.body,
+        )}
+    </div>
+  );
+}
+
 function CountBadge({ item }: { item: SidebarNavItem }) {
   if (typeof item.count !== 'number' || item.count <= 0) return null;
   return (
@@ -76,6 +136,14 @@ function CountBadge({ item }: { item: SidebarNavItem }) {
     </span>
   );
 }
+
+/** レールで件数を点に置き換えるときの色（件数バッジの色調に合わせる）。 */
+const COUNT_DOT_CLASS = {
+  danger: 'bg-red-600',
+  info: 'bg-blue-600',
+  accent: 'bg-[var(--sb-accent-bg)]',
+  default: 'bg-[#C2560D]',
+} as const;
 
 const PLUS_ICON = (
   <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
@@ -114,10 +182,11 @@ export function SidebarNavLink({
   dotClassName?: string;
   onNavigate?: () => void;
 }) {
-  if (item.custom != null) return <>{item.custom}</>;
+  // レールでは、インライン展開グループ等の custom は出さず、親の行（href）だけを普通の行として出す。
+  if (item.custom != null && !collapsed) return <>{item.custom}</>;
   // ---- 今後実装予定（リンクにしない）----
   if (item.comingSoon) {
-    return (
+    const soon = (
       <div
         className={`flex h-9 items-center rounded-md text-base cursor-not-allowed opacity-50 select-none ${collapsed ? 'justify-center' : 'gap-2.5 px-3'}`}
         style={{ color: 'var(--sb-text)' }}
@@ -137,6 +206,7 @@ export function SidebarNavLink({
         )}
       </div>
     );
+    return collapsed ? <SidebarRailTip text={`${item.label}（準備中）`}>{soon}</SidebarRailTip> : soon;
   }
 
   // ---- Pro ロック（リンクにしない。案内はアプリ側が renderLocked で付ける）----
@@ -161,18 +231,24 @@ export function SidebarNavLink({
     const className = `flex h-9 w-full items-center rounded-md text-left text-base text-[var(--sb-text)] opacity-50 transition-opacity hover:opacity-90 ${
       collapsed ? 'justify-center' : 'gap-2.5 px-3'
     } focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sb-accent-bg)]`;
-    return renderLocked ? (
-      <>{renderLocked({ className, title, children: body }, item)}</>
+    const lockedNode = renderLocked ? (
+      <>{renderLocked({ className, title: collapsed ? '' : title, children: body }, item)}</>
     ) : (
-      <div className={`${className} cursor-not-allowed`} title={title} aria-disabled="true">
+      <div className={`${className} cursor-not-allowed`} title={collapsed ? undefined : title} aria-disabled="true">
         {body}
       </div>
     );
+    return collapsed ? <SidebarRailTip text={title}>{lockedNode}</SidebarRailTip> : lockedNode;
   }
 
   const isActive = isSidebarNavItemActive(item, pathname);
   const baseLabel = item.badge ? `${item.label} (${item.badge}版)` : item.label;
+  const hasCount = typeof item.count === 'number' && item.count > 0;
+  // 「＋」の角の件数（出品の要対応など）。レールでは「＋」ごと隠れるので、点と吹き出しで知らせる。
+  const qaCount = item.quickActionCount && typeof item.quickActionCount.count === 'number' && item.quickActionCount.count > 0 ? item.quickActionCount : null;
   const title = item.dot && item.dotReason ? `${baseLabel}（${item.dotReason}）` : item.dim && !isActive ? `${baseLabel}（未設定）` : baseLabel;
+  // レール表示中の吹き出し文言（件数があれば「倉庫連携（184）」）。native の title は二重になるので空にする。
+  const railText = hasCount ? `${baseLabel}（${item.count}）` : qaCount ? `${baseLabel}（${qaCount.label} ${qaCount.count}件）` : title;
   // レール表示中は行の右端ごと隠れるので「＋」は出さない。
   const quickAction = !collapsed ? item.quickAction : undefined;
   const pillClass = 'sb-glass-surface-ringed whitespace-nowrap rounded-full px-1.5 py-0.5 text-[10px] font-medium leading-none';
@@ -180,8 +256,8 @@ export function SidebarNavLink({
   const main = renderLink(
     {
       href: item.href,
-      title,
-      'aria-label': item.badge || (item.dot && item.dotReason) ? title : item.label,
+      title: collapsed ? '' : title,
+      'aria-label': collapsed ? railText : item.badge || (item.dot && item.dotReason) ? title : item.label,
       'aria-current': isActive ? 'page' : undefined,
       onClick: onNavigate,
       'data-tour': item.dataTour,
@@ -205,13 +281,13 @@ export function SidebarNavLink({
           )}
           {!collapsed && item.trailing}
           {/* 要対応の赤丸。置き場所は常に行の右端＝開閉で飛ばない（レールでは角）。 */}
-          {item.dot && (
+          {(item.dot || (collapsed && (hasCount || qaCount))) && (
             <SidebarNewDot
               placement={collapsed ? 'corner' : 'inline'}
-              label={item.dotReason ?? '新着あり'}
+              label={collapsed ? null : item.dotReason ?? '新着あり'}
               muted={item.dotMuted}
               onAccent={false}
-              colorClassName={dotClassName}
+              colorClassName={item.dot ? dotClassName : COUNT_DOT_CLASS[item.countTone ?? 'default']}
             />
           )}
         </>
@@ -220,8 +296,8 @@ export function SidebarNavLink({
     { kind: 'item', item },
   );
 
-  return (
-    <div className="relative">
+  const inner = (
+    <>
       {main}
       {quickAction &&
         renderLink(
@@ -251,8 +327,9 @@ export function SidebarNavLink({
           },
           { kind: 'quickActionCount', item },
         )}
-    </div>
+    </>
   );
+  return collapsed ? <SidebarRailTip text={railText}>{inner}</SidebarRailTip> : <div className="relative">{inner}</div>;
 }
 
 function CollapsibleSectionHeader({ label, open, dot, dotLabel, dotClassName, onToggle }: { label: string; open: boolean; dot: boolean; dotLabel?: string; dotClassName?: string; onToggle: () => void }) {
@@ -314,14 +391,20 @@ function SidebarNavSectionBlock({
     });
   };
   const sectionActive = items.some((item) => isSidebarNavItemActive(item, rest.pathname));
-  const open = !section.collapsible || sectionActive || expanded;
+  // レール（collapsed）では見出しが無く開閉できないので、開閉できる区分も全部開く。
+  const rail = !!rest.collapsed;
+  const open = !section.collapsible || sectionActive || expanded || rail;
   const hasDot = items.some((item) => item.dot);
-  const gap = index === 0 ? firstGapClassName ?? 'pt-1' : gapClassName ?? (section.label ? '' : 'mt-4');
+  const gap = rail ? '' : index === 0 ? firstGapClassName ?? 'pt-1' : gapClassName ?? (section.label ? '' : 'mt-4');
   const { onExpandedChange } = section;
   useEffect(() => { if (section.collapsible) onExpandedChange?.(expanded); }, [section.collapsible, expanded, onExpandedChange]);
   return (
     <div className={gap} data-tour={section.dataTour}>
-      {section.label && !rest.collapsed && (
+      {/* レールでは見出しを隠し、区分の間に短い横線を1本入れる。 */}
+      {rail && index > 0 && items.length > 0 && (
+        <div className="mx-auto my-2 h-px w-6" style={{ backgroundColor: 'color-mix(in srgb, var(--sb-label) 35%, transparent)' }} aria-hidden="true" />
+      )}
+      {section.label && !rail && (
         section.collapsible
           ? <CollapsibleSectionHeader label={section.label} open={open} dot={hasDot} dotLabel={section.dotLabel} dotClassName={rest.dotClassName} onToggle={toggle} />
           : <SidebarNavSectionLabel label={section.label} badge={section.labelBadge} />

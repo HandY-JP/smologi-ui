@@ -57,14 +57,24 @@ function AppSidebar({
   const { setMobileOpen } = drawer;
   const zeroWidthWhenClosed = isZeroCssLength(collapsedWidth);
   const sidebarHidden = zeroWidthWhenClosed && persistedCollapsed && !peeking;
-  const dockCollapsed = isMobile ? !mobileOpen : sidebarHidden;
+  const railActive = !zeroWidthWhenClosed && collapsed && !isMobile;
+  const dockCollapsed = isMobile ? !mobileOpen : zeroWidthWhenClosed ? sidebarHidden : collapsed;
   const asideHidden = isMobile ? !mobileOpen : sidebarHidden;
   const news = summarizeSidebarNews(decorate ? sections.map((s) => ({ ...s, items: s.items.map(decorate) })) : sections);
-  const ctx = { collapsed: zeroWidthWhenClosed ? false : collapsed };
+  const ctx = { collapsed: railActive };
   const closeDrawer = () => setMobileOpen(false);
-  const spacer = /* @__PURE__ */ jsx("div", { className: `${topSpacerClassName} flex-shrink-0`, "aria-hidden": "true" });
-  const topNode = top != null && (topWrapperClassName ? /* @__PURE__ */ jsx("div", { className: topWrapperClassName, children: resolve(top, ctx) }) : resolve(top, ctx));
-  const navNode = navOverride != null ? navOverride : /* @__PURE__ */ jsx(
+  const railDockCount = 1 + (dock?.home ? 1 : 0) + (dock?.allPages ? 1 : 0);
+  const spacer = railActive ? /* @__PURE__ */ jsx(
+    "div",
+    {
+      className: "flex flex-shrink-0 items-end justify-center pb-2",
+      style: { height: `calc(1rem + ${railDockCount * 2 + (railDockCount - 1) * 0.25}rem + 1rem)` },
+      "aria-hidden": "true",
+      children: /* @__PURE__ */ jsx("div", { className: "h-px w-6", style: { backgroundColor: "color-mix(in srgb, var(--sb-label) 35%, transparent)" } })
+    }
+  ) : /* @__PURE__ */ jsx("div", { className: `${topSpacerClassName} flex-shrink-0`, "aria-hidden": "true" });
+  const topNode = !railActive && top != null && (topWrapperClassName ? /* @__PURE__ */ jsx("div", { className: topWrapperClassName, children: resolve(top, ctx) }) : resolve(top, ctx));
+  const navNode = navOverride != null && !railActive ? navOverride : /* @__PURE__ */ jsx(
     "nav",
     {
       className: `flex min-h-0 flex-1 flex-col overflow-y-auto px-2 py-2 transition-opacity duration-150 motion-reduce:transition-none ${navStateClassName ?? (navDimmed ? "opacity-40" : "")}`,
@@ -97,7 +107,7 @@ function AppSidebar({
     footer != null && resolve(footer, ctx)
   ] });
   return /* @__PURE__ */ jsxs(Fragment, { children: [
-    persistedCollapsed && !isMobile && zeroWidthWhenClosed && /* @__PURE__ */ jsx(
+    persistedCollapsed && !isMobile && (zeroWidthWhenClosed || railActive || peeking) && /* @__PURE__ */ jsx(
       "button",
       {
         type: "button",
@@ -105,7 +115,7 @@ function AppSidebar({
         title: openSidebarLabel,
         onClick: () => setCollapsed(false),
         ...edgeTriggerHandlers,
-        className: `fixed inset-y-0 left-0 z-[60] w-[15px] bg-transparent ${edgeTriggerFocusClassName} focus-visible:outline-none ${peeking ? "pointer-events-none" : ""}`
+        className: `fixed inset-y-0 left-0 z-[60] ${zeroWidthWhenClosed ? "w-[15px]" : "w-2"} bg-transparent ${edgeTriggerFocusClassName} focus-visible:outline-none ${peeking ? "pointer-events-none" : ""}`
       }
     ),
     mobileOpen && /* @__PURE__ */ jsx(
@@ -126,13 +136,14 @@ function AppSidebar({
         collapsed: dockCollapsed,
         persistedCollapsed: isMobile ? !mobileOpen : persistedCollapsed,
         onToggle: () => isMobile ? setMobileOpen((value) => !value) : setCollapsed((value) => !value),
-        hoverHandlers: isMobile ? void 0 : peekHandlers
+        hoverHandlers: isMobile || railActive ? void 0 : peekHandlers,
+        rail: railActive
       }
     ),
     /* @__PURE__ */ jsx(
       "aside",
       {
-        ...peekHandlers,
+        ...railActive ? {} : peekHandlers,
         "aria-hidden": asideHidden,
         inert: asideHidden ? true : void 0,
         className: `fixed inset-y-0 left-0 z-50 flex w-[var(--sidebar-visual-width)] flex-col overflow-hidden ${shadowTransition ? "transition-[width,box-shadow]" : "transition-[width]"} ${widthMotionClass} motion-reduce:transition-none ${peeking ? "shadow-2xl" : ""} ${mobileDrawer ? `max-md:w-56 max-md:transition-transform max-md:duration-200 ${mobileOpen ? "max-md:translate-x-0 max-md:shadow-2xl" : "max-md:-translate-x-full"}` : ""}`,

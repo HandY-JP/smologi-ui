@@ -1,5 +1,6 @@
 'use client';
 import { useCallback, useEffect, useRef, useState, type SetStateAction, type PointerEvent as ReactPointerEvent, type FocusEvent as ReactFocusEvent } from 'react';
+import { isZeroCssLength } from '../lib/sidebar-nav';
 import {
   SIDEBAR_PEEK_NEAR_PX,
   distanceToSidebarPeekRegion,
@@ -113,7 +114,8 @@ export function useSidebarCollapsed(
     // その専有ぶんを CSS 変数で配り、トップバー側が左 padding として実際に空ける
     // （重ね順で誤魔化さず、レイアウトで場所を確保する）。ピーク中は動かさない
     // ＝ホバーのたびにタブ列が横に飛ぶのを防ぐため、永続状態だけを見る。
-    document.documentElement.style.setProperty('--sidebar-toggle-inset', collapsed ? SIDEBAR_TOGGLE_INSET : '0px');
+    // レール（閉じた幅が 0 でない）のときは、サイドバー自体が左を占めて本文を押すので、ドックの避け幅は要らない。
+    document.documentElement.style.setProperty('--sidebar-toggle-inset', collapsed && isZeroCssLength(collapsedWidth) ? SIDEBAR_TOGGLE_INSET : '0px');
     if (!storageReady) return;
     try {
       window.localStorage.setItem(storageKey, collapsed ? '1' : '0');
@@ -128,7 +130,7 @@ export function useSidebarCollapsed(
     // 畳み時に本文の上へ浮くカプセルが左上の開閉ドックと重ならないための専有幅（smologi の --sidebar-dock-inset）。
     // --sidebar-toggle-inset と違い、ピーク中は 0。options.syncDockInset を付けたアプリだけが受け取る。
     if (syncDockInset) {
-      document.documentElement.style.setProperty('--sidebar-dock-inset', displayCollapsed ? SIDEBAR_TOGGLE_INSET : '0px');
+      document.documentElement.style.setProperty('--sidebar-dock-inset', displayCollapsed && isZeroCssLength(collapsedWidth) ? SIDEBAR_TOGGLE_INSET : '0px');
     }
   }, [collapsedWidth, displayCollapsed, expandedWidth, syncDockInset]);
 

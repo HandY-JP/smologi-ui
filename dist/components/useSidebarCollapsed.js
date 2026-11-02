@@ -1,5 +1,6 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { isZeroCssLength } from "../lib/sidebar-nav.js";
 import {
   SIDEBAR_PEEK_NEAR_PX,
   distanceToSidebarPeekRegion,
@@ -65,7 +66,7 @@ function useSidebarCollapsed(expandedWidth = "14rem", collapsedWidth = "3.5rem",
   }, [storageKey]);
   useEffect(() => {
     document.documentElement.style.setProperty("--sidebar-width", collapsed ? collapsedWidth : expandedWidth);
-    document.documentElement.style.setProperty("--sidebar-toggle-inset", collapsed ? SIDEBAR_TOGGLE_INSET : "0px");
+    document.documentElement.style.setProperty("--sidebar-toggle-inset", collapsed && isZeroCssLength(collapsedWidth) ? SIDEBAR_TOGGLE_INSET : "0px");
     if (!storageReady) return;
     try {
       window.localStorage.setItem(storageKey, collapsed ? "1" : "0");
@@ -76,7 +77,7 @@ function useSidebarCollapsed(expandedWidth = "14rem", collapsedWidth = "3.5rem",
   useEffect(() => {
     document.documentElement.style.setProperty("--sidebar-visual-width", displayCollapsed ? collapsedWidth : expandedWidth);
     if (syncDockInset) {
-      document.documentElement.style.setProperty("--sidebar-dock-inset", displayCollapsed ? SIDEBAR_TOGGLE_INSET : "0px");
+      document.documentElement.style.setProperty("--sidebar-dock-inset", displayCollapsed && isZeroCssLength(collapsedWidth) ? SIDEBAR_TOGGLE_INSET : "0px");
     }
   }, [collapsedWidth, displayCollapsed, expandedWidth, syncDockInset]);
   const updateCollapsed = useCallback((next) => {

@@ -40,8 +40,12 @@ export interface AppSidebarProps {
   /** 開いたときの幅。既定 14rem。 */
   expandedWidth?: string;
   /**
-   * 閉じたときの幅。既定 0rem（完全に引っ込む）。0 以外にするとアイコンだけのレールとして残る
-   * （そのときは hidden/inert にせず、行はアイコン表示に切り替わる）。変更はこの部品の中だけで済む。
+   * 閉じたときの幅。既定 0rem（完全に引っ込む）。0 以外（例 '3.5rem'）にするとアイコンだけのレールとして残る。
+   * レールのときの見た目（v0.13.0）: ▶・ホーム・すべてのページが縦に並ぶ／区分の見出しは隠して区分の間に短い横線／
+   * 件数と「＋」は隠して件数・要対応のある行はアイコンの角に点／行にカーソル・キーボードフォーカスで右に名前の吹き出し
+   * （件数があれば「倉庫連携（184）」。portal なので <aside> で切れない）／top slot は出さない／
+   * 左端 8px のホバー帯かドックの▶で一時展開（ピーク）。スマホ（767px 以下）は従来のドロワーのまま。
+   * レール中は --sidebar-width がこの幅になるので、本文の左余白はアプリが var(--sidebar-width) で追従させる。
    */
   collapsedWidth?: string;
   /** next/link などへの差し替え。既定は <a>。 */
@@ -79,7 +83,8 @@ export interface AppSidebarProps {
   edgeTriggerFocusClassName?: string;
   /** nav の状態 class を丸ごと差し替える（既定は navDimmed で opacity-40 / なし）。例 Smologi の画面切替中 'opacity-60'・通常 'opacity-100'。 */
   navStateClassName?: string;
-  /** 区分 nav の代わりに出すもの（設定モードで設定メニューに差し替える等）。指定すると <nav> ごと置き換わる。 */
+  /** 区分 nav の代わりに出すもの（設定モードで設定メニューに差し替える等）。指定すると <nav> ごと置き換わる。
+   *  ただしレール（閉じてアイコンの列だけのとき）は幅が足りないので差し替えず、通常の区分 nav（アイコン）を出す。 */
   navOverride?: ReactNode;
   /** アカウント欄の下に出す slot（「Logisticに戻る」など）。 */
   footer?: SidebarSlot;
@@ -145,17 +150,32 @@ export function AppSidebar({
   // 閉じた幅が 0 のときだけ、閉じ中のサイドバーを隠す（aria-hidden / inert）。レールなら残す。
   const zeroWidthWhenClosed = isZeroCssLength(collapsedWidth);
   const sidebarHidden = zeroWidthWhenClosed && persistedCollapsed && !peeking;
-  const dockCollapsed = isMobile ? !mobileOpen : sidebarHidden;
+  // レール（閉じた幅が 0 でない）として見えている間。ピーク中・スマホドロワーでは false（通常の展開描画）。
+  const railActive = !zeroWidthWhenClosed && collapsed && !isMobile;
+  const dockCollapsed = isMobile ? !mobileOpen : zeroWidthWhenClosed ? sidebarHidden : collapsed;
   const asideHidden = isMobile ? !mobileOpen : sidebarHidden;
 
   const news = summarizeSidebarNews(decorate ? sections.map((s) => ({ ...s, items: s.items.map(decorate) })) : sections);
-  const ctx = { collapsed: zeroWidthWhenClosed ? false : collapsed };
+  const ctx = { collapsed: railActive };
   const closeDrawer = () => setMobileOpen(false);
 
-  const spacer = <div className={`${topSpacerClassName} flex-shrink-0`} aria-hidden="true" />;
-  const topNode = top != null && (topWrapperClassName ? <div className={topWrapperClassName}>{resolve(top, ctx)}</div> : resolve(top, ctx));
+  // レールでは ▶・ホーム・すべてのページが縦に並ぶので、そのぶんの高さを取り、下に短い横線を引く。
+  const railDockCount = 1 + (dock?.home ? 1 : 0) + (dock?.allPages ? 1 : 0);
+  const spacer = railActive ? (
+    <div
+      className="flex flex-shrink-0 items-end justify-center pb-2"
+      style={{ height: `calc(1rem + ${railDockCount * 2 + (railDockCount - 1) * 0.25}rem + 1rem)` }}
+      aria-hidden="true"
+    >
+      <div className="h-px w-6" style={{ backgroundColor: 'color-mix(in srgb, var(--sb-label) 35%, transparent)' }} />
+    </div>
+  ) : (
+    <div className={`${topSpacerClassName} flex-shrink-0`} aria-hidden="true" />
+  );
+  // ストア・アカウントなどの切り替え（top）は、レールでは出さない（一時展開したときに使う）。
+  const topNode = !railActive && top != null && (topWrapperClassName ? <div className={topWrapperClassName}>{resolve(top, ctx)}</div> : resolve(top, ctx));
   const navNode =
-    navOverride != null ? (
+    navOverride != null && !railActive ? (
       navOverride
     ) : (
       <nav
@@ -199,15 +219,15 @@ export function AppSidebar({
   return (
     <>
       {/* 画面左端の当たり判定。折りたたみ中だけ描き、ホバーした瞬間に開く（待ち時間なし）。
-          スマホ（ドロワー）では出さない＝タップでの開閉だけにする。レール表示中は不要（レール自体が当たり判定）。 */}
-      {persistedCollapsed && !isMobile && zeroWidthWhenClosed && (
+          スマホ（ドロワー）では出さない＝タップでの開閉だけにする。レール表示中は、行にカーソルを当てて名前を見られるよう左端 8px だけの帯にする。 */}
+      {persistedCollapsed && !isMobile && (zeroWidthWhenClosed || railActive || peeking) && (
         <button
           type="button"
           aria-label={`${openSidebarLabel}する`}
           title={openSidebarLabel}
           onClick={() => setCollapsed(false)}
           {...edgeTriggerHandlers}
-          className={`fixed inset-y-0 left-0 z-[60] w-[15px] bg-transparent ${edgeTriggerFocusClassName} focus-visible:outline-none ${peeking ? 'pointer-events-none' : ''}`}
+          className={`fixed inset-y-0 left-0 z-[60] ${zeroWidthWhenClosed ? 'w-[15px]' : 'w-2'} bg-transparent ${edgeTriggerFocusClassName} focus-visible:outline-none ${peeking ? 'pointer-events-none' : ''}`}
         />
       )}
 
@@ -229,11 +249,12 @@ export function AppSidebar({
         collapsed={dockCollapsed}
         persistedCollapsed={isMobile ? !mobileOpen : persistedCollapsed}
         onToggle={() => (isMobile ? setMobileOpen((value) => !value) : setCollapsed((value) => !value))}
-        hoverHandlers={isMobile ? undefined : peekHandlers}
+        hoverHandlers={isMobile || railActive ? undefined : peekHandlers}
+        rail={railActive}
       />
 
       <aside
-        {...peekHandlers}
+        {...(railActive ? {} : peekHandlers)}
         aria-hidden={asideHidden}
         inert={asideHidden ? true : undefined}
         // サイドバーと本文の境界は色面の差（--sb-bg と本文の背景）だけで示す。

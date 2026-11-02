@@ -20,8 +20,12 @@ export interface AppSidebarProps {
     /** 開いたときの幅。既定 14rem。 */
     expandedWidth?: string;
     /**
-     * 閉じたときの幅。既定 0rem（完全に引っ込む）。0 以外にするとアイコンだけのレールとして残る
-     * （そのときは hidden/inert にせず、行はアイコン表示に切り替わる）。変更はこの部品の中だけで済む。
+     * 閉じたときの幅。既定 0rem（完全に引っ込む）。0 以外（例 '3.5rem'）にするとアイコンだけのレールとして残る。
+     * レールのときの見た目（v0.13.0）: ▶・ホーム・すべてのページが縦に並ぶ／区分の見出しは隠して区分の間に短い横線／
+     * 件数と「＋」は隠して件数・要対応のある行はアイコンの角に点／行にカーソル・キーボードフォーカスで右に名前の吹き出し
+     * （件数があれば「倉庫連携（184）」。portal なので <aside> で切れない）／top slot は出さない／
+     * 左端 8px のホバー帯かドックの▶で一時展開（ピーク）。スマホ（767px 以下）は従来のドロワーのまま。
+     * レール中は --sidebar-width がこの幅になるので、本文の左余白はアプリが var(--sidebar-width) で追従させる。
      */
     collapsedWidth?: string;
     /** next/link などへの差し替え。既定は <a>。 */
@@ -59,7 +63,8 @@ export interface AppSidebarProps {
     edgeTriggerFocusClassName?: string;
     /** nav の状態 class を丸ごと差し替える（既定は navDimmed で opacity-40 / なし）。例 Smologi の画面切替中 'opacity-60'・通常 'opacity-100'。 */
     navStateClassName?: string;
-    /** 区分 nav の代わりに出すもの（設定モードで設定メニューに差し替える等）。指定すると <nav> ごと置き換わる。 */
+    /** 区分 nav の代わりに出すもの（設定モードで設定メニューに差し替える等）。指定すると <nav> ごと置き換わる。
+     *  ただしレール（閉じてアイコンの列だけのとき）は幅が足りないので差し替えず、通常の区分 nav（アイコン）を出す。 */
     navOverride?: ReactNode;
     /** アカウント欄の下に出す slot（「Logisticに戻る」など）。 */
     footer?: SidebarSlot;

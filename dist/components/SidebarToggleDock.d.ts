@@ -73,7 +73,7 @@ export type SidebarDockLinkProps = {
  * （collapsed）はドックが唯一の導線になってしまうが、プロフィールメニューは折りたたみ中でも
  * サイドバー最下部から常に開けるため、導線を一本化できる。
  */
-export declare function SidebarToggleDock({ collapsed, persistedCollapsed, onToggle, hoverHandlers, hasNews, newsReason, home, workspaceSwitch, allPages, renderLink, activeClassName, newDotClassName, }: {
+export declare function SidebarToggleDock({ collapsed, persistedCollapsed, onToggle, hoverHandlers, hasNews, newsReason, home, workspaceSwitch, allPages, renderLink, activeClassName, newDotClassName, rail, }: {
     /** 見た目の状態（折りたたみ中でも一時展開＝ピーク中は false）。 */
     collapsed: boolean;
     /** 保存された状態。クリックで切り替わるのはこちら。 */
@@ -145,5 +145,11 @@ export declare function SidebarToggleDock({ collapsed, persistedCollapsed, onTog
     activeClassName?: string;
     /** 要対応ドットの色クラスの差し替え（SidebarNewDot の colorClassName）。省略時は既定の赤。 */
     newDotClassName?: string;
+    /**
+     * サイドバーが閉じてアイコンの列（レール）になっているとき true（AppSidebar が渡す）。
+     * ▶・ホーム・すべてのページを縦に並べ、サイドバーの上に載る配色（--sb-*）にする。
+     * 要対応の集約ドットは各行の角の点が見えているので出さない。画面切替は出さない。
+     */
+    rail?: boolean;
 }): import("react").JSX.Element;
 //# sourceMappingURL=SidebarToggleDock.d.ts.map
