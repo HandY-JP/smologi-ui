@@ -49,7 +49,7 @@ export * from './components/DiscountTicket';
 export * from './components/PeriodProgress';
 export * from './lib/period';
 export * from './components/EmptyState';
-export * from './components/integration';
+export * from './components/integration/index';
 export * from './components/ErrorBanner';
 export * from './components/SortIndicator';
 export * from './components/Skeleton';

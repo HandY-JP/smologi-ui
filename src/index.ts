@@ -75,7 +75,7 @@ export * from './lib/period';
 export * from './components/EmptyState';
 
 // ---- 連携ページ・ショップ設定（v0.14.0） ----
-export * from './components/integration';
+export * from './components/integration/index';
 export * from './components/ErrorBanner';
 export * from './components/SortIndicator';
 export * from './components/Skeleton';
