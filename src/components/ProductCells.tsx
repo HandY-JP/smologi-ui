@@ -68,7 +68,9 @@ export function ProductNameStack({
   return (
     <div className="flex h-14 flex-col overflow-hidden">
       <div className="flex min-w-0 items-start gap-2 overflow-hidden">
-        <div className={`${FLAT_NAME_PRIMARY_CLASS} ${primaryColorClassName}`}>{primary}</div>
+        <div className="min-w-0 flex-1">
+          <div className={`${FLAT_NAME_PRIMARY_CLASS} ${primaryColorClassName}`}>{primary}</div>
+        </div>
         {badges}
       </div>
       {secondary != null && secondary !== false && <div className={`${FLAT_NAME_SECONDARY_CLASS} ${secondaryColorClassName}`}>{secondary}</div>}

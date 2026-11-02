@@ -35,7 +35,7 @@ function ProductNameStack({
 }) {
   return /* @__PURE__ */ jsxs("div", { className: "flex h-14 flex-col overflow-hidden", children: [
     /* @__PURE__ */ jsxs("div", { className: "flex min-w-0 items-start gap-2 overflow-hidden", children: [
-      /* @__PURE__ */ jsx("div", { className: `${FLAT_NAME_PRIMARY_CLASS} ${primaryColorClassName}`, children: primary }),
+      /* @__PURE__ */ jsx("div", { className: "min-w-0 flex-1", children: /* @__PURE__ */ jsx("div", { className: `${FLAT_NAME_PRIMARY_CLASS} ${primaryColorClassName}`, children: primary }) }),
       badges
     ] }),
     secondary != null && secondary !== false && /* @__PURE__ */ jsx("div", { className: `${FLAT_NAME_SECONDARY_CLASS} ${secondaryColorClassName}`, children: secondary })

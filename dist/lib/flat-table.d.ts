@@ -34,8 +34,8 @@ export declare const FLAT_CODE_COL_PX = 168;
 export declare const FLAT_CODE_PRIMARY_CLASS = "text-base tabular-nums text-[var(--accent-hover)]";
 /** コード欄の下段（JAN・SKU）。薄色・小さめ。 */
 export declare const FLAT_CODE_SECONDARY_CLASS = "text-sm tabular-nums text-[rgb(var(--ink-muted))]";
-/** 名前欄の上段（商品名）。2 行まで。 */
-export declare const FLAT_NAME_PRIMARY_CLASS = "min-w-0 flex-1 font-medium text-[15px] line-clamp-2 break-words";
+/** 名前欄の上段（商品名）。2 行まで。flex の子に直接付けると display が blockify されて clamp が効かないので、ProductNameStack は内側の div に付ける。 */
+export declare const FLAT_NAME_PRIMARY_CLASS = "font-medium text-[15px] line-clamp-2 break-words";
 /** 名前欄の上段の既定色（`ProductNameStack` の `primaryColorClassName` で差し替え可）。 */
 export declare const FLAT_NAME_PRIMARY_COLOR_CLASS = "text-[rgb(var(--ink))]";
 /** 名前欄の下段（システム商品名・ブランドなど）。 */
