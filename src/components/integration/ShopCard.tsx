@@ -16,7 +16,7 @@ export function ShopCard({ shop, action }: { shop: ShopCardModel; action?: React
       <IntegrationLogo meta={shop.meta} size="sm" />
       <div className="min-w-0 flex-1">
         <div className="truncate font-semibold">{shop.name}</div>
-        {shop.subtitle && <div className="sb-int-muted truncate text-xs">{shop.subtitle}</div>}
+        {shop.subtitle && <div className="sb-int-muted truncate text-[12px] leading-[18px]">{shop.subtitle}</div>}
         {marks.length > 0 && (
           <div className="mt-1 flex flex-wrap gap-1">
             {marks.map((m) => (
@@ -39,7 +39,7 @@ export function ShopCardList({
   renderAction?: (shop: ShopCardModel) => ReactNode;
   emptyText?: string;
 }) {
-  if (shops.length === 0) return <p className="sb-int sb-int-muted text-[13px]">{emptyText}</p>;
+  if (shops.length === 0) return <p className="sb-int sb-int-muted text-[13px] leading-[20px]">{emptyText}</p>;
   return (
     <div className="grid gap-2.5" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(min(240px, 100%), 1fr))' }}>
       {shops.map((s) => (

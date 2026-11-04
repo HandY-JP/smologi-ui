@@ -179,14 +179,14 @@ export function SearchFilterBar({
             onKeyDown={onInputKeyDown}
             onBlur={collapsible ? onInputBlur : undefined}
             placeholder={placeholder}
-            className="h-full min-w-0 flex-1 border-0 bg-transparent pr-2 text-sm text-gray-900 outline-none placeholder:text-gray-400"
+            className="h-full min-w-0 flex-1 border-0 bg-transparent pr-2 text-[14px] leading-[22px] text-gray-900 outline-none placeholder:text-gray-400"
           />
         )}
         {filterControl}
       </div>
       </CollapsedFilterTriggerProvider>
       {countLabel ? (
-        <span className="w-24 shrink-0 whitespace-nowrap text-right text-xs tabular-nums text-gray-500">
+        <span className="w-24 shrink-0 whitespace-nowrap text-right text-[12px] leading-[18px] tabular-nums text-gray-500">
           {countLabel}
         </span>
       ) : null}

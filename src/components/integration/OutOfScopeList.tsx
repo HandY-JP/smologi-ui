@@ -14,10 +14,10 @@ export function OutOfScopeList({
   return (
     <div className="sb-int grid gap-1.5 sm:grid-cols-[200px_minmax(0,1fr)] sm:gap-4">
       <div>
-        <p className="text-[13.5px] font-semibold">{title}</p>
-        <p className="sb-int-muted text-xs">{hint}</p>
+        <p className="text-[13px] leading-[20px] font-semibold">{title}</p>
+        <p className="sb-int-muted text-[12px] leading-[18px]">{hint}</p>
       </div>
-      <ul className="sb-int-muted m-0 grid list-none gap-1 p-0 text-[12.5px]">
+      <ul className="sb-int-muted m-0 grid list-none gap-1 p-0 text-[12px] leading-[18px]">
         {items.map((t) => (
           <li key={t}>{t}</li>
         ))}

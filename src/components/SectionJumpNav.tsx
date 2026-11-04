@@ -123,13 +123,13 @@ function OverflowMenu({
           type="button"
           role="menuitem"
           onClick={() => { onJump(item.key); onClose(); }}
-          className={`flex items-center gap-2 rounded-lg px-3 py-2 text-left text-sm transition-colors hover:bg-gray-50 ${
+          className={`flex items-center gap-2 rounded-lg px-3 py-2 text-left text-[14px] leading-[22px] transition-colors hover:bg-gray-50 ${
             item.key === activeKey ? 'font-semibold text-gray-900' : 'text-gray-700'
           }`}
         >
           {item.dotClassName && <span className={`h-2 w-2 shrink-0 rounded-full ${item.dotClassName}`} aria-hidden />}
           <span className="min-w-0 flex-1 truncate">{item.label}</span>
-          <span className="shrink-0 text-xs text-gray-400">{item.count}</span>
+          <span className="shrink-0 text-[12px] leading-[18px] text-gray-400">{item.count}</span>
         </button>
       ))}
     </div>,

@@ -267,8 +267,8 @@ function ModalBody({
       {title != null && (
         <div className="flex items-start gap-3 border-b border-gray-200 px-5 py-4">
           <div className="min-w-0 flex-1">
-            <h2 id={titleId} className="text-base font-bold text-gray-900">{title}</h2>
-            {subtitle != null && <p className="mt-0.5 text-xs text-gray-500">{subtitle}</p>}
+            <h2 id={titleId} className="text-[15px] leading-[22px] font-semibold text-gray-900">{title}</h2>
+            {subtitle != null && <p className="mt-0.5 text-[12px] leading-[18px] text-gray-500">{subtitle}</p>}
           </div>
           {headerRight != null && <div className="flex shrink-0 items-center gap-2 self-center">{headerRight}</div>}
           {withCloseButton && (
@@ -276,7 +276,7 @@ function ModalBody({
               type="button"
               onClick={onClose}
               aria-label="閉じる"
-              className="-mr-1 rounded-md p-1 text-xl leading-none text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+              className="-mr-1 rounded-md p-1 text-[22px] leading-none text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
             >
               ×
             </button>

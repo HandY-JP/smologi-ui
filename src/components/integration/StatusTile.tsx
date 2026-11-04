@@ -6,12 +6,12 @@ export function StatusTile({ label, tone, value, sub, lastSuccessAt }: StatusTil
   const note = sub ?? (lastSuccessAt ? `最終成功 ${lastSuccessAt}` : undefined);
   return (
     <div className={`sb-int sb-int-tile sb-int-tile--${tone} flex flex-col gap-0.5 rounded-[10px] px-3.5 py-3`} data-tone={tone}>
-      <span className="sb-int-muted text-xs">{label}</span>
+      <span className="sb-int-muted text-[12px] leading-[18px]">{label}</span>
       <span className="sb-int-tile-value flex items-center gap-1.5 font-semibold">
         <span aria-hidden className={`sb-int-dot sb-int-dot--${tone} h-2 w-2 flex-none rounded-full`} />
         {value}
       </span>
-      {note && <span className="sb-int-muted text-xs tabular-nums">{note}</span>}
+      {note && <span className="sb-int-muted text-[12px] leading-[18px] tabular-nums">{note}</span>}
     </div>
   );
 }

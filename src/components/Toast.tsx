@@ -74,10 +74,10 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
           <div
             key={t.id}
             // 長文（警告など）が画面外へはみ出さないよう幅を制限し、アイコンは1行目に揃える。
-            className="pointer-events-auto max-w-[min(90vw,36rem)] px-4 py-2.5 rounded-lg shadow-lg text-sm font-medium text-white flex items-start gap-2 toast-enter"
+            className="pointer-events-auto max-w-[min(90vw,36rem)] px-4 py-2.5 rounded-lg shadow-lg text-[14px] leading-[22px] font-medium text-white flex items-start gap-2 toast-enter"
             style={{ backgroundColor: STYLES[t.type].bg }}
           >
-            <span className="font-bold">{STYLES[t.type].icon}</span>
+            <span className="font-semibold">{STYLES[t.type].icon}</span>
             <span>{t.message}</span>
           </div>
         ))}

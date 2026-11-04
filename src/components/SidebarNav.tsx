@@ -44,11 +44,11 @@ const ROW_FOCUS =
 
 export function SidebarNavSectionLabel({ label, badge }: { label: string; badge?: string }) {
   return (
-    <div className="truncate px-3 pt-4 pb-1 text-[10px] font-semibold tracking-wider" style={{ color: 'var(--sb-label)' }}>
+    <div className="truncate px-3 pt-4 pb-1 text-[11px] leading-[16px] font-semibold tracking-wider" style={{ color: 'var(--sb-label)' }}>
       {label}
       {badge && (
         <span
-          className="ml-1.5 rounded-sm border px-1 py-px align-middle text-[9px] font-semibold leading-none"
+          className="ml-1.5 rounded-sm border px-1 py-px align-middle text-[11px] font-semibold leading-none"
           style={{ borderColor: 'var(--sb-border)' }}
         >
           {badge}
@@ -104,7 +104,7 @@ export function SidebarRailTip({ text, children }: { text: string; children: Rea
           <span
             role="tooltip"
             data-sidebar-rail-tip
-            className="pointer-events-none fixed z-[80] -translate-y-1/2 whitespace-nowrap rounded-md px-2.5 py-1 text-xs font-medium shadow-lg"
+            className="pointer-events-none fixed z-[80] -translate-y-1/2 whitespace-nowrap rounded-md px-2.5 py-1 text-[12px] leading-[18px] font-medium shadow-lg"
             style={{ top: pos.top, left: pos.left, backgroundColor: 'var(--sb-text)', color: 'var(--sb-bg)' }}
           >
             <span
@@ -191,7 +191,7 @@ export function SidebarNavLink({
   if (item.comingSoon) {
     const soon = (
       <div
-        className={`flex h-9 items-center rounded-md text-base cursor-not-allowed opacity-50 select-none ${collapsed ? 'justify-center' : 'gap-2.5 px-3'}`}
+        className={`flex h-9 items-center rounded-md text-[15px] leading-[22px] cursor-not-allowed opacity-50 select-none ${collapsed ? 'justify-center' : 'gap-2.5 px-3'}`}
         style={{ color: 'var(--sb-text)' }}
         title="今後実装予定の機能です"
       >
@@ -200,7 +200,7 @@ export function SidebarNavLink({
           <>
             <span className="min-w-0 flex-1 truncate">{item.label}</span>
             <span
-              className="flex-shrink-0 whitespace-nowrap rounded px-1 py-px text-[9px] font-bold"
+              className="flex-shrink-0 whitespace-nowrap rounded px-1 py-px text-[11px] leading-[16px] font-semibold"
               style={{ backgroundColor: 'var(--sb-hover)', color: 'var(--sb-label)' }}
             >
               準備中
@@ -222,7 +222,7 @@ export function SidebarNavLink({
           <>
             <span className="min-w-0 flex-1 truncate">{item.label}</span>
             <span
-              className="flex-shrink-0 whitespace-nowrap rounded px-1 py-px text-[9px] font-bold"
+              className="flex-shrink-0 whitespace-nowrap rounded px-1 py-px text-[11px] leading-[16px] font-semibold"
               style={{ backgroundColor: 'var(--sb-hover)', color: 'var(--sb-label)' }}
             >
               {lockBadge}
@@ -231,7 +231,7 @@ export function SidebarNavLink({
         )}
       </>
     );
-    const className = `flex h-9 w-full items-center rounded-md text-left text-base text-[var(--sb-text)] opacity-50 transition-opacity hover:opacity-90 ${
+    const className = `flex h-9 w-full items-center rounded-md text-left text-[15px] leading-[22px] text-[var(--sb-text)] opacity-50 transition-opacity hover:opacity-90 ${
       collapsed ? 'justify-center' : 'gap-2.5 px-3'
     } focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sb-accent-bg)]`;
     const lockedNode = renderLocked ? (
@@ -254,7 +254,7 @@ export function SidebarNavLink({
   const railText = hasCount ? `${baseLabel}（${item.count}）` : qaCount ? `${baseLabel}（${qaCount.label} ${qaCount.count}件）` : title;
   // レール表示中は行の右端ごと隠れるので「＋」は出さない。
   const quickAction = !collapsed ? item.quickAction : undefined;
-  const pillClass = 'sb-glass-surface-ringed whitespace-nowrap rounded-full px-1.5 py-0.5 text-[10px] font-medium leading-none';
+  const pillClass = 'sb-glass-surface-ringed whitespace-nowrap rounded-full px-1.5 py-0.5 text-[11px] font-medium leading-none';
 
   const main = renderLink(
     {
@@ -264,7 +264,7 @@ export function SidebarNavLink({
       'aria-current': isActive ? 'page' : undefined,
       onClick: onNavigate,
       'data-tour': item.dataTour,
-      className: `relative flex h-9 items-center rounded-md text-base transition-colors ${ROW_FOCUS} ${
+      className: `relative flex h-9 items-center rounded-md text-[15px] leading-[22px] transition-colors ${ROW_FOCUS} ${
         collapsed ? 'justify-center px-0' : quickAction ? 'gap-2.5 pl-3 pr-10' : 'gap-2.5 px-3'
       } ${isActive ? `${activeClassName} font-semibold` : 'hover:bg-[var(--sb-hover)]'} ${item.dim && !isActive ? 'opacity-55' : ''}`,
       style: isActive ? undefined : { color: 'var(--sb-text)' },
@@ -278,7 +278,7 @@ export function SidebarNavLink({
             <span className={pillClass} style={{ color: 'var(--sb-label)' }}>{item.unlockPill}</span>
           )}
           {!collapsed && item.badge && (
-            <span className="rounded-full border border-orange-300 bg-white px-1.5 py-0.5 text-[11px] font-bold leading-none text-orange-700">
+            <span className="rounded-full border border-orange-300 bg-white px-1.5 py-0.5 text-[11px] font-semibold leading-none text-orange-700">
               {item.badge}
             </span>
           )}
@@ -325,7 +325,7 @@ export function SidebarNavLink({
             title: `${item.quickActionCount.label} ${item.quickActionCount.count}件`,
             'aria-label': `${item.quickActionCount.label} ${item.quickActionCount.count}件`,
             className:
-              'absolute right-0 top-0 min-w-[1rem] rounded-full bg-[#C2560D] px-1 py-0.5 text-center text-[10px] font-semibold leading-none tabular-nums text-white',
+              'absolute right-0 top-0 min-w-[1rem] rounded-full bg-[#C2560D] px-1 py-0.5 text-center text-[11px] font-semibold leading-none tabular-nums text-white',
             children: item.quickActionCount.count > 99 ? '99+' : item.quickActionCount.count,
           },
           { kind: 'quickActionCount', item },
@@ -341,7 +341,7 @@ function CollapsibleSectionHeader({ label, open, dot, dotLabel, dotClassName, on
       type="button"
       onClick={onToggle}
       aria-expanded={open}
-      className="mt-3 mb-1 flex h-7 w-full items-center gap-2 rounded-md px-3 text-left text-[10px] font-semibold tracking-wider transition-colors hover:bg-[var(--sb-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--sb-text)]"
+      className="mt-3 mb-1 flex h-7 w-full items-center gap-2 rounded-md px-3 text-left text-[11px] leading-[16px] font-semibold tracking-wider transition-colors hover:bg-[var(--sb-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--sb-text)]"
       style={{ color: 'var(--sb-label)' }}
     >
       <span className="min-w-0 flex-1 truncate">{label}</span>

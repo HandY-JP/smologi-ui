@@ -149,7 +149,7 @@ export function SearchableSelect({
         role="option"
         aria-selected={on}
         onClick={() => pick(o.value)}
-        className={`flex w-full items-center justify-between gap-2 rounded px-1.5 py-1.5 text-left text-sm ${on ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-50'}`}
+        className={`flex w-full items-center justify-between gap-2 rounded px-1.5 py-1.5 text-left text-[14px] leading-[22px] ${on ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-50'}`}
       >
         <span className="truncate">{o.label}</span>
         {on && (
@@ -171,7 +171,7 @@ export function SearchableSelect({
   const panelBody = (
     <div className="max-h-full overflow-y-auto p-1" style={portalPanel ? undefined : { maxHeight: '14rem' }}>
       {visibleOptions.length === 0 ? (
-        <div className="px-2 py-2 text-xs text-gray-400">
+        <div className="px-2 py-2 text-[12px] leading-[18px] text-gray-400">
           {q ? `「${query}」に一致する項目がありません` : emptyText}
         </div>
       ) : (
@@ -192,10 +192,10 @@ export function SearchableSelect({
             ? // 未フォーカス（候補を開いていない）ときは、文字の上でも ▾ と同じ手のカーソルにする
               // （2026-09-22 ユーザー決定。中身が input なので放っておくと I ビームになる）。
               // 開いて検索入力できる状態になったら input 側で cursor-text に戻す。
-              `relative flex h-full w-full min-w-0 items-center border-0 bg-transparent text-sm transition-colors ${
+              `relative flex h-full w-full min-w-0 items-center border-0 bg-transparent text-[14px] leading-[22px] transition-colors ${
                 disabled ? 'cursor-not-allowed text-gray-400' : open ? 'text-gray-900' : 'cursor-pointer text-gray-700'
               }`
-            : `relative flex w-full items-center rounded-md border text-sm transition-colors ${
+            : `relative flex w-full items-center rounded-md border text-[14px] leading-[22px] transition-colors ${
                 disabled
                   ? 'cursor-not-allowed border-gray-200 bg-gray-50 text-gray-400'
                   : open ? 'border-blue-400 bg-white ring-2 ring-blue-100' : 'border-gray-300 bg-white hover:border-gray-400'
@@ -245,7 +245,7 @@ export function SearchableSelect({
           disabled={disabled}
           className={
             inline
-              ? `min-w-0 flex-1 truncate bg-transparent py-0 px-1 pr-5 text-sm font-medium outline-none ${
+              ? `min-w-0 flex-1 truncate bg-transparent py-0 px-1 pr-5 text-[14px] leading-[22px] font-medium outline-none ${
                   disabled ? 'cursor-not-allowed' : open ? 'cursor-text' : 'cursor-pointer'
                 } ${
                   selectedLabel && !open ? (disabled ? 'text-gray-400' : 'text-gray-700') : 'text-gray-700 placeholder:text-gray-400'

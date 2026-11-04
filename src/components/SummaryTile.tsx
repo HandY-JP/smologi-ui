@@ -27,9 +27,9 @@ export function SummaryTile({
 }) {
   return (
     <div className="rounded-xl border border-gray-200 bg-white px-3 py-2">
-      <p className="text-[11px] font-medium text-gray-500">{label}</p>
-      {sublabel && <p className="truncate text-[10px] text-gray-400" title={sublabel}>{sublabel}</p>}
-      <p className={`mt-0.5 text-2xl font-bold tabular-nums ${TONE_CLASS[tone]}`}>
+      <p className="text-[11px] leading-[16px] font-medium text-gray-500">{label}</p>
+      {sublabel && <p className="truncate text-[11px] leading-[16px] text-gray-400" title={sublabel}>{sublabel}</p>}
+      <p className={`mt-0.5 text-[22px] leading-[30px] font-semibold tabular-nums ${TONE_CLASS[tone]}`}>
         {typeof value === 'number' ? value.toLocaleString('ja-JP') : value}
       </p>
     </div>

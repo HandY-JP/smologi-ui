@@ -54,7 +54,7 @@ export function ActiveFilterChips({
       {chips.map((chip) => (
         <span
           key={chip.key}
-          className="inline-flex items-center gap-1 rounded-full border border-[var(--sb-accent-bg)]/40 bg-[var(--sb-accent-bg)]/5 py-0.5 pl-2.5 pr-1 text-xs text-[var(--sb-accent-bg)]"
+          className="inline-flex items-center gap-1 rounded-full border border-[var(--sb-accent-bg)]/40 bg-[var(--sb-accent-bg)]/5 py-0.5 pl-2.5 pr-1 text-[12px] leading-[18px] text-[var(--sb-accent-bg)]"
         >
           <span className="text-gray-500">{chip.label}:</span>
           <span className="font-medium">{chip.valueLabel}</span>
@@ -74,7 +74,7 @@ export function ActiveFilterChips({
         <button
           type="button"
           onClick={onClearAll}
-          className="text-xs text-gray-400 underline-offset-2 hover:text-gray-700 hover:underline"
+          className="text-[12px] leading-[18px] text-gray-400 underline-offset-2 hover:text-gray-700 hover:underline"
         >
           すべて解除
         </button>
@@ -182,7 +182,7 @@ export function FilterTriggerButton({
       aria-controls={ariaControls}
       title={triggerTitle}
       aria-label={triggerAriaLabel}
-      className={`relative mr-1.5 flex h-8 min-w-[7rem] items-center justify-center rounded-full px-7 text-xs font-semibold leading-none transition-colors ${
+      className={`relative mr-1.5 flex h-8 min-w-[7rem] items-center justify-center rounded-full px-7 text-[12px] font-semibold leading-none transition-colors ${
         activeCount > 0 || open
           ? 'bg-[var(--search-accent-light)] text-[var(--search-accent)]'
           : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900'
@@ -190,7 +190,7 @@ export function FilterTriggerButton({
     >
       {label}
       {activeCount > 0 && (
-        <span className="absolute left-2 rounded-full bg-[var(--search-accent)] px-1.5 py-0.5 text-[10px] font-bold leading-none text-white">
+        <span className="absolute left-2 rounded-full bg-[var(--search-accent)] px-1.5 py-0.5 text-[11px] font-semibold leading-none text-white">
           {activeCount}
         </span>
       )}
@@ -344,7 +344,7 @@ export function FilterPopover({
               key={item.key}
               type="button"
               onClick={() => tabs.onChange(item.key)}
-              className={`flex-1 rounded-md px-3 py-1.5 text-sm font-medium ${
+              className={`flex-1 rounded-md px-3 py-1.5 text-[14px] leading-[22px] font-medium ${
                 tabs.active === item.key ? 'bg-white text-[var(--sb-accent-bg)] shadow-sm' : 'text-gray-500'
               }`}
             >
@@ -356,14 +356,14 @@ export function FilterPopover({
 
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <span className="text-sm font-semibold text-gray-700">{title}</span>
-          {description && <p className="mt-0.5 text-xs text-gray-400">{description}</p>}
+          <span className="text-[14px] leading-[22px] font-semibold text-gray-700">{title}</span>
+          {description && <p className="mt-0.5 text-[12px] leading-[18px] text-gray-400">{description}</p>}
         </div>
         <button
           type="button"
           onClick={onClearAll}
           disabled={clearDisabled}
-          className="shrink-0 text-xs text-gray-400 hover:text-gray-700 disabled:opacity-40"
+          className="shrink-0 text-[12px] leading-[18px] text-gray-400 hover:text-gray-700 disabled:opacity-40"
         >
           すべてクリア
         </button>
@@ -462,7 +462,7 @@ export function FilterSection({
 }) {
   return (
     <section className={first ? '' : 'border-t border-gray-100 pt-3'}>
-      <h3 className="mb-2 flex items-center gap-1.5 text-[11px] font-semibold tracking-wide text-gray-400">
+      <h3 className="mb-2 flex items-center gap-1.5 text-[11px] leading-[16px] font-semibold tracking-wide text-gray-400">
         <span>{title}</span>
         {active && (
           <>
@@ -509,7 +509,7 @@ export function FilterChipToggle({
       onClick={onToggle}
       aria-pressed={pressed}
       title={title}
-      className={`inline-flex items-center whitespace-nowrap rounded-full border px-2.5 py-1 text-xs font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--search-accent)] ${
+      className={`inline-flex items-center whitespace-nowrap rounded-full border px-2.5 py-1 text-[12px] leading-[18px] font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--search-accent)] ${
         pressed
           ? 'border-[var(--search-accent)] bg-[var(--search-accent)] text-white shadow-sm'
           : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-900'
@@ -532,7 +532,7 @@ export function FilterChipGroup({
 }) {
   return (
     <div>
-      {label && <div className="mb-1.5 text-xs font-medium text-gray-600">{label}</div>}
+      {label && <div className="mb-1.5 text-[12px] leading-[18px] font-medium text-gray-600">{label}</div>}
       <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label={ariaLabel ?? label}>
         {children}
       </div>
@@ -555,15 +555,15 @@ export function FilterField({
 }) {
   return (
     <div className={span === 2 ? 'sm:col-span-2' : undefined}>
-      <span className="mb-1 block text-xs text-gray-500">{label}</span>
+      <span className="mb-1 block text-[12px] leading-[18px] text-gray-500">{label}</span>
       {children}
-      {hint && <p className="mt-1 text-[11px] text-gray-400">{hint}</p>}
+      {hint && <p className="mt-1 text-[11px] leading-[16px] text-gray-400">{hint}</p>}
     </div>
   );
 }
 
 const FILTER_INPUT_CLASS =
-  'w-full rounded-md border border-gray-300 bg-white px-2 py-2 text-sm text-gray-700 focus:outline-none focus:ring-1 focus:ring-[var(--sb-accent-bg)]';
+  'w-full rounded-md border border-gray-300 bg-white px-2 py-2 text-[14px] leading-[22px] text-gray-700 focus:outline-none focus:ring-1 focus:ring-[var(--sb-accent-bg)]';
 
 /** パネル内の共通 <select>（ラベル付き）。 */
 export function FilterSelect({
@@ -579,7 +579,7 @@ export function FilterSelect({
 }) {
   return (
     <label className="block">
-      <span className="mb-1 block text-xs text-gray-500">{label}</span>
+      <span className="mb-1 block text-[12px] leading-[18px] text-gray-500">{label}</span>
       <select value={value} onChange={(event) => onChange(event.target.value)} className={FILTER_INPUT_CLASS}>
         {options.map((option) => (
           <option key={option.value} value={option.value}>{option.label}</option>
@@ -608,7 +608,7 @@ export function FilterCheckbox({
         ? 'text-gray-600 focus:ring-gray-500'
         : 'text-[var(--sb-accent-bg)] focus:ring-[var(--sb-accent-bg)]';
   return (
-    <label className="flex cursor-pointer items-center gap-2 text-xs text-gray-700">
+    <label className="flex cursor-pointer items-center gap-2 text-[12px] leading-[18px] text-gray-700">
       <input
         type="checkbox"
         checked={checked}
@@ -645,10 +645,10 @@ export function FilterDateRange({
   const error = filterDateRangeError(from, to);
   return (
     <div className="sm:col-span-2">
-      {label && <p className="mb-1 text-xs font-semibold text-gray-600">{label}</p>}
+      {label && <p className="mb-1 text-[12px] leading-[18px] font-semibold text-gray-600">{label}</p>}
       <div className="grid grid-cols-2 gap-2">
         <label>
-          <span className="mb-1 block text-xs text-gray-500">{fromLabel}</span>
+          <span className="mb-1 block text-[12px] leading-[18px] text-gray-500">{fromLabel}</span>
           <input
             type="date"
             value={from}
@@ -659,7 +659,7 @@ export function FilterDateRange({
           />
         </label>
         <label>
-          <span className="mb-1 block text-xs text-gray-500">{toLabel}</span>
+          <span className="mb-1 block text-[12px] leading-[18px] text-gray-500">{toLabel}</span>
           <input
             type="date"
             value={to}
@@ -670,7 +670,7 @@ export function FilterDateRange({
           />
         </label>
       </div>
-      {error && <p className="mt-1 text-xs text-red-600">{error}</p>}
+      {error && <p className="mt-1 text-[12px] leading-[18px] text-red-600">{error}</p>}
     </div>
   );
 }

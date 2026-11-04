@@ -120,7 +120,7 @@ function Tile({
             aria-label={`${def.title}を外す`}
             {...STOP_DRAG}
             onClick={() => onRemove(id)}
-            className={`absolute -left-2 -top-2 z-20 grid h-[26px] w-[26px] cursor-pointer place-items-center rounded-full text-lg leading-none shadow-[0_2px_6px_rgba(0,0,0,0.25)] ${classes.minus}`}
+            className={`absolute -left-2 -top-2 z-20 grid h-[26px] w-[26px] cursor-pointer place-items-center rounded-full text-[18px] leading-none shadow-[0_2px_6px_rgba(0,0,0,0.25)] ${classes.minus}`}
           >
             −
           </button>
@@ -130,7 +130,7 @@ function Tile({
               aria-label={`${def.title}のサイズを変える（現在: ${SIZE_LABEL[size]}）`}
               {...STOP_DRAG}
               onClick={() => onCycleSize(id)}
-              className={`absolute right-2.5 top-2.5 z-20 inline-flex cursor-pointer items-center rounded-full px-2.5 py-1 text-xs ${classes.sizeButton}`}
+              className={`absolute right-2.5 top-2.5 z-20 inline-flex cursor-pointer items-center rounded-full px-2.5 py-1 text-[12px] leading-[18px] ${classes.sizeButton}`}
             >
               サイズ: {SIZE_LABEL[size]}
             </button>
@@ -261,7 +261,7 @@ export function WidgetGrid({
           );
         })}
         {editing && (
-          <button type="button" onClick={onAdd} className={`grid place-items-center text-[15px] min-[821px]:col-span-4 ${classes.addTile}`}>
+          <button type="button" onClick={onAdd} className={`grid place-items-center text-[15px] leading-[22px] min-[821px]:col-span-4 ${classes.addTile}`}>
             ＋ ウィジェットを追加
           </button>
         )}
@@ -272,7 +272,7 @@ export function WidgetGrid({
             className={`cursor-grabbing px-4 pt-3 shadow-[0_24px_48px_rgba(0,0,0,0.28)] ${classes.ghost}`}
             style={{ width: activeSize.width, height: Math.min(activeSize.height, 220) }}
           >
-            <p className="text-[13px] font-semibold">{activeDef.title}</p>
+            <p className="text-[13px] leading-[20px] font-semibold">{activeDef.title}</p>
             <div className="mt-3 space-y-2 opacity-30">
               <div className="h-3 w-3/4 rounded bg-current" />
               <div className="h-3 w-1/2 rounded bg-current" />

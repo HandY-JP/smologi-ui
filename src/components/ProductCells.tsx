@@ -38,7 +38,7 @@ export function ProductCodeStack({
           className={
             hasPrimary
               ? `mt-auto min-w-0 pt-0.5 truncate ${secondaryClassName}`
-              : 'min-w-0 truncate text-base tabular-nums text-[rgb(var(--ink))]'
+              : 'min-w-0 truncate text-[15px] leading-[22px] tabular-nums text-[rgb(var(--ink))]'
           }
         >
           {secondary}

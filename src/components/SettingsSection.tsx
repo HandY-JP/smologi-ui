@@ -45,7 +45,7 @@ export function SettingsPage({
       <div className={`admin-page-tight-top max-w-4xl ${className}`}>
         {children}
         {trimmed && !hasMatch && (
-          <p className="py-10 text-sm text-gray-500">
+          <p className="py-10 text-[14px] leading-[22px] text-gray-500">
             この区分に「{trimmed}」に当たる設定はありません。左のメニューで別の区分を選んでください。
           </p>
         )}
@@ -96,9 +96,9 @@ export function SettingsSection({
     >
       <div className="flex items-start gap-3">
         <div className="min-w-0 flex-1">
-          <h2 className="text-[15px] font-bold text-gray-900">{title}</h2>
+          <h2 className="text-[15px] leading-[22px] font-semibold text-gray-900">{title}</h2>
           {description && (
-            <p className="mt-1 text-xs leading-5 text-gray-500">{description}</p>
+            <p className="mt-1 text-[12px] leading-5 text-gray-500">{description}</p>
           )}
         </div>
         {action && <div className="flex shrink-0 items-center gap-2">{action}</div>}
@@ -110,13 +110,13 @@ export function SettingsSection({
 
 /** 値が無い・まだ読めないときの控えめなプレースホルダ。 */
 export function SettingsEmpty({ children }: { children: ReactNode }) {
-  return <p className="py-6 text-center text-sm text-gray-400">{children}</p>;
+  return <p className="py-6 text-center text-[14px] leading-[22px] text-gray-400">{children}</p>;
 }
 
 /** 閲覧のみ権限のときに区画の先頭へ出す帯（全区分で同じ文言・同じ見た目にする）。 */
 export function SettingsReadOnlyNotice({ children }: { children?: ReactNode }) {
   return (
-    <p className="mb-4 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800">
+    <p className="mb-4 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-[14px] leading-[22px] text-amber-800">
       {children ?? '閲覧のみの権限です。内容の変更はできません。'}
     </p>
   );

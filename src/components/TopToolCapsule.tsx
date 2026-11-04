@@ -212,7 +212,7 @@ function ToolMenu({ items, onClose, triggerRef }: { items: TopToolMenuItem[]; on
           role="menuitem"
           disabled={mi.disabled}
           onClick={() => { mi.onClick(); onClose(); }}
-          className="flex items-center rounded-lg px-3 py-2 text-left text-sm text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:text-gray-300 disabled:hover:bg-transparent"
+          className="flex items-center rounded-lg px-3 py-2 text-left text-[14px] leading-[22px] text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:text-gray-300 disabled:hover:bg-transparent"
         >
           {mi.label}
         </button>
@@ -275,18 +275,18 @@ function buildToolListRows(items: TopToolItem[], expandedKey: string | null): To
 /** 行の右端に出す状態（帯のバッジと同じ情報を、一覧では言葉で出す）。 */
 function ToolListRowStatus({ item }: { item: TopToolItem }) {
   if (item.status === 'progress') {
-    return <span className="flex-shrink-0 text-[11px] font-medium text-gray-400">処理中</span>;
+    return <span className="flex-shrink-0 text-[11px] leading-[16px] font-medium text-gray-400">処理中</span>;
   }
   if (item.status === 'done') {
     return (
-      <span className="flex-shrink-0 rounded-full bg-blue-50 px-2 py-0.5 text-[11px] font-semibold text-blue-600">
+      <span className="flex-shrink-0 rounded-full bg-blue-50 px-2 py-0.5 text-[11px] leading-[16px] font-semibold text-blue-600">
         {item.doneCount != null ? `${item.doneCount.toLocaleString()}件 できあがり` : 'できあがり'}
       </span>
     );
   }
   if (item.status === 'failed') {
     return (
-      <span className="flex-shrink-0 text-[11px] font-medium text-red-600">
+      <span className="flex-shrink-0 text-[11px] leading-[16px] font-medium text-red-600">
         {item.statusMessage ?? '失敗しました'}
       </span>
     );
@@ -402,7 +402,7 @@ function ToolListPanel({
                 {parent.icon}
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block truncate text-[13px] font-medium text-gray-700">{sub.label}</span>
+                <span className="block truncate text-[13px] leading-[20px] font-medium text-gray-700">{sub.label}</span>
                 {sub.description && (
                   <span className="mt-0.5 block text-[11px] leading-snug text-gray-400">{sub.description}</span>
                 )}
@@ -447,8 +447,8 @@ function ToolListPanel({
                 {item.icon}
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block truncate text-sm font-semibold text-gray-800">{item.label}</span>
-                {sub && <span className="mt-0.5 block text-xs leading-snug text-gray-500">{sub}</span>}
+                <span className="block truncate text-[14px] leading-[22px] font-semibold text-gray-800">{item.label}</span>
+                {sub && <span className="mt-0.5 block text-[12px] leading-snug text-gray-500">{sub}</span>}
               </span>
               <ToolListRowStatus item={item} />
               {hasMenu && (
@@ -466,7 +466,7 @@ function ToolListPanel({
       {settingsLinks && settingsLinks.length > 0 && (
         <>
           <span className="my-1 block h-px bg-gray-100" aria-hidden />
-          <div className="px-2.5 pb-1 pt-1.5 text-[11px] font-semibold uppercase tracking-wide text-gray-400">
+          <div className="px-2.5 pb-1 pt-1.5 text-[11px] leading-[16px] font-semibold uppercase tracking-wide text-gray-400">
             関連する設定
           </div>
           {settingsLinks.map((link) => (
@@ -488,9 +488,9 @@ function ToolListPanel({
                 {SettingsGearIcon}
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block truncate text-sm font-semibold text-gray-800">{link.label}</span>
+                <span className="block truncate text-[14px] leading-[22px] font-semibold text-gray-800">{link.label}</span>
                 {link.description && (
-                  <span className="mt-0.5 block text-xs leading-snug text-gray-500">{link.description}</span>
+                  <span className="mt-0.5 block text-[12px] leading-snug text-gray-500">{link.description}</span>
                 )}
               </span>
             </button>

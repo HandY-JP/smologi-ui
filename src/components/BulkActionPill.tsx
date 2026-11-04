@@ -62,7 +62,7 @@ export type BulkPillAction = {
 };
 
 const MENU_CLASS = 'absolute bottom-full z-[60] mb-2 w-80 max-w-[calc(100vw-2rem)] overflow-hidden rounded-xl border border-gray-200 bg-white p-1.5 text-left shadow-xl';
-const MENU_ITEM_CLASS = 'flex w-full items-start justify-between gap-4 rounded-lg px-3 py-2.5 text-left text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--sb-accent-bg)] disabled:cursor-not-allowed disabled:opacity-40';
+const MENU_ITEM_CLASS = 'flex w-full items-start justify-between gap-4 rounded-lg px-3 py-2.5 text-left text-[14px] leading-[22px] font-medium text-gray-700 transition-colors hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--sb-accent-bg)] disabled:cursor-not-allowed disabled:opacity-40';
 
 function actionClass(tone: BulkPillAction['tone']): string {
   if (tone === 'primary') return 'sb-bulk-primary';
@@ -116,11 +116,11 @@ function BulkPillActionButton({
               <span className="min-w-0">
                 <span className="block truncate">{item.label}</span>
                 {item.description && (
-                  <span className="mt-0.5 block truncate text-[11px] font-normal text-gray-400">{item.description}</span>
+                  <span className="mt-0.5 block truncate text-[11px] leading-[16px] font-normal text-gray-400">{item.description}</span>
                 )}
               </span>
               {typeof item.count === 'number' && (
-                <span className="shrink-0 text-xs tabular-nums text-gray-400">{item.count.toLocaleString()}件</span>
+                <span className="shrink-0 text-[12px] leading-[18px] tabular-nums text-gray-400">{item.count.toLocaleString()}件</span>
               )}
             </button>
           </WithReason>
@@ -145,7 +145,7 @@ function BulkPillActionButton({
           >
             {action.busy && <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-t-transparent opacity-70" aria-hidden="true" />}
             {label}
-            <span className="text-[10px] opacity-70" aria-hidden="true">▾</span>
+            <span className="text-[11px] leading-[16px] opacity-70" aria-hidden="true">▾</span>
           </button>
         </WithReason>
         {menu}
@@ -179,7 +179,7 @@ function BulkPillActionButton({
             onClick={() => onToggleMenu(action.key)}
             className={`${buttonClass} sb-bulk-split-caret`}
           >
-            <span className="text-[10px] opacity-80" aria-hidden="true">▾</span>
+            <span className="text-[11px] leading-[16px] opacity-80" aria-hidden="true">▾</span>
           </button>
         </span>
         {menu}
@@ -255,7 +255,7 @@ export function BulkActionPill({
         data-tour={dataTour}
         className="sb-bulk-bar flex flex-wrap items-center justify-center gap-x-3 gap-y-2 rounded-full px-5 py-2.5"
       >
-        <span className="flex flex-wrap items-center gap-x-2 gap-y-0.5 whitespace-nowrap text-sm">
+        <span className="flex flex-wrap items-center gap-x-2 gap-y-0.5 whitespace-nowrap text-[14px] leading-[22px]">
           <span className="font-semibold tabular-nums">{selectedCount.toLocaleString()}{selectedLabel}</span>
           {stats.map((stat) => (
             <span key={stat.key} className="inline-flex items-center gap-1" title={stat.title}>
@@ -302,7 +302,7 @@ export function BulkActionPill({
         )}
       </div>
       {error && (
-        <p className="max-w-[min(48rem,100%)] rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700 shadow-lg" role="alert">
+        <p className="max-w-[min(48rem,100%)] rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-[12px] leading-[18px] text-red-700 shadow-lg" role="alert">
           {error}
         </p>
       )}

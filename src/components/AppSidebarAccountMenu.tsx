@@ -35,7 +35,7 @@ export interface AppSidebarAccountMenuItem {
 }
 
 const ITEM_CLASS =
-  'flex w-full items-center gap-3 px-3 py-2.5 text-left text-sm text-[var(--sb-text)] transition-colors hover:bg-[var(--sb-hover)]';
+  'flex w-full items-center gap-3 px-3 py-2.5 text-left text-[14px] leading-[22px] text-[var(--sb-text)] transition-colors hover:bg-[var(--sb-hover)]';
 
 export function AppSidebarAccountMenu({
   name,
@@ -95,7 +95,7 @@ export function AppSidebarAccountMenu({
         style={{ color: 'var(--sb-text)' }}
       >
         {avatar}
-        <span className="min-w-0 flex-1 truncate text-left text-base">{display}</span>
+        <span className="min-w-0 flex-1 truncate text-left text-[15px] leading-[22px]">{display}</span>
         <svg className="h-3.5 w-3.5 flex-shrink-0 text-[var(--sb-label)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" d="M8 15l4-4 4 4M8 9l4-4 4 4" />
         </svg>
@@ -110,8 +110,8 @@ export function AppSidebarAccountMenu({
           <div className="flex items-center gap-3 px-3 py-3">
             {avatar}
             <div className="min-w-0">
-              <p className="truncate text-sm font-semibold" style={{ color: 'var(--sb-heading, var(--sb-text))' }}>{display}</p>
-              {email && <p className="truncate text-xs" style={{ color: 'var(--sb-label)' }}>{email}</p>}
+              <p className="truncate text-[14px] leading-[22px] font-semibold" style={{ color: 'var(--sb-heading, var(--sb-text))' }}>{display}</p>
+              {email && <p className="truncate text-[12px] leading-[18px]" style={{ color: 'var(--sb-label)' }}>{email}</p>}
             </div>
           </div>
           <div className="border-t py-1" style={{ borderColor: 'var(--sb-hover)' }}>

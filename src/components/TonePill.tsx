@@ -33,7 +33,7 @@ export function TonePill({
   return (
     <span
       title={title}
-      className={`inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-px text-[11px] font-semibold ${TONE_CLASS[tone]} ${className}`}
+      className={`inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-px text-[11px] leading-[16px] font-semibold ${TONE_CLASS[tone]} ${className}`}
     >
       {icon && <span aria-hidden className="inline-flex flex-shrink-0">{icon}</span>}
       {children}

@@ -200,10 +200,10 @@ export function GuideTour({ storageKey, introTitle, introBody, steps, active = t
       aria-label={step.title}
     >
       <div className="flex items-start justify-between gap-2">
-        <div className="text-[11px] font-semibold tracking-wide text-blue-600">ステップ {idx + 1} / {steps.length}</div>
+        <div className="text-[11px] leading-[16px] font-semibold tracking-wide text-blue-600">ステップ {idx + 1} / {steps.length}</div>
         <button type="button" onClick={finish} className="text-gray-300 hover:text-gray-500 leading-none" aria-label="ガイドを終了" title="ガイドを終了（以後表示しません）">×</button>
       </div>
-      <h3 className="mt-0.5 text-sm font-semibold text-gray-900">{step.title}</h3>
+      <h3 className="mt-0.5 text-[14px] leading-[22px] font-semibold text-gray-900">{step.title}</h3>
       <div className="mt-1.5 text-[13px] leading-relaxed text-gray-600">{step.body}</div>
       <div className="mt-3 flex items-center justify-between">
         <div className="flex items-center gap-1">
@@ -213,12 +213,12 @@ export function GuideTour({ storageKey, introTitle, introBody, steps, active = t
         </div>
         <div className="flex items-center gap-2">
           {idx > 0 && (
-            <button type="button" onClick={() => setIdx(idx - 1)} className="rounded-md px-2.5 py-1.5 text-xs font-medium text-gray-500 hover:bg-gray-50">戻る</button>
+            <button type="button" onClick={() => setIdx(idx - 1)} className="rounded-md px-2.5 py-1.5 text-[12px] leading-[18px] font-medium text-gray-500 hover:bg-gray-50">戻る</button>
           )}
           {isLast ? (
-            <button type="button" onClick={finish} className="rounded-md bg-blue-600 px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-blue-700">ガイドを終了</button>
+            <button type="button" onClick={finish} className="rounded-md bg-blue-600 px-3.5 py-1.5 text-[12px] leading-[18px] font-semibold text-white hover:bg-blue-700">ガイドを終了</button>
           ) : (
-            <button type="button" onClick={() => setIdx(idx + 1)} className="rounded-md bg-blue-600 px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-blue-700">次へ</button>
+            <button type="button" onClick={() => setIdx(idx + 1)} className="rounded-md bg-blue-600 px-3.5 py-1.5 text-[12px] leading-[18px] font-semibold text-white hover:bg-blue-700">次へ</button>
           )}
         </div>
       </div>
@@ -231,15 +231,15 @@ export function GuideTour({ storageKey, introTitle, introBody, steps, active = t
         <div className="fixed inset-0 z-[1100] flex items-center justify-center bg-black/40 p-4" role="dialog" aria-modal="true" aria-label={introTitle}>
           <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-2xl row-fade-in">
             <div className="flex items-center gap-2">
-              <span className="inline-flex items-center rounded-full bg-blue-600 px-2 py-0.5 text-[10px] font-bold text-white">GUIDE</span>
-              <h2 className="text-base font-semibold text-gray-900">{introTitle}</h2>
+              <span className="inline-flex items-center rounded-full bg-blue-600 px-2 py-0.5 text-[11px] leading-[16px] font-semibold text-white">GUIDE</span>
+              <h2 className="text-[15px] leading-[22px] font-semibold text-gray-900">{introTitle}</h2>
             </div>
-            <div className="mt-2 text-sm leading-relaxed text-gray-600">{introBody}</div>
+            <div className="mt-2 text-[14px] leading-relaxed text-gray-600">{introBody}</div>
             <div className="mt-5 flex items-center justify-end gap-2">
               <button
                 type="button"
                 onClick={finish}
-                className="rounded-md px-3 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50"
+                className="rounded-md px-3 py-2 text-[14px] leading-[22px] font-medium text-gray-500 hover:bg-gray-50"
                 title="以後この案内は表示されません"
               >
                 今は見ない
@@ -247,7 +247,7 @@ export function GuideTour({ storageKey, introTitle, introBody, steps, active = t
               <button
                 type="button"
                 onClick={() => { setIdx(0); setPhase('steps'); }}
-                className="rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
+                className="rounded-md bg-blue-600 px-4 py-2 text-[14px] leading-[22px] font-semibold text-white hover:bg-blue-700"
               >
                 {startLabel}
               </button>

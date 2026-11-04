@@ -5,11 +5,11 @@ import { LIST_PAGE_SIZE_OPTIONS } from '../lib/list-page-size';
 
 // ページ送りボタンの見た目（最初へ／前へ／次へ／最後へで共通）。ピル内の控えめなゴーストボタン。
 const PAGER_BUTTON =
-  'h-8 rounded-full px-3 text-[12.5px] text-gray-700 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-100';
+  'h-8 rounded-full px-3 text-[12px] leading-[18px] text-gray-700 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-100';
 // コンパクト版（StickyPagerBar の中）の ‹ › ボタン。丸い最小サイズで、件数テキストや
 // 最初へ／最後へは出さない（件数はツールバー側に出るため）。
 const PAGER_BUTTON_COMPACT =
-  'flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[14px] text-gray-700 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-100';
+  'flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[14px] leading-[22px] text-gray-700 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-100';
 
 type Props = {
   total: number;
@@ -58,9 +58,9 @@ export function Pagination({
 
   if (compact) {
     return (
-      <div className={`flex items-center gap-1 text-sm ${className}`}>
+      <div className={`flex items-center gap-1 text-[14px] leading-[22px] ${className}`}>
         {/* 総件数（他に件数表示のない一覧向け）。start-end は幅を抑えるため出さない。 */}
-        <span className="whitespace-nowrap px-0.5 text-[12px] tabular-nums text-gray-500">
+        <span className="whitespace-nowrap px-0.5 text-[12px] leading-[18px] tabular-nums text-gray-500">
           {total.toLocaleString('ja-JP')}{unitLabel}
         </span>
         <span aria-hidden="true" className="mx-0.5 h-4 w-px bg-gray-200/70" />
@@ -92,13 +92,13 @@ export function Pagination({
                 onChange={(e) => onPageSizeChange(Number(e.target.value))}
                 aria-label="1ページの件数"
                 title="表示件数（次に開いたときも同じ件数で表示します）"
-                className="appearance-none rounded-full bg-transparent py-1 pl-1 pr-3.5 text-[12.5px] text-gray-700 focus:outline-none"
+                className="appearance-none rounded-full bg-transparent py-1 pl-1 pr-3.5 text-[12px] leading-[18px] text-gray-700 focus:outline-none"
               >
                 {pageSizeOptions.map((opt) => (
                   <option key={opt} value={opt}>{opt}{unitLabel}</option>
                 ))}
               </select>
-              <span aria-hidden="true" className="pointer-events-none absolute right-0 text-[9px] text-gray-400">⏷</span>
+              <span aria-hidden="true" className="pointer-events-none absolute right-0 text-[11px] leading-[16px] text-gray-400">⏷</span>
             </div>
           </>
         )}
@@ -107,8 +107,8 @@ export function Pagination({
   }
 
   return (
-    <div className={`flex flex-wrap items-center gap-2 text-sm ${className}`}>
-      <div className="whitespace-nowrap text-[12px] text-gray-600">
+    <div className={`flex flex-wrap items-center gap-2 text-[14px] leading-[22px] ${className}`}>
+      <div className="whitespace-nowrap text-[12px] leading-[18px] text-gray-600">
         {total === 0 ? `0${unitLabel}` : `${total}${unitLabel}中 ${start}-${end}${unitLabel}を表示`}
       </div>
       {/* 狭い画面では折り返す（ボタンを隠すと端まで飛べなくなるため、数を減らさず折り返しで逃がす）。 */}
@@ -143,7 +143,7 @@ export function Pagination({
             onChange={(e) => onPageSizeChange(Number(e.target.value))}
             aria-label="表示件数"
             title="表示件数（次に開いたときも同じ件数で表示します）"
-            className="ml-1 h-8 rounded-full border border-gray-200/80 bg-white/70 px-2 text-[12.5px] text-gray-700"
+            className="ml-1 h-8 rounded-full border border-gray-200/80 bg-white/70 px-2 text-[12px] leading-[18px] text-gray-700"
           >
             {pageSizeOptions.map((opt) => (
               <option key={opt} value={opt}>{opt}/ページ</option>

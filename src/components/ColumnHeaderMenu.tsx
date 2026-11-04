@@ -93,7 +93,7 @@ function ColumnSortArrow({ dir, label }: { dir: ColumnSortDir | null; label: str
   if (!dir) {
     return (
       <span
-        className="text-[10px] leading-none text-gray-300 opacity-0 transition-opacity group-hover/ch:opacity-100"
+        className="text-[11px] leading-none text-gray-300 opacity-0 transition-opacity group-hover/ch:opacity-100"
         aria-hidden
       >
         ↕
@@ -101,7 +101,7 @@ function ColumnSortArrow({ dir, label }: { dir: ColumnSortDir | null; label: str
     );
   }
   return (
-    <span className="text-[11px] font-bold leading-none text-[var(--sb-accent-bg)]" title={label ?? undefined} aria-hidden>
+    <span className="text-[11px] font-semibold leading-none text-[var(--sb-accent-bg)]" title={label ?? undefined} aria-hidden>
       {dir === 'asc' ? '↑' : '↓'}
     </span>
   );
@@ -228,17 +228,17 @@ export function ColumnHeaderCell({
 
 const MENU_ITEM_CLASS =
   'flex w-full items-center gap-2 px-3 py-1.5 text-left text-[13px] leading-5 text-gray-700 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none disabled:cursor-not-allowed disabled:text-gray-300 disabled:hover:bg-transparent';
-const MENU_SECTION_CLASS = 'px-3 pb-0.5 pt-1.5 text-[11px] font-semibold text-gray-400';
+const MENU_SECTION_CLASS = 'px-3 pb-0.5 pt-1.5 text-[11px] leading-[16px] font-semibold text-gray-400';
 const MENU_SEPARATOR_CLASS = 'my-1 border-t border-gray-100';
 const FIELD_CLASS =
-  'h-8 w-full min-w-0 rounded-md border border-gray-300 bg-white px-2 text-[13px] text-gray-700 placeholder:text-gray-400 focus:border-[var(--sb-accent-bg)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-ring)] disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-400';
+  'h-8 w-full min-w-0 rounded-md border border-gray-300 bg-white px-2 text-[13px] leading-[20px] text-gray-700 placeholder:text-gray-400 focus:border-[var(--sb-accent-bg)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-ring)] disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-400';
 const APPLY_BUTTON_CLASS =
-  'inline-flex h-7 items-center rounded-md bg-[var(--sb-accent-bg)] px-2.5 text-[12px] font-semibold text-[var(--accent-on)] hover:bg-[var(--accent-hover)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-ring)] disabled:cursor-not-allowed disabled:opacity-40';
+  'inline-flex h-7 items-center rounded-md bg-[var(--sb-accent-bg)] px-2.5 text-[12px] leading-[18px] font-semibold text-[var(--accent-on)] hover:bg-[var(--accent-hover)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-ring)] disabled:cursor-not-allowed disabled:opacity-40';
 
 /** チェック位置を揃えるための ✓ 枠（未選択でも幅を取る）。 */
 function MenuCheck({ checked }: { checked: boolean }) {
   return (
-    <span className={`w-3 shrink-0 text-center text-[11px] ${checked ? 'text-[var(--sb-accent-bg)]' : 'text-transparent'}`} aria-hidden>
+    <span className={`w-3 shrink-0 text-center text-[11px] leading-[16px] ${checked ? 'text-[var(--sb-accent-bg)]' : 'text-transparent'}`} aria-hidden>
       ✓
     </span>
   );
@@ -467,11 +467,11 @@ function ColumnHeaderMenuPanel({
         <>
           {separator()}
           <button type="button" role="menuitem" className={MENU_ITEM_CLASS} disabled={!move.onMoveLeft} onClick={move.onMoveLeft ? run(move.onMoveLeft) : undefined}>
-            <span className="w-3 shrink-0 text-center text-[11px] text-gray-400" aria-hidden>←</span>
+            <span className="w-3 shrink-0 text-center text-[11px] leading-[16px] text-gray-400" aria-hidden>←</span>
             <span className="truncate">左へ移動</span>
           </button>
           <button type="button" role="menuitem" className={MENU_ITEM_CLASS} disabled={!move.onMoveRight} onClick={move.onMoveRight ? run(move.onMoveRight) : undefined}>
-            <span className="w-3 shrink-0 text-center text-[11px] text-gray-400" aria-hidden>→</span>
+            <span className="w-3 shrink-0 text-center text-[11px] leading-[16px] text-gray-400" aria-hidden>→</span>
             <span className="truncate">右へ移動</span>
           </button>
         </>
@@ -569,7 +569,7 @@ function NumberRangeFilterField({ filter, onClose }: { filter: ColumnNumberRange
   };
   const field = (value: string, set: (v: string) => void, placeholder: string) => (
     <span className="flex min-w-0 flex-1 items-center gap-1">
-      {unit && prefix && <span className="text-[12px] text-gray-500">{unit}</span>}
+      {unit && prefix && <span className="text-[12px] leading-[18px] text-gray-500">{unit}</span>}
       <input
         inputMode={filter.allowDecimal ? 'decimal' : 'numeric'}
         value={value}
@@ -578,18 +578,18 @@ function NumberRangeFilterField({ filter, onClose }: { filter: ColumnNumberRange
         aria-label={`${filter.label ?? ''}${placeholder}`}
         className={`${FIELD_CLASS} text-right tabular-nums`}
       />
-      {unit && !prefix && <span className="text-[12px] text-gray-500">{unit}</span>}
+      {unit && !prefix && <span className="text-[12px] leading-[18px] text-gray-500">{unit}</span>}
     </span>
   );
   return (
     <form onSubmit={submit} className="px-3 py-1">
       <div className="flex items-center gap-1.5">
         {field(min, setMin, '下限')}
-        <span className="text-[11px] text-gray-400">〜</span>
+        <span className="text-[11px] leading-[16px] text-gray-400">〜</span>
         {field(max, setMax, '上限')}
       </div>
       <div className="mt-1.5 flex items-center justify-between gap-2">
-        <span className="text-[11px] text-red-600" role={error ? 'alert' : undefined}>{error ?? ''}</span>
+        <span className="text-[11px] leading-[16px] text-red-600" role={error ? 'alert' : undefined}>{error ?? ''}</span>
         <button type="submit" className={APPLY_BUTTON_CLASS} disabled={Boolean(error) || unchanged}>適用</button>
       </div>
     </form>
@@ -611,11 +611,11 @@ function DateRangeFilterField({ filter, onClose }: { filter: ColumnDateRangeFilt
     <form onSubmit={submit} className="px-3 py-1">
       <div className="flex items-center gap-1.5">
         <input type="date" value={from} max={to || undefined} onChange={(event) => setFrom(event.target.value)} aria-label={`${filter.label ?? ''}開始日`} className={FIELD_CLASS} />
-        <span className="text-[11px] text-gray-400">〜</span>
+        <span className="text-[11px] leading-[16px] text-gray-400">〜</span>
         <input type="date" value={to} min={from || undefined} onChange={(event) => setTo(event.target.value)} aria-label={`${filter.label ?? ''}終了日`} className={FIELD_CLASS} />
       </div>
       <div className="mt-1.5 flex items-center justify-between gap-2">
-        <span className="text-[11px] text-red-600" role={error ? 'alert' : undefined}>{error ?? ''}</span>
+        <span className="text-[11px] leading-[16px] text-red-600" role={error ? 'alert' : undefined}>{error ?? ''}</span>
         <button type="submit" className={APPLY_BUTTON_CLASS} disabled={Boolean(error) || unchanged}>適用</button>
       </div>
     </form>
@@ -669,7 +669,7 @@ function EnumFilterField({ filter, onClose }: { filter: ColumnEnumFilterSpec; on
             }}
           >
             <span
-              className={`flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-sm border text-[9px] leading-none ${
+              className={`flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-sm border text-[11px] leading-none ${
                 checked ? 'border-[var(--sb-accent-bg)] bg-[var(--sb-accent-bg)] text-[var(--accent-on)]' : 'border-gray-300 text-transparent'
               }`}
               aria-hidden

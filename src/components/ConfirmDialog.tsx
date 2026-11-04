@@ -69,7 +69,7 @@ export function ConfirmDialog({
             data-autofocus
             onClick={onClose}
             disabled={busy}
-            className="rounded-lg border border-gray-300 bg-white px-3.5 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:opacity-50"
+            className="rounded-lg border border-gray-300 bg-white px-3.5 py-2 text-[14px] leading-[22px] font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:opacity-50"
           >
             {cancelLabel}
           </button>
@@ -77,7 +77,7 @@ export function ConfirmDialog({
             type="button"
             onClick={onConfirm}
             disabled={busy}
-            className={`inline-flex items-center gap-2 rounded-lg px-3.5 py-2 text-sm font-medium text-white transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${TONE_CONFIRM_BUTTON[tone]}`}
+            className={`inline-flex items-center gap-2 rounded-lg px-3.5 py-2 text-[14px] leading-[22px] font-medium text-white transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${TONE_CONFIRM_BUTTON[tone]}`}
           >
             {busy && <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/40 border-t-white" aria-hidden="true" />}
             {confirmLabel}
@@ -96,11 +96,11 @@ export function ConfirmDialog({
           </svg>
         </span>
         <div className="min-w-0 flex-1">
-          <h2 className="text-sm font-semibold text-slate-900">{title}</h2>
+          <h2 className="text-[14px] leading-[22px] font-semibold text-slate-900">{title}</h2>
           {lines.length > 0 && (
             <ul className="mt-2 space-y-1.5">
               {lines.map((line) => (
-                <li key={line} className="text-xs leading-5 text-slate-600">{line}</li>
+                <li key={line} className="text-[12px] leading-5 text-slate-600">{line}</li>
               ))}
             </ul>
           )}

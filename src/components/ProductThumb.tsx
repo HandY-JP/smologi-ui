@@ -176,7 +176,7 @@ export function ProductThumb({
             className="max-h-[90vh] max-w-[90vw] object-contain rounded shadow-2xl bg-white"
           />
           {alt && (
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 max-w-[80vw] text-center text-xs text-white/80 bg-black/40 rounded-full px-3 py-1 truncate">
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 max-w-[80vw] text-center text-[12px] leading-[18px] text-white/80 bg-black/40 rounded-full px-3 py-1 truncate">
               {alt}
             </div>
           )}

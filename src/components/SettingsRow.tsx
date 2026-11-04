@@ -28,7 +28,7 @@ export function SettingsRow({
     <div className="grid gap-1.5 sm:grid-cols-[200px_minmax(0,1fr)] sm:items-start sm:gap-4">
       <div className="pt-1.5">
         {label && (
-          <label htmlFor={htmlFor} className="block text-sm font-medium text-gray-700">
+          <label htmlFor={htmlFor} className="block text-[14px] leading-[22px] font-medium text-gray-700">
             {label}
           </label>
         )}
@@ -41,14 +41,14 @@ export function SettingsRow({
 
 /** 設定共通の入力欄クラス（幅は呼び出し側で決める）。 */
 export const SETTINGS_INPUT_CLASS =
-  'w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 '
+  'w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-[14px] leading-[22px] text-gray-900 '
   + 'placeholder:text-gray-400 focus:border-[var(--sb-accent-bg)] focus:outline-none '
   + 'focus:ring-1 focus:ring-[var(--sb-accent-bg)] disabled:bg-gray-50 disabled:text-gray-400';
 
 /** 区画の中の副次ボタン（ゴースト）。主操作の塗りは道具バーの「保存」だけ。 */
 export const SETTINGS_GHOST_BUTTON_CLASS =
   'inline-flex h-8 items-center gap-1.5 rounded-md border border-gray-300 bg-white px-3 '
-  + 'text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 '
+  + 'text-[14px] leading-[22px] font-medium text-gray-700 transition-colors hover:bg-gray-50 '
   + 'disabled:cursor-not-allowed disabled:opacity-50';
 
 /** ON/OFF のトグル（設定モード共通）。 */

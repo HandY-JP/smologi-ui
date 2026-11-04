@@ -57,16 +57,16 @@ export function DashboardStarter({
   return (
     <section aria-label={title} className={`flex flex-col items-center gap-3.5 px-5 py-9 text-center ${className}`}>
       <div className={`grid h-14 w-14 place-items-center rounded-2xl ${iconClassName}`}>{icon}</div>
-      <h3 className="text-xl font-semibold [text-wrap:balance]">{title}</h3>
-      <p className="max-w-[34em] text-sm leading-relaxed opacity-70">{description}</p>
+      <h3 className="text-[22px] leading-[30px] font-semibold [text-wrap:balance]">{title}</h3>
+      <p className="max-w-[34em] text-[14px] leading-relaxed opacity-70">{description}</p>
       <div className="flex flex-wrap justify-center gap-2.5">
-        <button type="button" disabled={busy} onClick={onRecommend} className={`px-5 py-3 text-[15px] ${primaryClassName}`}>{recommendLabel}</button>
-        <button type="button" disabled={busy} onClick={onPick} className={`px-5 py-3 text-[15px] ${secondaryClassName}`}>{pickLabel}</button>
+        <button type="button" disabled={busy} onClick={onRecommend} className={`px-5 py-3 text-[15px] leading-[22px] ${primaryClassName}`}>{recommendLabel}</button>
+        <button type="button" disabled={busy} onClick={onPick} className={`px-5 py-3 text-[15px] leading-[22px] ${secondaryClassName}`}>{pickLabel}</button>
       </div>
       {recommendedTitles.length > 0 ? (
         <ul className="flex flex-wrap justify-center gap-1.5" aria-label="おすすめの内容">
           {recommendedTitles.map((t) => (
-            <li key={t} className={`rounded-full px-2.5 py-0.5 text-xs ${chipClassName}`}>{t}</li>
+            <li key={t} className={`rounded-full px-2.5 py-0.5 text-[12px] leading-[18px] ${chipClassName}`}>{t}</li>
           ))}
         </ul>
       ) : null}

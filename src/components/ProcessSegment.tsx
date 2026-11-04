@@ -112,7 +112,7 @@ export function FilterChipRow({ chips }: { chips: FilterChipItem[] }) {
         <svg className="h-3.5 w-3.5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 4.5h16.5l-6.6 7.7v4.55l-3.3 1.65v-6.2L3.75 4.5z" />
         </svg>
-        <span className="text-xs text-gray-500">絞り込み</span>
+        <span className="text-[12px] leading-[18px] text-gray-500">絞り込み</span>
       </span>
       {/* 表示側: nowrap（折り返さない）。計測結果で絞り込んだ配列だけを描画する。
           溢れ計算の基準（利用できる幅）は、行頭ラベルと「すべて解除」を除いた**この箱**の幅。 */}
@@ -130,7 +130,7 @@ export function FilterChipRow({ chips }: { chips: FilterChipItem[] }) {
         <button
           type="button"
           onClick={() => { for (const c of chips) c.onRemove?.(); }}
-          className="shrink-0 text-xs text-gray-500 underline-offset-2 hover:text-gray-700 hover:underline"
+          className="shrink-0 text-[12px] leading-[18px] text-gray-500 underline-offset-2 hover:text-gray-700 hover:underline"
         >
           すべて解除
         </button>

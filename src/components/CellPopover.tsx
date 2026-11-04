@@ -197,7 +197,7 @@ export function CellPopover({
           onClick={(event) => event.stopPropagation()}
           onDoubleClick={(event) => event.stopPropagation()}
         >
-          <p className="mb-2 text-[11px] font-semibold tracking-wide text-gray-500">{panelLabel}</p>
+          <p className="mb-2 text-[11px] leading-[16px] font-semibold tracking-wide text-gray-500">{panelLabel}</p>
           {panel}
         </div>,
         document.body,

@@ -37,7 +37,7 @@ export function PeriodProgress({
           style={{ width: `${pct}%` }}
         />
       </div>
-      {showLabel && <span className="flex-shrink-0 text-[11px] text-gray-500">{s.label}</span>}
+      {showLabel && <span className="flex-shrink-0 text-[11px] leading-[16px] text-gray-500">{s.label}</span>}
     </div>
   );
 }

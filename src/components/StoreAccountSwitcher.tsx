@@ -70,7 +70,7 @@ const FIELD_BASE =
   'group flex h-10 w-full items-center gap-2 rounded-md px-2.5 text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--sb-text)]';
 
 const ROW_BASE =
-  'flex w-full items-center gap-2 px-3 py-2 text-left text-sm transition-colors hover:bg-[var(--sb-popover-hover,var(--sb-popover-current-bg,var(--accent-subtle)))] focus-visible:bg-[var(--sb-popover-hover,var(--sb-popover-current-bg,var(--accent-subtle)))] focus-visible:outline-none disabled:cursor-default disabled:opacity-50';
+  'flex w-full items-center gap-2 px-3 py-2 text-left text-[14px] leading-[22px] transition-colors hover:bg-[var(--sb-popover-hover,var(--sb-popover-current-bg,var(--accent-subtle)))] focus-visible:bg-[var(--sb-popover-hover,var(--sb-popover-current-bg,var(--accent-subtle)))] focus-visible:outline-none disabled:cursor-default disabled:opacity-50';
 
 function Chevron({ open }: { open: boolean }) {
   return (
@@ -166,7 +166,7 @@ export function StoreAccountSwitcher({
           title: currentLabel,
           className: `${FIELD_BASE} border border-orange-200 bg-orange-50 hover:bg-orange-100`,
           children: (
-            <span className="min-w-0 flex-1 truncate text-sm font-semibold text-orange-800">{currentLabel}</span>
+            <span className="min-w-0 flex-1 truncate text-[14px] leading-[22px] font-semibold text-orange-800">{currentLabel}</span>
           ),
         })}
         {emptyHint && (
@@ -186,14 +186,14 @@ export function StoreAccountSwitcher({
             {item.label}
           </span>
           {item.sub && (
-            <span className="block truncate text-[11px]" style={{ color: 'var(--sb-popover-muted, var(--sb-label))' }}>
+            <span className="block truncate text-[11px] leading-[16px]" style={{ color: 'var(--sb-popover-muted, var(--sb-label))' }}>
               {item.sub}
             </span>
           )}
         </span>
         {item.badge && (
           <span
-            className="flex-shrink-0 rounded px-1.5 py-0.5 text-[10px] font-semibold leading-none"
+            className="flex-shrink-0 rounded px-1.5 py-0.5 text-[11px] font-semibold leading-none"
             style={{ backgroundColor: 'var(--sb-hover)', color: 'var(--sb-popover-muted, var(--sb-label))' }}
           >
             {item.badge}
@@ -201,7 +201,7 @@ export function StoreAccountSwitcher({
         )}
         {item.checked && (
           <span
-            className="flex-shrink-0 text-xs font-semibold"
+            className="flex-shrink-0 text-[12px] leading-[18px] font-semibold"
             style={{ color: 'var(--sb-popover-current-ink, var(--sb-accent-bg))' }}
           >
             <span aria-hidden="true">✓ </span>今の画面
@@ -270,7 +270,7 @@ export function StoreAccountSwitcher({
         className={`${FIELD_BASE} border hover:bg-[var(--sb-field-hover,var(--sb-hover))]`}
         style={{ ...fieldStyle, color: 'var(--sb-text)' }}
       >
-        <span className="min-w-0 flex-1 truncate text-sm font-semibold">{currentLabel}</span>
+        <span className="min-w-0 flex-1 truncate text-[14px] leading-[22px] font-semibold">{currentLabel}</span>
         <Chevron open={open} />
       </button>
 
@@ -285,7 +285,7 @@ export function StoreAccountSwitcher({
           {statusText ? (
             <div
               role="status"
-              className="px-3 py-2 text-xs"
+              className="px-3 py-2 text-[12px] leading-[18px]"
               style={{ color: 'var(--sb-popover-muted, var(--sb-label))' }}
             >
               {statusText}
@@ -295,7 +295,7 @@ export function StoreAccountSwitcher({
               <div key={group.id} role="group" aria-label={group.heading}>
                 {group.heading && (
                   <div
-                    className="px-3 pb-0.5 pt-2 text-[11px] font-semibold"
+                    className="px-3 pb-0.5 pt-2 text-[11px] leading-[16px] font-semibold"
                     style={{ color: 'var(--sb-popover-muted, var(--sb-label))' }}
                   >
                     {group.heading}

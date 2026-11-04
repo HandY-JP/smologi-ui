@@ -407,12 +407,12 @@ export function TopbarSearchDock({
               runSearch();
             }}
             placeholder={placeholder}
-            className="h-full min-w-0 flex-1 border-0 bg-transparent pr-2 text-sm text-gray-900 outline-none placeholder:text-gray-400"
+            className="h-full min-w-0 flex-1 border-0 bg-transparent pr-2 text-[14px] leading-[22px] text-gray-900 outline-none placeholder:text-gray-400"
           />
           {slashKeycap && (
             <kbd
               aria-hidden="true"
-              className="mr-1.5 flex h-[18px] w-5 shrink-0 items-center justify-center rounded border border-gray-300 text-[11px] font-medium text-gray-400 group-focus-within:hidden"
+              className="mr-1.5 flex h-[18px] w-5 shrink-0 items-center justify-center rounded border border-gray-300 text-[11px] leading-[16px] font-medium text-gray-400 group-focus-within:hidden"
             >
               /
             </kbd>

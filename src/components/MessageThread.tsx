@@ -36,7 +36,7 @@ export function MessageThread({
   empty?: ReactNode;
 }) {
   if (messages.length === 0) {
-    return <div className={`p-6 text-center text-sm text-gray-400 ${className}`}>{empty ?? 'やり取りはまだありません。'}</div>;
+    return <div className={`p-6 text-center text-[14px] leading-[22px] text-gray-400 ${className}`}>{empty ?? 'やり取りはまだありません。'}</div>;
   }
   let prevDay = '';
   return (
@@ -49,10 +49,10 @@ export function MessageThread({
         const out = m.direction === 'out';
         return (
           <div key={m.id} className="contents">
-            {showDay && d && <div className="self-center text-[11px] text-gray-400">{dayLabel(d)}</div>}
+            {showDay && d && <div className="self-center text-[11px] leading-[16px] text-gray-400">{dayLabel(d)}</div>}
             <div className={`flex max-w-[86%] flex-col gap-1 md:max-w-[76%] ${out ? 'items-end self-end' : 'items-start self-start'}`}>
               <div
-                className={`whitespace-pre-wrap break-words px-3.5 py-2.5 text-[13.5px] leading-relaxed text-gray-900 ${
+                className={`whitespace-pre-wrap break-words px-3.5 py-2.5 text-[13px] leading-relaxed text-gray-900 ${
                   out
                     ? 'rounded-2xl rounded-tr bg-[var(--accent-subtle)]'
                     : 'rounded-2xl rounded-tl bg-gray-100'
@@ -61,7 +61,7 @@ export function MessageThread({
                 {m.body}
               </div>
               {(m.sender || d) && (
-                <span className="text-[11px] text-gray-400">
+                <span className="text-[11px] leading-[16px] text-gray-400">
                   {m.sender}
                   {m.sender && d ? ' ・ ' : ''}
                   {d ? timeLabel(d) : ''}

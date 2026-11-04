@@ -138,6 +138,64 @@ git push origin v0.1.1
 > 差し替える方式なので、生の gray ユーティリティを暗転させる互換層を重ねると二重反転になる
 > （代わりに、部品が使う素の `bg-white` だけを b2b の globals.css が売り手スコープで受ける）。
 
+### 文字（書体・サイズ・太さ）（v0.17.0）
+
+書体 1 つ・サイズ 8 段・太さ 3 段に揃える。アプリごとに `text-[13.5px]` や `font-bold` を足さない。
+
+| 段 | px / 行の高さ | 用途 |
+|---|---|---|
+| `meta` | 11 / 16 | バッジ・タグ・小さな注記 |
+| `note` | 12 / 18 | 注釈・ヘルプ文・表の補助行 |
+| `label` | 13 / 20 | 項目名・表の見出し・フォームのラベル |
+| `body` | 14 / 22 | 本文・表のセル・入力欄 |
+| `item` | 15 / 22 | 一覧の主役（商品名・コード）・サイドバー項目 |
+| `title` | 18 / 26 | カード・モーダルの見出し |
+| `heading` | 22 / 30 | ページの見出し |
+| `figure` | 28 / 36 | ダッシュボードの大きな数字 |
+
+太さは `normal`（400）・`medium`（500）・`strong`（600）の 3 つだけ。`font-bold` 以上は使わない（強調は `strong`）。
+
+**書体**（`tokens/typography.css`。`globals.css` で 1 回読む）
+
+```css
+@import '@handy-jp/smologi-ui/tokens/typography.css';
+```
+
+`--sm-font-sans`（Hiragino → Noto Sans JP → Yu Gothic の順）・`--sm-font-mono`・`--sm-text-<段>` / `--sm-leading-<段>`・`--sm-weight-*` を定義し、`html, body` に `font-family: var(--sm-font-sans)` を当てる。コード類は等幅にせず、本文の書体に `tabular-nums`（`NUM_CLASS`）で桁をそろえる。
+
+**クラス**（`TEXT` / `WEIGHT`。Tailwind の任意値なので preset が無いアプリでも効く）
+
+```tsx
+import { TEXT, WEIGHT, NUM_CLASS } from '@handy-jp/smologi-ui';
+
+<h2 className={`${TEXT.title} ${WEIGHT.strong}`}>…</h2>
+<span className={`${TEXT.body} ${NUM_CLASS}`}>1,234</span>
+```
+
+クラス文字列はリテラルのまま（`text-[14px] leading-[22px]` の形）残る。アプリの Tailwind `content` にこのパッケージの `dist` が入っていれば拾われる。
+
+**Tailwind の設定ファイルがあるアプリ**は preset も使える（`text-body` `text-title` `font-sans` `font-mono`。既存の `text-sm` などは消えないので併用できる）。
+
+```js
+// tailwind.config.js（Tailwind v3）
+module.exports = { presets: [require('@handy-jp/smologi-ui/tailwind-preset')] };
+```
+
+**既存コードの寄せ方**（コードモッド・点検用の対応表）: `TYPE_SIZE_MAP`（旧 px → 段、`typeStepForPx(13.5)` → `'label'`、Tailwind 名は `typeStepForTailwind('sm')` → `'body'`）と `WEIGHT_MAP`（`font-bold` → `strong` など）。
+
+- 7〜11.5px → meta / 12〜12.5 → note / 13〜13.5 → label / 14〜14.5 → body / 15〜16 → item / 17〜19 → title / 20〜27 → heading / 28 以上 → figure
+- `text-xs`→note / `text-sm`→body / `text-base`→item / `text-lg`→title / `text-xl`・`2xl`→heading / `text-3xl` 以上→figure
+- `font-light`・`normal`→normal / `font-medium`→medium / `font-semibold`・`bold`・`extrabold`・`black`→strong
+
+**点検**（どのアプリからでも）
+
+```bash
+npx smologi-check-typography                    # 既定は src/**/*.{ts,tsx}。外れた指定があれば exit 1
+npx smologi-check-typography "app/**/*.tsx" --report   # 件数だけ見る（exit 0）
+```
+
+`text-[Npx]`（8 段の値以外）・`text-xs`〜`text-4xl`・`font-bold/extrabold/black/light/thin` を探す。どうしても段に収まらない箇所は、その行に `// 独自サイズ: 理由` と書くと対象外になる。このパッケージでは `npm run build` の前に自動で走る。
+
 ### ガラスのクラスとトークン（v0.5.0）
 
 Web Seller の「質のいいガラス」を全アプリへ一本化する（2026-10-24 ユーザー決定）。既存クラス名は変えていない。

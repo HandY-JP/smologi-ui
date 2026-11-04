@@ -48,16 +48,16 @@ export function ReplyComposer({
         placeholder={placeholder}
         disabled={busy}
         onChange={(e) => onChange(e.target.value)}
-        className="min-h-[84px] w-full resize-y rounded-md border-0 bg-transparent p-0 text-[13.5px] text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-0 disabled:opacity-60"
+        className="min-h-[84px] w-full resize-y rounded-md border-0 bg-transparent p-0 text-[13px] leading-[20px] text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-0 disabled:opacity-60"
       />
       <div className="flex items-center justify-between gap-3">
-        <div className="min-w-0 flex-1 text-xs text-gray-500">{footer}</div>
+        <div className="min-w-0 flex-1 text-[12px] leading-[18px] text-gray-500">{footer}</div>
         <button
           type="button"
           onClick={onSend}
           disabled={busy || disabled}
           aria-busy={busy}
-          className="inline-flex h-8 flex-shrink-0 items-center rounded-full bg-[var(--sb-accent-bg)] px-4 text-sm font-semibold text-[var(--accent-on)] transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline-flex h-8 flex-shrink-0 items-center rounded-full bg-[var(--sb-accent-bg)] px-4 text-[14px] leading-[22px] font-semibold text-[var(--accent-on)] transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {busy ? '送信中…' : label}
         </button>

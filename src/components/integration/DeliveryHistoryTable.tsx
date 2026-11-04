@@ -49,17 +49,17 @@ export function DeliveryHistoryTable({
           失敗だけ{failCount > 0 ? `（${failCount}）` : ''}
         </button>
         {failCount > 0 && onResendAll && (
-          <button type="button" onClick={onResendAll} className={`${SETTINGS_GHOST_BUTTON_CLASS} ml-auto !h-7 !px-2.5 !text-xs`}>
+          <button type="button" onClick={onResendAll} className={`${SETTINGS_GHOST_BUTTON_CLASS} ml-auto !h-7 !px-2.5 !text-[12px] leading-[18px]`}>
             失敗をまとめて再送
           </button>
         )}
       </div>
       <div className="sb-int-table-wrap overflow-x-auto rounded-[10px]">
-        <table className="w-full min-w-[620px] border-collapse text-[13px]">
+        <table className="w-full min-w-[620px] border-collapse text-[13px] leading-[20px]">
           <thead>
             <tr>
               {HEADS.map((h) => (
-                <th key={h} scope="col" className="sb-int-th px-3 py-2 text-left text-xs font-medium">{h}</th>
+                <th key={h} scope="col" className="sb-int-th px-3 py-2 text-left text-[12px] leading-[18px] font-medium">{h}</th>
               ))}
               <th className="sb-int-th w-px px-3 py-2"><span className="sr-only">操作</span></th>
             </tr>
@@ -76,7 +76,7 @@ export function DeliveryHistoryTable({
                 <td className="sb-int-td px-3 py-2 align-top">{r.destination}</td>
                 <td className="sb-int-td px-3 py-2 align-top">
                   <TonePill tone={r.result === 'ok' ? 'ok' : r.result === 'bad' ? 'bad' : 'warn'}>{r.resultLabel}</TonePill>
-                  {r.error && <div className="sb-int-bad-text mt-1 text-xs">{r.error}</div>}
+                  {r.error && <div className="sb-int-bad-text mt-1 text-[12px] leading-[18px]">{r.error}</div>}
                 </td>
                 <td className="sb-int-td px-3 py-2 align-top">
                   {r.result === 'bad' && onResend && (
@@ -84,7 +84,7 @@ export function DeliveryHistoryTable({
                       type="button"
                       disabled={resendingIds.includes(r.id)}
                       onClick={() => onResend(r.id)}
-                      className={`${SETTINGS_GHOST_BUTTON_CLASS} !h-7 !px-2.5 !text-xs`}
+                      className={`${SETTINGS_GHOST_BUTTON_CLASS} !h-7 !px-2.5 !text-[12px] leading-[18px]`}
                     >
                       再送
                     </button>

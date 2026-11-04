@@ -85,7 +85,7 @@ export function DashboardAppRow({
           </Tooltip>
         );
       })}
-      {loading && <span className="self-center text-xs text-ink-muted" role="status">{loadingText}</span>}
+      {loading && <span className="self-center text-[12px] leading-[18px] text-ink-muted" role="status">{loadingText}</span>}
     </nav>
   );
 }

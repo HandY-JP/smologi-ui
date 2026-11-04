@@ -53,14 +53,14 @@ export function SplitInbox({
           <button
             type="button"
             onClick={onBack}
-            className="inline-flex h-8 items-center gap-1 rounded-md px-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
+            className="inline-flex h-8 items-center gap-1 rounded-md px-2 text-[14px] leading-[22px] font-medium text-gray-700 hover:bg-gray-100"
           >
             <span aria-hidden>‹</span>
             {backLabel}
           </button>
         </div>
         <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
-          {selected ? detail : emptyDetail ?? <div className="p-8 text-center text-sm text-gray-400">左の一覧から選んでください。</div>}
+          {selected ? detail : emptyDetail ?? <div className="p-8 text-center text-[14px] leading-[22px] text-gray-400">左の一覧から選んでください。</div>}
         </div>
       </section>
       {aside && (

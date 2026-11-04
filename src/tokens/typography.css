@@ -1,0 +1,36 @@
+/* @handy/smologi-ui — 文字トークン（書体・サイズ 8 段・太さ 3 段）v0.17.0
+ *
+ * 使い方: アプリのグローバル CSS から 1 回だけ読む。
+ *   @import '@handy-jp/smologi-ui/tokens/typography.css';
+ *
+ * 書体   --sm-font-sans / --sm-font-mono（html, body に sans を当てる。日本語は Hiragino → Noto → Yu の順）
+ * サイズ 8 段（px / 行の高さ）  変数は --sm-text-<名前> と --sm-leading-<名前>
+ *   meta 11/16  note 12/18  label 13/20  body 14/22  item 15/22  title 18/26  heading 22/30  figure 28/36
+ * 太さ   3 段  normal 400 / medium 500 / strong 600（bold 以上は使わない）
+ *
+ * Tailwind のクラスは src/lib/typography.ts の TEXT / WEIGHT（任意値クラス。preset なしでも効く）。
+ * 色トークン（palette.css）とは独立。テーマで書体は変わらない。
+ */
+
+:root {
+  --sm-font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Yu Gothic UI', 'Yu Gothic', Meiryo, Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --sm-font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+
+  --sm-text-meta: 11px;     --sm-leading-meta: 16px;
+  --sm-text-note: 12px;     --sm-leading-note: 18px;
+  --sm-text-label: 13px;    --sm-leading-label: 20px;
+  --sm-text-body: 14px;     --sm-leading-body: 22px;
+  --sm-text-item: 15px;     --sm-leading-item: 22px;
+  --sm-text-title: 18px;    --sm-leading-title: 26px;
+  --sm-text-heading: 22px;  --sm-leading-heading: 30px;
+  --sm-text-figure: 28px;   --sm-leading-figure: 36px;
+
+  --sm-weight-normal: 400;
+  --sm-weight-medium: 500;
+  --sm-weight-strong: 600;
+}
+
+html,
+body {
+  font-family: var(--sm-font-sans);
+}

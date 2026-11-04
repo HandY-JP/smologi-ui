@@ -11,8 +11,8 @@ export function IntegrationLogo({ meta, size = 'lg' }: { meta: IntegrationProvid
   return (
     <span
       aria-hidden
-      className={`sb-int-logo grid flex-none place-items-center font-bold ${
-        size === 'lg' ? 'h-12 w-12 rounded-xl text-[15px]' : 'h-9 w-9 rounded-[9px] text-xs'
+      className={`sb-int-logo grid flex-none place-items-center font-semibold ${
+        size === 'lg' ? 'h-12 w-12 rounded-xl text-[15px] leading-[22px]' : 'h-9 w-9 rounded-[9px] text-[12px] leading-[18px]'
       }`}
       style={{ backgroundColor: `var(${meta.accentVar}, rgb(var(--accent, 37 99 235)))` }}
     >
@@ -39,11 +39,11 @@ export function IntegrationHeader({
     <header className="sb-int flex flex-wrap items-start gap-4">
       <IntegrationLogo meta={meta} />
       <div className="min-w-0 flex-1 basis-[220px]">
-        <h2 className="flex flex-wrap items-center gap-2.5 text-xl font-semibold">
+        <h2 className="flex flex-wrap items-center gap-2.5 text-[22px] leading-[30px] font-semibold">
           {meta.label}
           {statusLabel && <TonePill tone={PILL_TONE[statusTone]}>{statusLabel}</TonePill>}
         </h2>
-        {description && <p className="sb-int-muted mt-1 text-[13px]">{description}</p>}
+        {description && <p className="sb-int-muted mt-1 text-[13px] leading-[20px]">{description}</p>}
       </div>
       {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
     </header>

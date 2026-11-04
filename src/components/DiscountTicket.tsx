@@ -23,14 +23,14 @@ export function DiscountTicket({
   const notch = 'absolute top-1/2 h-2.5 w-2.5 -translate-y-1/2 rounded-full';
   return (
     <div
-      className={`relative flex h-[52px] w-[92px] flex-shrink-0 flex-col items-center justify-center rounded-[10px] font-bold leading-[1.1] ${
+      className={`relative flex h-[52px] w-[92px] flex-shrink-0 flex-col items-center justify-center rounded-[10px] font-semibold leading-[1.1] ${
         muted ? 'bg-gray-100 text-gray-400' : 'bg-[var(--accent-subtle)] text-[var(--sb-accent-bg)]'
       } ${className}`}
     >
       <span aria-hidden className={`${notch} -left-[5px]`} style={{ background: notchColor }} />
       <span aria-hidden className={`${notch} -right-[5px]`} style={{ background: notchColor }} />
-      <span className="text-[17px]">{big}</span>
-      {small && <span className="text-[10px] font-semibold opacity-85">{small}</span>}
+      <span className="text-[18px] leading-[26px]">{big}</span>
+      {small && <span className="text-[11px] leading-[16px] font-semibold opacity-85">{small}</span>}
     </div>
   );
 }

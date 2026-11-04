@@ -30,12 +30,12 @@ export function ProcessToggleList({
             )}
           </div>
           <div className="min-w-0 flex-1">
-            <div className="flex flex-wrap items-center gap-2 text-[13.5px] font-semibold">
+            <div className="flex flex-wrap items-center gap-2 text-[13px] leading-[20px] font-semibold">
               {it.label}
               {it.readOnly && <span className="sb-int-chip">{it.readOnlyText ?? '常に行います'}</span>}
-              {it.saving && <span className="sb-int-muted text-xs font-normal" aria-live="polite">保存中…</span>}
+              {it.saving && <span className="sb-int-muted text-[12px] leading-[18px] font-normal" aria-live="polite">保存中…</span>}
             </div>
-            {it.description && <div className="sb-int-muted text-xs">{it.description}</div>}
+            {it.description && <div className="sb-int-muted text-[12px] leading-[18px]">{it.description}</div>}
           </div>
         </li>
       ))}

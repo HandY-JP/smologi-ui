@@ -172,8 +172,8 @@ export function AppLauncherPopover({
     >
       {header != null && <div className="border-b px-5 py-4" style={{ borderColor: POPOVER_LINE }}>{header}</div>}
       <div className="max-h-[calc(100vh-9rem)] overflow-y-auto p-2">
-        {loading && <p className="px-3 py-5 text-sm" style={{ color: POPOVER_MUTED }}>{loadingText}</p>}
-        {failed && <p className="px-3 py-5 text-sm" style={{ color: POPOVER_MUTED }}>{failedText}</p>}
+        {loading && <p className="px-3 py-5 text-[14px] leading-[22px]" style={{ color: POPOVER_MUTED }}>{loadingText}</p>}
+        {failed && <p className="px-3 py-5 text-[14px] leading-[22px]" style={{ color: POPOVER_MUTED }}>{failedText}</p>}
         {apps.map((app) => {
           const icon = renderIcon
             ? renderIcon(app)
@@ -185,16 +185,16 @@ export function AppLauncherPopover({
             <>
               {icon}
               <span className="min-w-0 flex-1">
-                <span className="flex items-center text-sm font-semibold" style={{ color: POPOVER_INK }}>
+                <span className="flex items-center text-[14px] leading-[22px] font-semibold" style={{ color: POPOVER_INK }}>
                   <span className="truncate">{app.name}</span>
                   {renderNewDot?.(app)}
                 </span>
                 {app.description && (
-                  <span className="mt-0.5 block truncate text-xs" style={{ color: POPOVER_MUTED }}>{app.description}</span>
+                  <span className="mt-0.5 block truncate text-[12px] leading-[18px]" style={{ color: POPOVER_MUTED }}>{app.description}</span>
                 )}
               </span>
               {app.current ? (
-                <span className="text-[10px] font-medium" style={{ color: POPOVER_CURRENT_INK }}>{currentLabel}</span>
+                <span className="text-[11px] leading-[16px] font-medium" style={{ color: POPOVER_CURRENT_INK }}>{currentLabel}</span>
               ) : (app.external ?? true) ? (
                 <span style={{ color: POPOVER_MUTED }} aria-hidden="true">↗</span>
               ) : null}

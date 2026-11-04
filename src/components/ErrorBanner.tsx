@@ -11,9 +11,9 @@ import type { ReactNode } from 'react';
 export type ErrorBannerSize = 'sm' | 'md' | 'lg';
 
 const SIZE_CLASS: Record<ErrorBannerSize, string> = {
-  sm: 'px-3 py-2 text-xs',
-  md: 'px-3 py-2 text-sm',
-  lg: 'p-4 text-sm',
+  sm: 'px-3 py-2 text-[12px] leading-[18px]',
+  md: 'px-3 py-2 text-[14px] leading-[22px]',
+  lg: 'p-4 text-[14px] leading-[22px]',
 };
 
 export function ErrorBanner({

@@ -114,8 +114,8 @@ export function AddWidgetSheet({
   hint,
   confirmLabel = '追加する',
   cancelLabel = 'やめる',
-  footerButtonClassName = 'rounded-full border border-current px-4 py-2 text-sm font-medium',
-  footerPrimaryClassName = 'rounded-full bg-current px-4 py-2 text-sm font-medium',
+  footerButtonClassName = 'rounded-full border border-current px-4 py-2 text-[14px] leading-[22px] font-medium',
+  footerPrimaryClassName = 'rounded-full bg-current px-4 py-2 text-[14px] leading-[22px] font-medium',
   selectedClassName = 'ring-2 ring-current',
   footerClassName = '',
 }: AddWidgetSheetProps) {
@@ -173,9 +173,9 @@ export function AddWidgetSheet({
   const body = (
     <>
       {multiple ? (
-        <p className="mb-3 text-[13px] opacity-60">{hint ?? '押して選び、「追加する」で並べます。あとから「編集」でいつでも変えられます。'}</p>
+        <p className="mb-3 text-[13px] leading-[20px] opacity-60">{hint ?? '押して選び、「追加する」で並べます。あとから「編集」でいつでも変えられます。'}</p>
       ) : null}
-      {allAdded ? <p className="mb-3 text-[13px] opacity-60">すべてのウィジェットを表示中です。</p> : null}
+      {allAdded ? <p className="mb-3 text-[13px] leading-[20px] opacity-60">すべてのウィジェットを表示中です。</p> : null}
       {candidates.length > 0 ? (
         <div className={`grid gap-2.5 ${wide ? 'grid-cols-3' : 'grid-cols-[repeat(auto-fill,minmax(150px,1fr))]'}`}>
           {candidates.map((c) => {
@@ -198,11 +198,11 @@ export function AddWidgetSheet({
                 {/* 見本。Plus ロックのときだけ薄くする（追加済みは薄くしない）。 */}
                 <div className={locked ? 'opacity-50' : undefined}><PreviewArt kind={c.preview} /></div>
                 <div className={locked ? 'opacity-50' : undefined}>
-                  <b className="mb-1 flex items-start justify-between gap-2 text-sm">
+                  <b className="mb-1 flex items-start justify-between gap-2 text-[14px] leading-[22px]">
                     <span className="flex min-w-0 flex-1 flex-wrap items-center gap-x-1.5 gap-y-1">
                       <span className="min-w-0 break-words">{inert || multiple ? '' : '＋ '}{c.title}</span>
-                      {c.badge ? <span className="rounded-full border border-current px-1.5 py-px text-[10px] font-semibold leading-none opacity-70">{c.badge}</span> : null}
-                      {c.recommended && !c.disabled && !c.added ? <span className="rounded-full border border-current px-1.5 py-px text-[10px] font-semibold leading-none opacity-70">おすすめ</span> : null}
+                      {c.badge ? <span className="rounded-full border border-current px-1.5 py-px text-[11px] font-semibold leading-none opacity-70">{c.badge}</span> : null}
+                      {c.recommended && !c.disabled && !c.added ? <span className="rounded-full border border-current px-1.5 py-px text-[11px] font-semibold leading-none opacity-70">おすすめ</span> : null}
                     </span>
                     {c.added ? (
                       <span className="relative inline-flex shrink-0 items-center gap-1 overflow-hidden whitespace-nowrap rounded-full px-2 py-0.5 text-[11px] font-semibold leading-none">
@@ -212,7 +212,7 @@ export function AddWidgetSheet({
                       </span>
                     ) : null}
                   </b>
-                  {c.description ? <small className="text-xs leading-normal opacity-60">{c.description}</small> : null}
+                  {c.description ? <small className="text-[12px] leading-normal opacity-60">{c.description}</small> : null}
                 </div>
               </button>
             );
@@ -241,7 +241,7 @@ export function AddWidgetSheet({
           className={`fixed left-1/2 top-1/2 z-[41] flex h-[min(640px,80vh)] w-[min(768px,calc(100%-32px))] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden outline-none ${modalClassName}`}
         >
           <div className="flex shrink-0 items-center justify-between gap-3 px-5 pb-2 pt-4">
-            <h4 className="text-base font-semibold">{heading}</h4>
+            <h4 className="text-[15px] leading-[22px] font-semibold">{heading}</h4>
             <button type="button" onClick={onClose} aria-label="閉じる" className="rounded-full p-1.5 opacity-60 hover:opacity-100">
               <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden><path d="M3.5 3.5l9 9m0-9l-9 9" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" /></svg>
             </button>
@@ -259,7 +259,7 @@ export function AddWidgetSheet({
           className={`fixed bottom-0 left-1/2 z-[41] max-h-[70vh] w-[min(560px,100%)] -translate-x-1/2 overflow-auto outline-none px-4 pb-[calc(20px+env(safe-area-inset-bottom,0px))] pt-2.5 ${sheetClassName}`}
         >
           <div className="mx-auto mb-2.5 mt-1 h-[5px] w-10 rounded-[3px] bg-current opacity-20" />
-          <h4 className={`${multiple ? 'mb-1' : 'mb-2.5'} text-base font-semibold`}>{heading}</h4>
+          <h4 className={`${multiple ? 'mb-1' : 'mb-2.5'} text-[15px] leading-[22px] font-semibold`}>{heading}</h4>
           {body}
           {footer}
         </div>

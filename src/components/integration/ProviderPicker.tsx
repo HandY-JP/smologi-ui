@@ -30,7 +30,7 @@ export function ProviderPicker({
             <IntegrationLogo meta={meta} size="sm" />
             <span className="min-w-0 flex-1">
               <span className="block font-semibold">{meta.label}</span>
-              {description && <span className="sb-int-muted block text-xs">{description}</span>}
+              {description && <span className="sb-int-muted block text-[12px] leading-[18px]">{description}</span>}
             </span>
             {comingSoon && <span className="sb-int-chip flex-none">準備中</span>}
           </button>

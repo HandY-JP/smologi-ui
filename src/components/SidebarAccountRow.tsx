@@ -13,7 +13,7 @@ export function SidebarAccountAvatar({ src, name }: { src?: string | null; name?
     // eslint-disable-next-line @next/next/no-img-element
     <img src={src} alt={name ?? ''} className="h-7 w-7 flex-shrink-0 rounded-full object-cover" />
   ) : (
-    <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-slate-600 text-xs font-medium text-white">
+    <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-slate-600 text-[12px] leading-[18px] font-medium text-white">
       {name?.[0] ?? '?'}
     </span>
   );
@@ -88,8 +88,8 @@ export function SidebarAccountRow({
         {avatar}
         {!collapsed && (
           <span className="min-w-0 flex-1 text-left">
-            <span className="block truncate text-base">{name}</span>
-            {subText != null && <span className="block truncate text-xs" style={{ color: 'var(--sb-label)' }}>{subText}</span>}
+            <span className="block truncate text-[15px] leading-[22px]">{name}</span>
+            {subText != null && <span className="block truncate text-[12px] leading-[18px]" style={{ color: 'var(--sb-label)' }}>{subText}</span>}
           </span>
         )}
       </>
