@@ -10,7 +10,7 @@ export declare const ADMIN_FLAT_TABLE: string;
  * 入荷ページは見出し行を持たない（日付帯が見出しの役目）が、出荷ページは「状態」見出しの
  * クリックが絞り込みを兼ねているため見出し行を残す。そのときの見た目はこの 1 つに揃える:
  * 背景塗りなし・13px の灰色・下罫線 1px のみ（追従はしない。追従するのは見出し帯 1 段だけ）。
- * 素の `.text-xs` などより詳細度が高いので、th 側のクラスを書き換えなくても上書きできる。
+ * Tailwind 標準の文字サイズクラスより詳細度が高いので、th 側のクラスを書き換えなくても上書きできる。
  */
 export declare const ADMIN_FLAT_TABLE_HEAD: string;
 /**
@@ -31,15 +31,15 @@ export declare const FLAT_IMAGE_COL_PX = 64;
 /** コード欄の幅（px）。 */
 export declare const FLAT_CODE_COL_PX = 168;
 /** コード欄の上段（商品コード・ASIN）。アクセント色。 */
-export declare const FLAT_CODE_PRIMARY_CLASS = "text-base tabular-nums text-[var(--accent-hover)]";
+export declare const FLAT_CODE_PRIMARY_CLASS = "text-[15px] leading-[22px] tabular-nums text-[var(--accent-hover)]";
 /** コード欄の下段（JAN・SKU）。薄色・小さめ。 */
-export declare const FLAT_CODE_SECONDARY_CLASS = "text-sm tabular-nums text-[rgb(var(--ink-muted))]";
+export declare const FLAT_CODE_SECONDARY_CLASS = "text-[14px] leading-[22px] tabular-nums text-[rgb(var(--ink-muted))]";
 /** 名前欄の上段（商品名）。2 行まで。flex の子に直接付けると display が blockify されて clamp が効かないので、ProductNameStack は内側の div に付ける。 */
-export declare const FLAT_NAME_PRIMARY_CLASS = "font-medium text-[15px] line-clamp-2 break-words";
+export declare const FLAT_NAME_PRIMARY_CLASS = "font-medium text-[15px] leading-[22px] line-clamp-2 break-words";
 /** 名前欄の上段の既定色（`ProductNameStack` の `primaryColorClassName` で差し替え可）。 */
 export declare const FLAT_NAME_PRIMARY_COLOR_CLASS = "text-[rgb(var(--ink))]";
 /** 名前欄の下段（システム商品名・ブランドなど）。 */
-export declare const FLAT_NAME_SECONDARY_CLASS = "mt-auto pt-0.5 text-[13px] truncate";
+export declare const FLAT_NAME_SECONDARY_CLASS = "mt-auto pt-0.5 text-[13px] leading-[20px] truncate";
 /** 名前欄の下段の既定色。 */
 export declare const FLAT_NAME_SECONDARY_COLOR_CLASS = "text-[rgb(var(--ink-muted))]";
 //# sourceMappingURL=flat-table.d.ts.map

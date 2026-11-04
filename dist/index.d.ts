@@ -1,5 +1,6 @@
 export * from './lib/theme';
 export * from './lib/palette';
+export * from './lib/typography';
 export * from './lib/flat-table';
 export * from './lib/list-card';
 export * from './lib/list-page-size';

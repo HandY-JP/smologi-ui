@@ -17,12 +17,12 @@ function ProcessToggleList({
       }
     ) }),
     /* @__PURE__ */ jsxs("div", { className: "min-w-0 flex-1", children: [
-      /* @__PURE__ */ jsxs("div", { className: "flex flex-wrap items-center gap-2 text-[13.5px] font-semibold", children: [
+      /* @__PURE__ */ jsxs("div", { className: "flex flex-wrap items-center gap-2 text-[13px] leading-[20px] font-semibold", children: [
         it.label,
         it.readOnly && /* @__PURE__ */ jsx("span", { className: "sb-int-chip", children: it.readOnlyText ?? "\u5E38\u306B\u884C\u3044\u307E\u3059" }),
-        it.saving && /* @__PURE__ */ jsx("span", { className: "sb-int-muted text-xs font-normal", "aria-live": "polite", children: "\u4FDD\u5B58\u4E2D\u2026" })
+        it.saving && /* @__PURE__ */ jsx("span", { className: "sb-int-muted text-[12px] leading-[18px] font-normal", "aria-live": "polite", children: "\u4FDD\u5B58\u4E2D\u2026" })
       ] }),
-      it.description && /* @__PURE__ */ jsx("div", { className: "sb-int-muted text-xs", children: it.description })
+      it.description && /* @__PURE__ */ jsx("div", { className: "sb-int-muted text-[12px] leading-[18px]", children: it.description })
     ] })
   ] }, it.id)) });
 }

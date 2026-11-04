@@ -7,7 +7,7 @@ function EmptyState({
   className = "",
   children
 }) {
-  return /* @__PURE__ */ jsxs("div", { className: `rounded-lg border border-gray-200 bg-white p-10 text-center text-sm text-gray-400 ${className}`, children: [
+  return /* @__PURE__ */ jsxs("div", { className: `rounded-lg border border-gray-200 bg-white p-10 text-center text-[14px] leading-[22px] text-gray-400 ${className}`, children: [
     /* @__PURE__ */ jsx("p", { children: loading ? LOADING_TEXT : message }),
     !loading && children && /* @__PURE__ */ jsx("div", { className: "mt-3", children })
   ] });
@@ -18,7 +18,7 @@ function EmptyTableRow({
   loading = false,
   className = ""
 }) {
-  return /* @__PURE__ */ jsx("tr", { children: /* @__PURE__ */ jsx("td", { colSpan, className: `px-4 py-10 text-center text-sm text-gray-400 ${className}`, children: loading ? LOADING_TEXT : message }) });
+  return /* @__PURE__ */ jsx("tr", { children: /* @__PURE__ */ jsx("td", { colSpan, className: `px-4 py-10 text-center text-[14px] leading-[22px] text-gray-400 ${className}`, children: loading ? LOADING_TEXT : message }) });
 }
 export {
   EmptyState,

@@ -8,12 +8,12 @@ const DEFAULT_SIDEBAR_ACTIVE_CLASS = "sb-nav-active";
 const defaultRenderLink = (props) => /* @__PURE__ */ jsx("a", { ...props });
 const ROW_FOCUS = "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--sb-text)]";
 function SidebarNavSectionLabel({ label, badge }) {
-  return /* @__PURE__ */ jsxs("div", { className: "truncate px-3 pt-4 pb-1 text-[10px] font-semibold tracking-wider", style: { color: "var(--sb-label)" }, children: [
+  return /* @__PURE__ */ jsxs("div", { className: "truncate px-3 pt-4 pb-1 text-[11px] leading-[16px] font-semibold tracking-wider", style: { color: "var(--sb-label)" }, children: [
     label,
     badge && /* @__PURE__ */ jsx(
       "span",
       {
-        className: "ml-1.5 rounded-sm border px-1 py-px align-middle text-[9px] font-semibold leading-none",
+        className: "ml-1.5 rounded-sm border px-1 py-px align-middle text-[11px] font-semibold leading-none",
         style: { borderColor: "var(--sb-border)" },
         children: badge
       }
@@ -60,7 +60,7 @@ function SidebarRailTip({ text, children }) {
             {
               role: "tooltip",
               "data-sidebar-rail-tip": true,
-              className: "pointer-events-none fixed z-[80] -translate-y-1/2 whitespace-nowrap rounded-md px-2.5 py-1 text-xs font-medium shadow-lg",
+              className: "pointer-events-none fixed z-[80] -translate-y-1/2 whitespace-nowrap rounded-md px-2.5 py-1 text-[12px] leading-[18px] font-medium shadow-lg",
               style: { top: pos.top, left: pos.left, backgroundColor: "var(--sb-text)", color: "var(--sb-bg)" },
               children: [
                 /* @__PURE__ */ jsx(
@@ -117,7 +117,7 @@ function SidebarNavLink({
     const soon = /* @__PURE__ */ jsxs(
       "div",
       {
-        className: `flex h-9 items-center rounded-md text-base cursor-not-allowed opacity-50 select-none ${collapsed ? "justify-center" : "gap-2.5 px-3"}`,
+        className: `flex h-9 items-center rounded-md text-[15px] leading-[22px] cursor-not-allowed opacity-50 select-none ${collapsed ? "justify-center" : "gap-2.5 px-3"}`,
         style: { color: "var(--sb-text)" },
         title: "\u4ECA\u5F8C\u5B9F\u88C5\u4E88\u5B9A\u306E\u6A5F\u80FD\u3067\u3059",
         children: [
@@ -127,7 +127,7 @@ function SidebarNavLink({
             /* @__PURE__ */ jsx(
               "span",
               {
-                className: "flex-shrink-0 whitespace-nowrap rounded px-1 py-px text-[9px] font-bold",
+                className: "flex-shrink-0 whitespace-nowrap rounded px-1 py-px text-[11px] leading-[16px] font-semibold",
                 style: { backgroundColor: "var(--sb-hover)", color: "var(--sb-label)" },
                 children: "\u6E96\u5099\u4E2D"
               }
@@ -147,14 +147,14 @@ function SidebarNavLink({
         /* @__PURE__ */ jsx(
           "span",
           {
-            className: "flex-shrink-0 whitespace-nowrap rounded px-1 py-px text-[9px] font-bold",
+            className: "flex-shrink-0 whitespace-nowrap rounded px-1 py-px text-[11px] leading-[16px] font-semibold",
             style: { backgroundColor: "var(--sb-hover)", color: "var(--sb-label)" },
             children: lockBadge
           }
         )
       ] })
     ] });
-    const className = `flex h-9 w-full items-center rounded-md text-left text-base text-[var(--sb-text)] opacity-50 transition-opacity hover:opacity-90 ${collapsed ? "justify-center" : "gap-2.5 px-3"} focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sb-accent-bg)]`;
+    const className = `flex h-9 w-full items-center rounded-md text-left text-[15px] leading-[22px] text-[var(--sb-text)] opacity-50 transition-opacity hover:opacity-90 ${collapsed ? "justify-center" : "gap-2.5 px-3"} focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sb-accent-bg)]`;
     const lockedNode = renderLocked ? /* @__PURE__ */ jsx(Fragment, { children: renderLocked({ className, title: collapsed ? "" : title2, children: body }, item) }) : /* @__PURE__ */ jsx("div", { className: `${className} cursor-not-allowed`, title: collapsed ? void 0 : title2, "aria-disabled": "true", children: body });
     return collapsed ? /* @__PURE__ */ jsx(SidebarRailTip, { text: title2, children: lockedNode }) : lockedNode;
   }
@@ -165,7 +165,7 @@ function SidebarNavLink({
   const title = item.dot && item.dotReason ? `${baseLabel}\uFF08${item.dotReason}\uFF09` : item.dim && !isActive ? `${baseLabel}\uFF08\u672A\u8A2D\u5B9A\uFF09` : baseLabel;
   const railText = hasCount ? `${baseLabel}\uFF08${item.count}\uFF09` : qaCount ? `${baseLabel}\uFF08${qaCount.label} ${qaCount.count}\u4EF6\uFF09` : title;
   const quickAction = !collapsed ? item.quickAction : void 0;
-  const pillClass = "sb-glass-surface-ringed whitespace-nowrap rounded-full px-1.5 py-0.5 text-[10px] font-medium leading-none";
+  const pillClass = "sb-glass-surface-ringed whitespace-nowrap rounded-full px-1.5 py-0.5 text-[11px] font-medium leading-none";
   const main = renderLink(
     {
       href: item.href,
@@ -174,14 +174,14 @@ function SidebarNavLink({
       "aria-current": isActive ? "page" : void 0,
       onClick: onNavigate,
       "data-tour": item.dataTour,
-      className: `relative flex h-9 items-center rounded-md text-base transition-colors ${ROW_FOCUS} ${collapsed ? "justify-center px-0" : quickAction ? "gap-2.5 pl-3 pr-10" : "gap-2.5 px-3"} ${isActive ? `${activeClassName} font-semibold` : "hover:bg-[var(--sb-hover)]"} ${item.dim && !isActive ? "opacity-55" : ""}`,
+      className: `relative flex h-9 items-center rounded-md text-[15px] leading-[22px] transition-colors ${ROW_FOCUS} ${collapsed ? "justify-center px-0" : quickAction ? "gap-2.5 pl-3 pr-10" : "gap-2.5 px-3"} ${isActive ? `${activeClassName} font-semibold` : "hover:bg-[var(--sb-hover)]"} ${item.dim && !isActive ? "opacity-55" : ""}`,
       style: isActive ? void 0 : { color: "var(--sb-text)" },
       children: /* @__PURE__ */ jsxs(Fragment, { children: [
         item.icon,
         !collapsed && /* @__PURE__ */ jsx("span", { className: "min-w-0 flex-1 truncate", children: item.label }),
         !collapsed && /* @__PURE__ */ jsx(CountBadge, { item }),
         !collapsed && item.unlockPill && /* @__PURE__ */ jsx("span", { className: pillClass, style: { color: "var(--sb-label)" }, children: item.unlockPill }),
-        !collapsed && item.badge && /* @__PURE__ */ jsx("span", { className: "rounded-full border border-orange-300 bg-white px-1.5 py-0.5 text-[11px] font-bold leading-none text-orange-700", children: item.badge }),
+        !collapsed && item.badge && /* @__PURE__ */ jsx("span", { className: "rounded-full border border-orange-300 bg-white px-1.5 py-0.5 text-[11px] font-semibold leading-none text-orange-700", children: item.badge }),
         !collapsed && item.trailing,
         (item.dot || collapsed && (hasCount || qaCount)) && /* @__PURE__ */ jsx(
           SidebarNewDot,
@@ -215,7 +215,7 @@ function SidebarNavLink({
         href: item.quickActionCount.href,
         title: `${item.quickActionCount.label} ${item.quickActionCount.count}\u4EF6`,
         "aria-label": `${item.quickActionCount.label} ${item.quickActionCount.count}\u4EF6`,
-        className: "absolute right-0 top-0 min-w-[1rem] rounded-full bg-[#C2560D] px-1 py-0.5 text-center text-[10px] font-semibold leading-none tabular-nums text-white",
+        className: "absolute right-0 top-0 min-w-[1rem] rounded-full bg-[#C2560D] px-1 py-0.5 text-center text-[11px] font-semibold leading-none tabular-nums text-white",
         children: item.quickActionCount.count > 99 ? "99+" : item.quickActionCount.count
       },
       { kind: "quickActionCount", item }
@@ -230,7 +230,7 @@ function CollapsibleSectionHeader({ label, open, dot, dotLabel, dotClassName, on
       type: "button",
       onClick: onToggle,
       "aria-expanded": open,
-      className: "mt-3 mb-1 flex h-7 w-full items-center gap-2 rounded-md px-3 text-left text-[10px] font-semibold tracking-wider transition-colors hover:bg-[var(--sb-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--sb-text)]",
+      className: "mt-3 mb-1 flex h-7 w-full items-center gap-2 rounded-md px-3 text-left text-[11px] leading-[16px] font-semibold tracking-wider transition-colors hover:bg-[var(--sb-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--sb-text)]",
       style: { color: "var(--sb-label)" },
       children: [
         /* @__PURE__ */ jsx("span", { className: "min-w-0 flex-1 truncate", children: label }),

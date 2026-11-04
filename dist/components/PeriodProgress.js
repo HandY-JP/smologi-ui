@@ -29,7 +29,7 @@ function PeriodProgress({
         )
       }
     ),
-    showLabel && /* @__PURE__ */ jsx("span", { className: "flex-shrink-0 text-[11px] text-gray-500", children: s.label })
+    showLabel && /* @__PURE__ */ jsx("span", { className: "flex-shrink-0 text-[11px] leading-[16px] text-gray-500", children: s.label })
   ] });
 }
 export {

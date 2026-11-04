@@ -19,7 +19,7 @@ function ActiveFilterChips({
     chips.map((chip) => /* @__PURE__ */ jsxs(
       "span",
       {
-        className: "inline-flex items-center gap-1 rounded-full border border-[var(--sb-accent-bg)]/40 bg-[var(--sb-accent-bg)]/5 py-0.5 pl-2.5 pr-1 text-xs text-[var(--sb-accent-bg)]",
+        className: "inline-flex items-center gap-1 rounded-full border border-[var(--sb-accent-bg)]/40 bg-[var(--sb-accent-bg)]/5 py-0.5 pl-2.5 pr-1 text-[12px] leading-[18px] text-[var(--sb-accent-bg)]",
         children: [
           /* @__PURE__ */ jsxs("span", { className: "text-gray-500", children: [
             chip.label,
@@ -45,7 +45,7 @@ function ActiveFilterChips({
       {
         type: "button",
         onClick: onClearAll,
-        className: "text-xs text-gray-400 underline-offset-2 hover:text-gray-700 hover:underline",
+        className: "text-[12px] leading-[18px] text-gray-400 underline-offset-2 hover:text-gray-700 hover:underline",
         children: "\u3059\u3079\u3066\u89E3\u9664"
       }
     )
@@ -110,10 +110,10 @@ function FilterTriggerButton({
       "aria-controls": ariaControls,
       title: triggerTitle,
       "aria-label": triggerAriaLabel,
-      className: `relative mr-1.5 flex h-8 min-w-[7rem] items-center justify-center rounded-full px-7 text-xs font-semibold leading-none transition-colors ${activeCount > 0 || open ? "bg-[var(--search-accent-light)] text-[var(--search-accent)]" : "text-gray-500 hover:bg-gray-100 hover:text-gray-900"}`,
+      className: `relative mr-1.5 flex h-8 min-w-[7rem] items-center justify-center rounded-full px-7 text-[12px] font-semibold leading-none transition-colors ${activeCount > 0 || open ? "bg-[var(--search-accent-light)] text-[var(--search-accent)]" : "text-gray-500 hover:bg-gray-100 hover:text-gray-900"}`,
       children: [
         label,
-        activeCount > 0 && /* @__PURE__ */ jsx("span", { className: "absolute left-2 rounded-full bg-[var(--search-accent)] px-1.5 py-0.5 text-[10px] font-bold leading-none text-white", children: activeCount }),
+        activeCount > 0 && /* @__PURE__ */ jsx("span", { className: "absolute left-2 rounded-full bg-[var(--search-accent)] px-1.5 py-0.5 text-[11px] font-semibold leading-none text-white", children: activeCount }),
         /* @__PURE__ */ jsx(
           "svg",
           {
@@ -204,15 +204,15 @@ function FilterPopover({
       {
         type: "button",
         onClick: () => tabs.onChange(item.key),
-        className: `flex-1 rounded-md px-3 py-1.5 text-sm font-medium ${tabs.active === item.key ? "bg-white text-[var(--sb-accent-bg)] shadow-sm" : "text-gray-500"}`,
+        className: `flex-1 rounded-md px-3 py-1.5 text-[14px] leading-[22px] font-medium ${tabs.active === item.key ? "bg-white text-[var(--sb-accent-bg)] shadow-sm" : "text-gray-500"}`,
         children: item.label
       },
       item.key
     )) }),
     /* @__PURE__ */ jsxs("div", { className: "flex items-start justify-between gap-2", children: [
       /* @__PURE__ */ jsxs("div", { className: "min-w-0", children: [
-        /* @__PURE__ */ jsx("span", { className: "text-sm font-semibold text-gray-700", children: title }),
-        description && /* @__PURE__ */ jsx("p", { className: "mt-0.5 text-xs text-gray-400", children: description })
+        /* @__PURE__ */ jsx("span", { className: "text-[14px] leading-[22px] font-semibold text-gray-700", children: title }),
+        description && /* @__PURE__ */ jsx("p", { className: "mt-0.5 text-[12px] leading-[18px] text-gray-400", children: description })
       ] }),
       /* @__PURE__ */ jsx(
         "button",
@@ -220,7 +220,7 @@ function FilterPopover({
           type: "button",
           onClick: onClearAll,
           disabled: clearDisabled,
-          className: "shrink-0 text-xs text-gray-400 hover:text-gray-700 disabled:opacity-40",
+          className: "shrink-0 text-[12px] leading-[18px] text-gray-400 hover:text-gray-700 disabled:opacity-40",
           children: "\u3059\u3079\u3066\u30AF\u30EA\u30A2"
         }
       )
@@ -282,7 +282,7 @@ function FilterSection({
   children
 }) {
   return /* @__PURE__ */ jsxs("section", { className: first ? "" : "border-t border-gray-100 pt-3", children: [
-    /* @__PURE__ */ jsxs("h3", { className: "mb-2 flex items-center gap-1.5 text-[11px] font-semibold tracking-wide text-gray-400", children: [
+    /* @__PURE__ */ jsxs("h3", { className: "mb-2 flex items-center gap-1.5 text-[11px] leading-[16px] font-semibold tracking-wide text-gray-400", children: [
       /* @__PURE__ */ jsx("span", { children: title }),
       active && /* @__PURE__ */ jsxs(Fragment, { children: [
         /* @__PURE__ */ jsx(
@@ -317,7 +317,7 @@ function FilterChipToggle({
       onClick: onToggle,
       "aria-pressed": pressed,
       title,
-      className: `inline-flex items-center whitespace-nowrap rounded-full border px-2.5 py-1 text-xs font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--search-accent)] ${pressed ? "border-[var(--search-accent)] bg-[var(--search-accent)] text-white shadow-sm" : "border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-900"}`,
+      className: `inline-flex items-center whitespace-nowrap rounded-full border px-2.5 py-1 text-[12px] leading-[18px] font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--search-accent)] ${pressed ? "border-[var(--search-accent)] bg-[var(--search-accent)] text-white shadow-sm" : "border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-900"}`,
       children: label
     }
   );
@@ -328,7 +328,7 @@ function FilterChipGroup({
   ariaLabel
 }) {
   return /* @__PURE__ */ jsxs("div", { children: [
-    label && /* @__PURE__ */ jsx("div", { className: "mb-1.5 text-xs font-medium text-gray-600", children: label }),
+    label && /* @__PURE__ */ jsx("div", { className: "mb-1.5 text-[12px] leading-[18px] font-medium text-gray-600", children: label }),
     /* @__PURE__ */ jsx("div", { className: "flex flex-wrap items-center gap-1.5", role: "group", "aria-label": ariaLabel ?? label, children })
   ] });
 }
@@ -339,12 +339,12 @@ function FilterField({
   span = 1
 }) {
   return /* @__PURE__ */ jsxs("div", { className: span === 2 ? "sm:col-span-2" : void 0, children: [
-    /* @__PURE__ */ jsx("span", { className: "mb-1 block text-xs text-gray-500", children: label }),
+    /* @__PURE__ */ jsx("span", { className: "mb-1 block text-[12px] leading-[18px] text-gray-500", children: label }),
     children,
-    hint && /* @__PURE__ */ jsx("p", { className: "mt-1 text-[11px] text-gray-400", children: hint })
+    hint && /* @__PURE__ */ jsx("p", { className: "mt-1 text-[11px] leading-[16px] text-gray-400", children: hint })
   ] });
 }
-const FILTER_INPUT_CLASS = "w-full rounded-md border border-gray-300 bg-white px-2 py-2 text-sm text-gray-700 focus:outline-none focus:ring-1 focus:ring-[var(--sb-accent-bg)]";
+const FILTER_INPUT_CLASS = "w-full rounded-md border border-gray-300 bg-white px-2 py-2 text-[14px] leading-[22px] text-gray-700 focus:outline-none focus:ring-1 focus:ring-[var(--sb-accent-bg)]";
 function FilterSelect({
   label,
   value,
@@ -352,7 +352,7 @@ function FilterSelect({
   options
 }) {
   return /* @__PURE__ */ jsxs("label", { className: "block", children: [
-    /* @__PURE__ */ jsx("span", { className: "mb-1 block text-xs text-gray-500", children: label }),
+    /* @__PURE__ */ jsx("span", { className: "mb-1 block text-[12px] leading-[18px] text-gray-500", children: label }),
     /* @__PURE__ */ jsx("select", { value, onChange: (event) => onChange(event.target.value), className: FILTER_INPUT_CLASS, children: options.map((option) => /* @__PURE__ */ jsx("option", { value: option.value, children: option.label }, option.value)) })
   ] });
 }
@@ -363,7 +363,7 @@ function FilterCheckbox({
   tone = "accent"
 }) {
   const toneClass = tone === "rose" ? "text-rose-600 focus:ring-rose-500" : tone === "gray" ? "text-gray-600 focus:ring-gray-500" : "text-[var(--sb-accent-bg)] focus:ring-[var(--sb-accent-bg)]";
-  return /* @__PURE__ */ jsxs("label", { className: "flex cursor-pointer items-center gap-2 text-xs text-gray-700", children: [
+  return /* @__PURE__ */ jsxs("label", { className: "flex cursor-pointer items-center gap-2 text-[12px] leading-[18px] text-gray-700", children: [
     /* @__PURE__ */ jsx(
       "input",
       {
@@ -387,10 +387,10 @@ function FilterDateRange({
 }) {
   const error = filterDateRangeError(from, to);
   return /* @__PURE__ */ jsxs("div", { className: "sm:col-span-2", children: [
-    label && /* @__PURE__ */ jsx("p", { className: "mb-1 text-xs font-semibold text-gray-600", children: label }),
+    label && /* @__PURE__ */ jsx("p", { className: "mb-1 text-[12px] leading-[18px] font-semibold text-gray-600", children: label }),
     /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-2", children: [
       /* @__PURE__ */ jsxs("label", { children: [
-        /* @__PURE__ */ jsx("span", { className: "mb-1 block text-xs text-gray-500", children: fromLabel }),
+        /* @__PURE__ */ jsx("span", { className: "mb-1 block text-[12px] leading-[18px] text-gray-500", children: fromLabel }),
         /* @__PURE__ */ jsx(
           "input",
           {
@@ -404,7 +404,7 @@ function FilterDateRange({
         )
       ] }),
       /* @__PURE__ */ jsxs("label", { children: [
-        /* @__PURE__ */ jsx("span", { className: "mb-1 block text-xs text-gray-500", children: toLabel }),
+        /* @__PURE__ */ jsx("span", { className: "mb-1 block text-[12px] leading-[18px] text-gray-500", children: toLabel }),
         /* @__PURE__ */ jsx(
           "input",
           {
@@ -418,7 +418,7 @@ function FilterDateRange({
         )
       ] })
     ] }),
-    error && /* @__PURE__ */ jsx("p", { className: "mt-1 text-xs text-red-600", children: error })
+    error && /* @__PURE__ */ jsx("p", { className: "mt-1 text-[12px] leading-[18px] text-red-600", children: error })
   ] });
 }
 export {

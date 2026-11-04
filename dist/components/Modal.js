@@ -179,8 +179,8 @@ function ModalBody({
   const inner = /* @__PURE__ */ jsxs(Fragment, { children: [
     title != null && /* @__PURE__ */ jsxs("div", { className: "flex items-start gap-3 border-b border-gray-200 px-5 py-4", children: [
       /* @__PURE__ */ jsxs("div", { className: "min-w-0 flex-1", children: [
-        /* @__PURE__ */ jsx("h2", { id: titleId, className: "text-base font-bold text-gray-900", children: title }),
-        subtitle != null && /* @__PURE__ */ jsx("p", { className: "mt-0.5 text-xs text-gray-500", children: subtitle })
+        /* @__PURE__ */ jsx("h2", { id: titleId, className: "text-[15px] leading-[22px] font-semibold text-gray-900", children: title }),
+        subtitle != null && /* @__PURE__ */ jsx("p", { className: "mt-0.5 text-[12px] leading-[18px] text-gray-500", children: subtitle })
       ] }),
       headerRight != null && /* @__PURE__ */ jsx("div", { className: "flex shrink-0 items-center gap-2 self-center", children: headerRight }),
       withCloseButton && /* @__PURE__ */ jsx(
@@ -189,7 +189,7 @@ function ModalBody({
           type: "button",
           onClick: onClose,
           "aria-label": "\u9589\u3058\u308B",
-          className: "-mr-1 rounded-md p-1 text-xl leading-none text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600",
+          className: "-mr-1 rounded-md p-1 text-[22px] leading-none text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600",
           children: "\xD7"
         }
       )

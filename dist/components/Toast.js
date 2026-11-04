@@ -44,10 +44,10 @@ function ToastProvider({ children }) {
     /* @__PURE__ */ jsx("div", { className: "fixed bottom-6 left-1/2 -translate-x-1/2 z-[60] flex flex-col gap-2 pointer-events-none w-fit", children: toasts.map((t) => /* @__PURE__ */ jsxs(
       "div",
       {
-        className: "pointer-events-auto max-w-[min(90vw,36rem)] px-4 py-2.5 rounded-lg shadow-lg text-sm font-medium text-white flex items-start gap-2 toast-enter",
+        className: "pointer-events-auto max-w-[min(90vw,36rem)] px-4 py-2.5 rounded-lg shadow-lg text-[14px] leading-[22px] font-medium text-white flex items-start gap-2 toast-enter",
         style: { backgroundColor: STYLES[t.type].bg },
         children: [
-          /* @__PURE__ */ jsx("span", { className: "font-bold", children: STYLES[t.type].icon }),
+          /* @__PURE__ */ jsx("span", { className: "font-semibold", children: STYLES[t.type].icon }),
           /* @__PURE__ */ jsx("span", { children: t.message })
         ]
       },

@@ -30,7 +30,7 @@ function DashboardAppRow({
         /* @__PURE__ */ jsx("span", { role: "img", "aria-current": "page", "aria-label": app.label, className: tileClass, children: inner })
       ) : /* @__PURE__ */ jsx("a", { href: app.href, target: "_blank", rel: "noopener noreferrer", "aria-label": app.label, className: tileClass, children: inner }) }, app.id);
     }),
-    loading && /* @__PURE__ */ jsx("span", { className: "self-center text-xs text-ink-muted", role: "status", children: loadingText })
+    loading && /* @__PURE__ */ jsx("span", { className: "self-center text-[12px] leading-[18px] text-ink-muted", role: "status", children: loadingText })
   ] });
 }
 export {

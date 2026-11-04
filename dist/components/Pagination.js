@@ -2,8 +2,8 @@
 import { Fragment, jsx, jsxs } from "react/jsx-runtime";
 import { Children, cloneElement, isValidElement } from "react";
 import { LIST_PAGE_SIZE_OPTIONS } from "../lib/list-page-size.js";
-const PAGER_BUTTON = "h-8 rounded-full px-3 text-[12.5px] text-gray-700 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-100";
-const PAGER_BUTTON_COMPACT = "flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[14px] text-gray-700 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-100";
+const PAGER_BUTTON = "h-8 rounded-full px-3 text-[12px] leading-[18px] text-gray-700 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-100";
+const PAGER_BUTTON_COMPACT = "flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[14px] leading-[22px] text-gray-700 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-100";
 function computePaginationView(total, page, pageSize) {
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
   const safePage = Math.min(Math.max(1, page), totalPages);
@@ -26,8 +26,8 @@ function Pagination({
 }) {
   const { totalPages, safePage, start, end } = computePaginationView(total, page, pageSize);
   if (compact) {
-    return /* @__PURE__ */ jsxs("div", { className: `flex items-center gap-1 text-sm ${className}`, children: [
-      /* @__PURE__ */ jsxs("span", { className: "whitespace-nowrap px-0.5 text-[12px] tabular-nums text-gray-500", children: [
+    return /* @__PURE__ */ jsxs("div", { className: `flex items-center gap-1 text-[14px] leading-[22px] ${className}`, children: [
+      /* @__PURE__ */ jsxs("span", { className: "whitespace-nowrap px-0.5 text-[12px] leading-[18px] tabular-nums text-gray-500", children: [
         total.toLocaleString("ja-JP"),
         unitLabel
       ] }),
@@ -69,20 +69,20 @@ function Pagination({
               onChange: (e) => onPageSizeChange(Number(e.target.value)),
               "aria-label": "1\u30DA\u30FC\u30B8\u306E\u4EF6\u6570",
               title: "\u8868\u793A\u4EF6\u6570\uFF08\u6B21\u306B\u958B\u3044\u305F\u3068\u304D\u3082\u540C\u3058\u4EF6\u6570\u3067\u8868\u793A\u3057\u307E\u3059\uFF09",
-              className: "appearance-none rounded-full bg-transparent py-1 pl-1 pr-3.5 text-[12.5px] text-gray-700 focus:outline-none",
+              className: "appearance-none rounded-full bg-transparent py-1 pl-1 pr-3.5 text-[12px] leading-[18px] text-gray-700 focus:outline-none",
               children: pageSizeOptions.map((opt) => /* @__PURE__ */ jsxs("option", { value: opt, children: [
                 opt,
                 unitLabel
               ] }, opt))
             }
           ),
-          /* @__PURE__ */ jsx("span", { "aria-hidden": "true", className: "pointer-events-none absolute right-0 text-[9px] text-gray-400", children: "\u23F7" })
+          /* @__PURE__ */ jsx("span", { "aria-hidden": "true", className: "pointer-events-none absolute right-0 text-[11px] leading-[16px] text-gray-400", children: "\u23F7" })
         ] })
       ] })
     ] });
   }
-  return /* @__PURE__ */ jsxs("div", { className: `flex flex-wrap items-center gap-2 text-sm ${className}`, children: [
-    /* @__PURE__ */ jsx("div", { className: "whitespace-nowrap text-[12px] text-gray-600", children: total === 0 ? `0${unitLabel}` : `${total}${unitLabel}\u4E2D ${start}-${end}${unitLabel}\u3092\u8868\u793A` }),
+  return /* @__PURE__ */ jsxs("div", { className: `flex flex-wrap items-center gap-2 text-[14px] leading-[22px] ${className}`, children: [
+    /* @__PURE__ */ jsx("div", { className: "whitespace-nowrap text-[12px] leading-[18px] text-gray-600", children: total === 0 ? `0${unitLabel}` : `${total}${unitLabel}\u4E2D ${start}-${end}${unitLabel}\u3092\u8868\u793A` }),
     /* @__PURE__ */ jsxs("div", { className: "flex flex-wrap items-center justify-end gap-1", children: [
       /* @__PURE__ */ jsx("button", { type: "button", onClick: () => onPageChange(1), disabled: safePage <= 1, className: PAGER_BUTTON, children: "\u6700\u521D\u3078" }),
       /* @__PURE__ */ jsx("button", { type: "button", onClick: () => onPageChange(safePage - 1), disabled: safePage <= 1, className: PAGER_BUTTON, children: "\u524D\u3078" }),
@@ -118,7 +118,7 @@ function Pagination({
           onChange: (e) => onPageSizeChange(Number(e.target.value)),
           "aria-label": "\u8868\u793A\u4EF6\u6570",
           title: "\u8868\u793A\u4EF6\u6570\uFF08\u6B21\u306B\u958B\u3044\u305F\u3068\u304D\u3082\u540C\u3058\u4EF6\u6570\u3067\u8868\u793A\u3057\u307E\u3059\uFF09",
-          className: "ml-1 h-8 rounded-full border border-gray-200/80 bg-white/70 px-2 text-[12.5px] text-gray-700",
+          className: "ml-1 h-8 rounded-full border border-gray-200/80 bg-white/70 px-2 text-[12px] leading-[18px] text-gray-700",
           children: pageSizeOptions.map((opt) => /* @__PURE__ */ jsxs("option", { value: opt, children: [
             opt,
             "/\u30DA\u30FC\u30B8"

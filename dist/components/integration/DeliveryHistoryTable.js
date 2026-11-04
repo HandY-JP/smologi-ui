@@ -29,11 +29,11 @@ function DeliveryHistoryTable({
         "\u5931\u6557\u3060\u3051",
         failCount > 0 ? `\uFF08${failCount}\uFF09` : ""
       ] }),
-      failCount > 0 && onResendAll && /* @__PURE__ */ jsx("button", { type: "button", onClick: onResendAll, className: `${SETTINGS_GHOST_BUTTON_CLASS} ml-auto !h-7 !px-2.5 !text-xs`, children: "\u5931\u6557\u3092\u307E\u3068\u3081\u3066\u518D\u9001" })
+      failCount > 0 && onResendAll && /* @__PURE__ */ jsx("button", { type: "button", onClick: onResendAll, className: `${SETTINGS_GHOST_BUTTON_CLASS} ml-auto !h-7 !px-2.5 !text-[12px] leading-[18px]`, children: "\u5931\u6557\u3092\u307E\u3068\u3081\u3066\u518D\u9001" })
     ] }),
-    /* @__PURE__ */ jsx("div", { className: "sb-int-table-wrap overflow-x-auto rounded-[10px]", children: /* @__PURE__ */ jsxs("table", { className: "w-full min-w-[620px] border-collapse text-[13px]", children: [
+    /* @__PURE__ */ jsx("div", { className: "sb-int-table-wrap overflow-x-auto rounded-[10px]", children: /* @__PURE__ */ jsxs("table", { className: "w-full min-w-[620px] border-collapse text-[13px] leading-[20px]", children: [
       /* @__PURE__ */ jsx("thead", { children: /* @__PURE__ */ jsxs("tr", { children: [
-        HEADS.map((h) => /* @__PURE__ */ jsx("th", { scope: "col", className: "sb-int-th px-3 py-2 text-left text-xs font-medium", children: h }, h)),
+        HEADS.map((h) => /* @__PURE__ */ jsx("th", { scope: "col", className: "sb-int-th px-3 py-2 text-left text-[12px] leading-[18px] font-medium", children: h }, h)),
         /* @__PURE__ */ jsx("th", { className: "sb-int-th w-px px-3 py-2", children: /* @__PURE__ */ jsx("span", { className: "sr-only", children: "\u64CD\u4F5C" }) })
       ] }) }),
       /* @__PURE__ */ jsxs("tbody", { children: [
@@ -45,7 +45,7 @@ function DeliveryHistoryTable({
           /* @__PURE__ */ jsx("td", { className: "sb-int-td px-3 py-2 align-top", children: r.destination }),
           /* @__PURE__ */ jsxs("td", { className: "sb-int-td px-3 py-2 align-top", children: [
             /* @__PURE__ */ jsx(TonePill, { tone: r.result === "ok" ? "ok" : r.result === "bad" ? "bad" : "warn", children: r.resultLabel }),
-            r.error && /* @__PURE__ */ jsx("div", { className: "sb-int-bad-text mt-1 text-xs", children: r.error })
+            r.error && /* @__PURE__ */ jsx("div", { className: "sb-int-bad-text mt-1 text-[12px] leading-[18px]", children: r.error })
           ] }),
           /* @__PURE__ */ jsx("td", { className: "sb-int-td px-3 py-2 align-top", children: r.result === "bad" && onResend && /* @__PURE__ */ jsx(
             "button",
@@ -53,7 +53,7 @@ function DeliveryHistoryTable({
               type: "button",
               disabled: resendingIds.includes(r.id),
               onClick: () => onResend(r.id),
-              className: `${SETTINGS_GHOST_BUTTON_CLASS} !h-7 !px-2.5 !text-xs`,
+              className: `${SETTINGS_GHOST_BUTTON_CLASS} !h-7 !px-2.5 !text-[12px] leading-[18px]`,
               children: "\u518D\u9001"
             }
           ) })

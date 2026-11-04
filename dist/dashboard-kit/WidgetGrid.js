@@ -81,7 +81,7 @@ function Tile({
               "aria-label": `${def.title}\u3092\u5916\u3059`,
               ...STOP_DRAG,
               onClick: () => onRemove(id),
-              className: `absolute -left-2 -top-2 z-20 grid h-[26px] w-[26px] cursor-pointer place-items-center rounded-full text-lg leading-none shadow-[0_2px_6px_rgba(0,0,0,0.25)] ${classes.minus}`,
+              className: `absolute -left-2 -top-2 z-20 grid h-[26px] w-[26px] cursor-pointer place-items-center rounded-full text-[18px] leading-none shadow-[0_2px_6px_rgba(0,0,0,0.25)] ${classes.minus}`,
               children: "\u2212"
             }
           ),
@@ -92,7 +92,7 @@ function Tile({
               "aria-label": `${def.title}\u306E\u30B5\u30A4\u30BA\u3092\u5909\u3048\u308B\uFF08\u73FE\u5728: ${SIZE_LABEL[size]}\uFF09`,
               ...STOP_DRAG,
               onClick: () => onCycleSize(id),
-              className: `absolute right-2.5 top-2.5 z-20 inline-flex cursor-pointer items-center rounded-full px-2.5 py-1 text-xs ${classes.sizeButton}`,
+              className: `absolute right-2.5 top-2.5 z-20 inline-flex cursor-pointer items-center rounded-full px-2.5 py-1 text-[12px] leading-[18px] ${classes.sizeButton}`,
               children: [
                 "\u30B5\u30A4\u30BA: ",
                 SIZE_LABEL[size]
@@ -199,7 +199,7 @@ function WidgetGrid({
               item.id
             );
           }),
-          editing && /* @__PURE__ */ jsx("button", { type: "button", onClick: onAdd, className: `grid place-items-center text-[15px] min-[821px]:col-span-4 ${classes.addTile}`, children: "\uFF0B \u30A6\u30A3\u30B8\u30A7\u30C3\u30C8\u3092\u8FFD\u52A0" })
+          editing && /* @__PURE__ */ jsx("button", { type: "button", onClick: onAdd, className: `grid place-items-center text-[15px] leading-[22px] min-[821px]:col-span-4 ${classes.addTile}`, children: "\uFF0B \u30A6\u30A3\u30B8\u30A7\u30C3\u30C8\u3092\u8FFD\u52A0" })
         ] }),
         /* @__PURE__ */ jsx(DragOverlay, { dropAnimation: { duration: 200, easing: "cubic-bezier(0.34, 1.4, 0.64, 1)" }, children: activeId && activeDef ? /* @__PURE__ */ jsxs(
           "div",
@@ -207,7 +207,7 @@ function WidgetGrid({
             className: `cursor-grabbing px-4 pt-3 shadow-[0_24px_48px_rgba(0,0,0,0.28)] ${classes.ghost}`,
             style: { width: activeSize.width, height: Math.min(activeSize.height, 220) },
             children: [
-              /* @__PURE__ */ jsx("p", { className: "text-[13px] font-semibold", children: activeDef.title }),
+              /* @__PURE__ */ jsx("p", { className: "text-[13px] leading-[20px] font-semibold", children: activeDef.title }),
               /* @__PURE__ */ jsxs("div", { className: "mt-3 space-y-2 opacity-30", children: [
                 /* @__PURE__ */ jsx("div", { className: "h-3 w-3/4 rounded bg-current" }),
                 /* @__PURE__ */ jsx("div", { className: "h-3 w-1/2 rounded bg-current" }),

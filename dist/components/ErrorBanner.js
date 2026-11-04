@@ -1,9 +1,9 @@
 "use client";
 import { jsxs } from "react/jsx-runtime";
 const SIZE_CLASS = {
-  sm: "px-3 py-2 text-xs",
-  md: "px-3 py-2 text-sm",
-  lg: "p-4 text-sm"
+  sm: "px-3 py-2 text-[12px] leading-[18px]",
+  md: "px-3 py-2 text-[14px] leading-[22px]",
+  lg: "p-4 text-[14px] leading-[22px]"
 };
 function ErrorBanner({
   message,

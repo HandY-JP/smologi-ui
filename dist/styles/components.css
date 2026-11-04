@@ -263,7 +263,7 @@ html.theme-dark .sb-tool-btn.sb-tool-caret, html.theme-dark .sb-glass-btn.sb-too
 .sb-tool-tooltip {
   position: fixed; z-index: 60; transform: translateX(-50%);
   padding: 3px 7px; border-radius: 6px; background: #2b2621; color: #fbf9f6;
-  font-size: 10px; font-weight: 500; line-height: 1.4; white-space: nowrap; pointer-events: none;
+  font-size: 11px; font-weight: 500; line-height: 1.4; white-space: nowrap; pointer-events: none;
 }
 
 /* --- 道具バーの状態表現（2026-09-15 ユーザー決定で刷新） ---
@@ -320,7 +320,7 @@ html.theme-dark .sb-tool-progress { background: rgba(255, 255, 255, 0.16); }
 .sb-tool-dot {
   position: absolute; top: -1px; right: -1px; min-width: 15px; height: 15px; padding: 0 3px;
   border-radius: 999px; display: flex; align-items: center; justify-content: center;
-  font-size: 9px; font-weight: 700; line-height: 1; color: #fff;
+  font-size: 11px; font-weight: 600; line-height: 1; color: #fff;
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9);
 }
 html.theme-dark .sb-tool-dot { box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.9); }
@@ -361,7 +361,7 @@ html.theme-dark .sb-stage-tab.danger { background: rgba(225, 29, 72, 0.16); colo
 html.theme-dark .sb-stage-tab.danger.current { background: #e11d48; color: #fff; }
 .sb-stage-badge {
   display: inline-flex; min-width: 18px; align-items: center; justify-content: center;
-  border-radius: 999px; padding: 0 4px; font-size: 10px; font-weight: 700; line-height: 16px;
+  border-radius: 999px; padding: 0 4px; font-size: 11px; font-weight: 600; line-height: 16px;
   background: #f3f4f6; color: #4b5563; font-variant-numeric: tabular-nums;
 }
 .sb-stage-tab.current .sb-stage-badge { background: var(--sb-accent-bg, #2563eb); color: #fff; }
@@ -373,7 +373,7 @@ html.theme-dark .sb-stage-badge { background: #334155; color: #cbd5e1; }
    モックの .rg-chip に合わせ、背景は透明＋チップ間の1px区切り線（選択中だけ塗る）。 --- */
 .sb-group-chip {
   display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px;
-  border: 0; border-right: 1px solid rgba(0, 0, 0, 0.08); background: transparent; font-size: 12.5px;
+  border: 0; border-right: 1px solid rgba(0, 0, 0, 0.08); background: transparent; font-size: 12px;
   font-weight: 600; color: #374151; white-space: nowrap; cursor: pointer;
 }
 .sb-group-chip:last-child { border-right: 0; }
@@ -388,7 +388,7 @@ html.theme-dark .sb-group-chip.active { background: rgba(255, 255, 255, 0.16); c
 html.theme-dark .sb-group-chip.active b { background: rgba(255, 255, 255, 0.24); color: #f1f5f9; }
 .sb-group-chip b {
   display: inline-flex; min-width: 16px; align-items: center; justify-content: center;
-  border-radius: 999px; padding: 0 4px; font-size: 10px; font-weight: 700; line-height: 15px;
+  border-radius: 999px; padding: 0 4px; font-size: 11px; font-weight: 600; line-height: 15px;
   background: rgba(17, 24, 39, 0.08); color: #4b5563; font-variant-numeric: tabular-nums;
 }
 .sb-group-chip.active b { background: rgba(255, 255, 255, 0.24); color: #fff; }
@@ -498,7 +498,7 @@ html.theme-dark .sb-glass-sep { background: rgba(255, 255, 255, 0.16); }
 .sb-glass-center { display: inline-flex; align-items: center; height: 40px; padding: 0 5px; gap: 1px; }
 .sb-glass-lead {
   display: inline-flex; align-items: center; flex-shrink: 0; padding: 0 8px 0 7px;
-  color: #6b7280; font-size: 11px; font-weight: 700; white-space: nowrap;
+  color: #6b7280; font-size: 11px; font-weight: 600; white-space: nowrap;
 }
 .sb-glass-lead::after { content: ''; width: 1px; height: 16px; margin-left: 8px; background: rgba(40, 28, 16, 0.13); }
 html.theme-dark .sb-glass-lead { color: #94a3b8; }
@@ -506,7 +506,7 @@ html.theme-dark .sb-glass-lead::after { background: rgba(255, 255, 255, 0.16); }
 .sb-glass-stage {
   display: inline-flex; align-items: center; gap: 5px; height: 30px; flex-shrink: 0; padding: 0 10px;
   border: 0; border-radius: 999px; background: transparent; color: #374151; font-size: 12px;
-  font-weight: 700; white-space: nowrap; cursor: pointer;
+  font-weight: 600; white-space: nowrap; cursor: pointer;
 }
 /* 本番崩れ修正（2026-09-14）: 畳み時、道具バーのカプセルと重なりそうな狭い幅で使う詰め表示
    （件数バッジは JSX 側で省略済み。ここではパディング・文字間を詰めるだけ）。 */
@@ -522,7 +522,7 @@ html.theme-dark .sb-glass-stage { color: #e2e8f0; }
 html.theme-dark .sb-glass-stage:hover { background: rgba(255, 255, 255, 0.14); }
 .sb-glass-stage b, .sb-glass-search .sb-group-chip b {
   display: inline-flex; min-width: 16px; align-items: center; justify-content: center; border-radius: 999px;
-  padding: 0 4px; font-size: 10px; font-weight: 700; line-height: 15px; background: rgba(17, 24, 39, 0.08);
+  padding: 0 4px; font-size: 11px; font-weight: 600; line-height: 15px; background: rgba(17, 24, 39, 0.08);
   color: #4b5563; font-variant-numeric: tabular-nums;
 }
 .sb-glass-stage.on b { background: rgba(255, 255, 255, 0.26); color: #fff; }
@@ -584,13 +584,13 @@ html.theme-dark .sb-glass input::placeholder { color: #8b9ab0; }
    自己参照になり、チップが際限なく縮み続けるバグがあった。幅を外から確定させて計測を安定させる）。 */
 .sb-glass-chips { padding: 0 5px; gap: 2px; max-width: min(220px, 22vw); overflow: hidden; }
 .sb-glass-chips .sb-group-chip, .sb-glass-chips .sb-filter-mini-chip {
-  height: 20px; padding: 0 3px 0 7px; font-size: 10px; background: rgba(255, 255, 255, 0.55); border-right: 0;
+  height: 20px; padding: 0 3px 0 7px; font-size: 11px; background: rgba(255, 255, 255, 0.55); border-right: 0;
 }
 html.theme-dark .sb-glass-chips .sb-group-chip, html.theme-dark .sb-glass-chips .sb-filter-mini-chip { background: rgba(255, 255, 255, 0.12); }
 
 /* 工程ピル間の「›」区切り（AdminTopBarFlow と同じ視覚言語）。 */
 /* 工程の区切り（モック v8 の .tab-arrow。1440px では 12px・#c3c8d0）。 */
-.sb-glass-chevron { margin: 0; color: #c3c8d0; font-size: 12px; font-weight: 700; line-height: 1; }
+.sb-glass-chevron { margin: 0; color: #c3c8d0; font-size: 12px; font-weight: 600; line-height: 1; }
 html.theme-dark .sb-glass-chevron { color: #64748b; }
 
 /* ===== 画面下中央・一括操作ピル（入荷「選択時の一括操作バー」／出荷 依頼中・作業中の選択ピル） =====
@@ -625,15 +625,15 @@ html.theme-dark .sb-glass-chevron { color: #64748b; }
   }
 }
 .sb-bulk-btn {
-  white-space: nowrap; border-radius: 999px; padding: 0.375rem 1rem; font-size: 0.875rem; font-weight: 600;
+  white-space: nowrap; border-radius: 999px; padding: 0.375rem 1rem; font-size: 14px; font-weight: 600;
   background: rgba(255, 255, 255, 0.14); color: #fff; transition: background-color 120ms ease;
 }
 .sb-bulk-btn:hover:not(:disabled) { background: rgba(255, 255, 255, 0.24); }
 .sb-bulk-btn:disabled { cursor: not-allowed; opacity: 0.5; }
 .sb-bulk-btn.danger { background: rgba(244, 63, 94, 0.26); color: #fecdd3; }
 .sb-bulk-btn.danger:hover:not(:disabled) { background: rgba(244, 63, 94, 0.40); }
-.sb-bulk-hint { white-space: nowrap; font-size: 0.75rem; color: rgba(255, 255, 255, 0.7); }
-.sb-bulk-clear { white-space: nowrap; font-size: 0.875rem; color: rgba(255, 255, 255, 0.7); transition: color 120ms ease; }
+.sb-bulk-hint { white-space: nowrap; font-size: 12px; color: rgba(255, 255, 255, 0.7); }
+.sb-bulk-clear { white-space: nowrap; font-size: 14px; color: rgba(255, 255, 255, 0.7); transition: color 120ms ease; }
 .sb-bulk-clear:hover { color: #fff; }
 
 /* 一括操作ピルの置き場（BulkActionPill）。position:fixed は viewport 基準なので、
@@ -651,7 +651,7 @@ html.theme-dark .sb-glass-chevron { color: #64748b; }
    ほかはゴースト＝.sb-bulk-btn のまま）。反転ガラスの上に置くため、ライト・ダークとも
    アクセント色（--sb-accent-bg）をそのまま使い、文字は白で固定する。 */
 .sb-bulk-primary {
-  white-space: nowrap; border-radius: 999px; padding: 0.375rem 1rem; font-size: 0.875rem; font-weight: 700;
+  white-space: nowrap; border-radius: 999px; padding: 0.375rem 1rem; font-size: 14px; font-weight: 600;
   background: var(--sb-accent-bg); color: #fff; transition: background-color 120ms ease, opacity 120ms ease;
 }
 .sb-bulk-primary:hover:not(:disabled) { background: var(--accent-hover); }
@@ -664,7 +664,7 @@ html.theme-dark .sb-glass-chevron { color: #64748b; }
   padding-left: 0.5rem; padding-right: 0.625rem; margin-left: 1px;
 }
 /* 選択の中身（CSV未出力 3 など）。残っている作業は少し強く出す。 */
-.sb-bulk-stat { color: rgba(255, 255, 255, 0.72); font-size: 0.8125rem; }
+.sb-bulk-stat { color: rgba(255, 255, 255, 0.72); font-size: 13px; }
 .sb-bulk-stat.warn { color: #fde68a; font-weight: 600; }
 .sb-bulk-stat-sep { color: rgba(255, 255, 255, 0.35); }
 
@@ -819,7 +819,7 @@ html.theme-dark .sb-colhead.is-stuck[data-tone='amber'] { background: rgba(60, 4
 .sb-section-jump {
   display: inline-flex; align-items: center; gap: 4px; height: 20px; flex-shrink: 0; padding: 0 8px;
   border: 0; border-radius: 10px; background: transparent; color: #6b7280;
-  font-size: 11px; font-weight: 700; white-space: nowrap; cursor: pointer;
+  font-size: 11px; font-weight: 600; white-space: nowrap; cursor: pointer;
   transition: background-color 120ms ease, color 120ms ease;
 }
 .sb-section-jump:hover { background: rgba(17, 24, 39, 0.06); color: #374151; }
@@ -827,7 +827,7 @@ html.theme-dark .sb-colhead.is-stuck[data-tone='amber'] { background: rgba(60, 4
 .sb-section-jump-dot { width: 5px; height: 5px; flex-shrink: 0; border-radius: 999px; }
 .sb-section-jump b {
   min-width: 13px; padding: 0 3px; border-radius: 999px; background: rgba(17, 24, 39, 0.08);
-  color: #4b5563; font-size: 9.5px; font-weight: 700; line-height: 14px; text-align: center;
+  color: #4b5563; font-size: 11px; font-weight: 600; line-height: 14px; text-align: center;
   font-variant-numeric: tabular-nums;
 }
 /* 現在のセクション（見出し自身のグループ）。 */
@@ -1078,18 +1078,18 @@ html.theme-dark .sb-nav-round-active { color: var(--sb-active-ink, color-mix(in 
   align-items: center;
   min-width: 138px;
   color: color-mix(in srgb, var(--sb-accent-bg, #2563eb) 84%, #0f172a);
-  font-size: 24px;
-  font-weight: 800;
+  font-size: 24px; /* 独自サイズ: ロード表示のロゴ文字。幅(min-width)と文字ごとのアニメ前提 */
+  font-weight: 800; /* 独自サイズ: ロード表示のロゴ文字。幅(min-width)と文字ごとのアニメ前提 */
   line-height: 1;
   letter-spacing: 0;
 }
 .hp-loading-indicator--sm .hp-loading-text {
   min-width: 112px;
-  font-size: 20px;
+  font-size: 20px; /* 独自サイズ: ロード表示のロゴ文字。幅(min-width)と文字ごとのアニメ前提 */
 }
 .hp-loading-indicator--lg .hp-loading-text {
   min-width: 160px;
-  font-size: 28px;
+  font-size: 28px; /* 独自サイズ: ロード表示のロゴ文字。幅(min-width)と文字ごとのアニメ前提 */
 }
 .hp-loading-letter {
   display: inline-block;
@@ -1150,7 +1150,7 @@ html.theme-dark .sb-nav-round-active { color: var(--sb-active-ink, color-mix(in 
   }
   .hp-loading-text {
     min-width: 116px;
-    font-size: 20px;
+    font-size: 20px; /* 独自サイズ: ロード表示のロゴ文字。幅(min-width)と文字ごとのアニメ前提 */
   }
   .hp-page-skeleton-table {
     min-width: 0;

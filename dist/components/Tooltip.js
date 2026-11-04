@@ -57,7 +57,7 @@ function HelpHint({
   return /* @__PURE__ */ jsx(Tooltip, { content: text, side, wrap, wrapWidth, children: /* @__PURE__ */ jsx(
     "span",
     {
-      className: `inline-flex items-center justify-center w-3.5 h-3.5 rounded-full bg-gray-200 text-gray-600 text-[10px] font-bold cursor-help hover:bg-gray-300 transition-colors ${className}`,
+      className: `inline-flex items-center justify-center w-3.5 h-3.5 rounded-full bg-gray-200 text-gray-600 text-[11px] leading-[16px] font-semibold cursor-help hover:bg-gray-300 transition-colors ${className}`,
       "aria-label": "\u30D8\u30EB\u30D7",
       children: "?"
     }

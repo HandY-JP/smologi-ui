@@ -19,7 +19,7 @@ function ProviderPicker({
         /* @__PURE__ */ jsx(IntegrationLogo, { meta, size: "sm" }),
         /* @__PURE__ */ jsxs("span", { className: "min-w-0 flex-1", children: [
           /* @__PURE__ */ jsx("span", { className: "block font-semibold", children: meta.label }),
-          description && /* @__PURE__ */ jsx("span", { className: "sb-int-muted block text-xs", children: description })
+          description && /* @__PURE__ */ jsx("span", { className: "sb-int-muted block text-[12px] leading-[18px]", children: description })
         ] }),
         comingSoon && /* @__PURE__ */ jsx("span", { className: "sb-int-chip flex-none", children: "\u6E96\u5099\u4E2D" })
       ]

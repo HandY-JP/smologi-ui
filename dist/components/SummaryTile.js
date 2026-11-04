@@ -15,9 +15,9 @@ function SummaryTile({
   tone = "slate"
 }) {
   return /* @__PURE__ */ jsxs("div", { className: "rounded-xl border border-gray-200 bg-white px-3 py-2", children: [
-    /* @__PURE__ */ jsx("p", { className: "text-[11px] font-medium text-gray-500", children: label }),
-    sublabel && /* @__PURE__ */ jsx("p", { className: "truncate text-[10px] text-gray-400", title: sublabel, children: sublabel }),
-    /* @__PURE__ */ jsx("p", { className: `mt-0.5 text-2xl font-bold tabular-nums ${TONE_CLASS[tone]}`, children: typeof value === "number" ? value.toLocaleString("ja-JP") : value })
+    /* @__PURE__ */ jsx("p", { className: "text-[11px] leading-[16px] font-medium text-gray-500", children: label }),
+    sublabel && /* @__PURE__ */ jsx("p", { className: "truncate text-[11px] leading-[16px] text-gray-400", title: sublabel, children: sublabel }),
+    /* @__PURE__ */ jsx("p", { className: `mt-0.5 text-[22px] leading-[30px] font-semibold tabular-nums ${TONE_CLASS[tone]}`, children: typeof value === "number" ? value.toLocaleString("ja-JP") : value })
   ] });
 }
 export {

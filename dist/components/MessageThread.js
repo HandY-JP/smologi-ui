@@ -14,7 +14,7 @@ function MessageThread({
   empty
 }) {
   if (messages.length === 0) {
-    return /* @__PURE__ */ jsx("div", { className: `p-6 text-center text-sm text-gray-400 ${className}`, children: empty ?? "\u3084\u308A\u53D6\u308A\u306F\u307E\u3060\u3042\u308A\u307E\u305B\u3093\u3002" });
+    return /* @__PURE__ */ jsx("div", { className: `p-6 text-center text-[14px] leading-[22px] text-gray-400 ${className}`, children: empty ?? "\u3084\u308A\u53D6\u308A\u306F\u307E\u3060\u3042\u308A\u307E\u305B\u3093\u3002" });
   }
   let prevDay = "";
   return /* @__PURE__ */ jsx("div", { className: `flex flex-col gap-3.5 ${className}`, children: messages.map((m) => {
@@ -24,16 +24,16 @@ function MessageThread({
     if (d) prevDay = key;
     const out = m.direction === "out";
     return /* @__PURE__ */ jsxs("div", { className: "contents", children: [
-      showDay && d && /* @__PURE__ */ jsx("div", { className: "self-center text-[11px] text-gray-400", children: dayLabel(d) }),
+      showDay && d && /* @__PURE__ */ jsx("div", { className: "self-center text-[11px] leading-[16px] text-gray-400", children: dayLabel(d) }),
       /* @__PURE__ */ jsxs("div", { className: `flex max-w-[86%] flex-col gap-1 md:max-w-[76%] ${out ? "items-end self-end" : "items-start self-start"}`, children: [
         /* @__PURE__ */ jsx(
           "div",
           {
-            className: `whitespace-pre-wrap break-words px-3.5 py-2.5 text-[13.5px] leading-relaxed text-gray-900 ${out ? "rounded-2xl rounded-tr bg-[var(--accent-subtle)]" : "rounded-2xl rounded-tl bg-gray-100"}`,
+            className: `whitespace-pre-wrap break-words px-3.5 py-2.5 text-[13px] leading-relaxed text-gray-900 ${out ? "rounded-2xl rounded-tr bg-[var(--accent-subtle)]" : "rounded-2xl rounded-tl bg-gray-100"}`,
             children: m.body
           }
         ),
-        (m.sender || d) && /* @__PURE__ */ jsxs("span", { className: "text-[11px] text-gray-400", children: [
+        (m.sender || d) && /* @__PURE__ */ jsxs("span", { className: "text-[11px] leading-[16px] text-gray-400", children: [
           m.sender,
           m.sender && d ? " \u30FB " : "",
           d ? timeLabel(d) : ""

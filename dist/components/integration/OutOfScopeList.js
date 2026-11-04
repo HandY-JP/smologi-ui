@@ -8,10 +8,10 @@ function OutOfScopeList({
   if (items.length === 0) return null;
   return /* @__PURE__ */ jsxs("div", { className: "sb-int grid gap-1.5 sm:grid-cols-[200px_minmax(0,1fr)] sm:gap-4", children: [
     /* @__PURE__ */ jsxs("div", { children: [
-      /* @__PURE__ */ jsx("p", { className: "text-[13.5px] font-semibold", children: title }),
-      /* @__PURE__ */ jsx("p", { className: "sb-int-muted text-xs", children: hint })
+      /* @__PURE__ */ jsx("p", { className: "text-[13px] leading-[20px] font-semibold", children: title }),
+      /* @__PURE__ */ jsx("p", { className: "sb-int-muted text-[12px] leading-[18px]", children: hint })
     ] }),
-    /* @__PURE__ */ jsx("ul", { className: "sb-int-muted m-0 grid list-none gap-1 p-0 text-[12.5px]", children: items.map((t) => /* @__PURE__ */ jsx("li", { children: t }, t)) })
+    /* @__PURE__ */ jsx("ul", { className: "sb-int-muted m-0 grid list-none gap-1 p-0 text-[12px] leading-[18px]", children: items.map((t) => /* @__PURE__ */ jsx("li", { children: t }, t)) })
   ] });
 }
 export {

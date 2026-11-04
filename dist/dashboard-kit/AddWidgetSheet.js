@@ -39,8 +39,8 @@ function AddWidgetSheet({
   hint,
   confirmLabel = "\u8FFD\u52A0\u3059\u308B",
   cancelLabel = "\u3084\u3081\u308B",
-  footerButtonClassName = "rounded-full border border-current px-4 py-2 text-sm font-medium",
-  footerPrimaryClassName = "rounded-full bg-current px-4 py-2 text-sm font-medium",
+  footerButtonClassName = "rounded-full border border-current px-4 py-2 text-[14px] leading-[22px] font-medium",
+  footerPrimaryClassName = "rounded-full bg-current px-4 py-2 text-[14px] leading-[22px] font-medium",
   selectedClassName = "ring-2 ring-current",
   footerClassName = ""
 }) {
@@ -99,8 +99,8 @@ function AddWidgetSheet({
   const heading = title ?? (multiple ? "\u30A6\u30A3\u30B8\u30A7\u30C3\u30C8\u3092\u9078\u3076" : "\u30A6\u30A3\u30B8\u30A7\u30C3\u30C8\u3092\u8FFD\u52A0");
   const allAdded = candidates.every((c) => c.added);
   const body = /* @__PURE__ */ jsxs(Fragment, { children: [
-    multiple ? /* @__PURE__ */ jsx("p", { className: "mb-3 text-[13px] opacity-60", children: hint ?? "\u62BC\u3057\u3066\u9078\u3073\u3001\u300C\u8FFD\u52A0\u3059\u308B\u300D\u3067\u4E26\u3079\u307E\u3059\u3002\u3042\u3068\u304B\u3089\u300C\u7DE8\u96C6\u300D\u3067\u3044\u3064\u3067\u3082\u5909\u3048\u3089\u308C\u307E\u3059\u3002" }) : null,
-    allAdded ? /* @__PURE__ */ jsx("p", { className: "mb-3 text-[13px] opacity-60", children: "\u3059\u3079\u3066\u306E\u30A6\u30A3\u30B8\u30A7\u30C3\u30C8\u3092\u8868\u793A\u4E2D\u3067\u3059\u3002" }) : null,
+    multiple ? /* @__PURE__ */ jsx("p", { className: "mb-3 text-[13px] leading-[20px] opacity-60", children: hint ?? "\u62BC\u3057\u3066\u9078\u3073\u3001\u300C\u8FFD\u52A0\u3059\u308B\u300D\u3067\u4E26\u3079\u307E\u3059\u3002\u3042\u3068\u304B\u3089\u300C\u7DE8\u96C6\u300D\u3067\u3044\u3064\u3067\u3082\u5909\u3048\u3089\u308C\u307E\u3059\u3002" }) : null,
+    allAdded ? /* @__PURE__ */ jsx("p", { className: "mb-3 text-[13px] leading-[20px] opacity-60", children: "\u3059\u3079\u3066\u306E\u30A6\u30A3\u30B8\u30A7\u30C3\u30C8\u3092\u8868\u793A\u4E2D\u3067\u3059\u3002" }) : null,
     candidates.length > 0 ? /* @__PURE__ */ jsx("div", { className: `grid gap-2.5 ${wide ? "grid-cols-3" : "grid-cols-[repeat(auto-fill,minmax(150px,1fr))]"}`, children: candidates.map((c) => {
       const locked = !!c.disabled && !c.added;
       const inert = locked || !!c.added;
@@ -120,14 +120,14 @@ function AddWidgetSheet({
           children: [
             /* @__PURE__ */ jsx("div", { className: locked ? "opacity-50" : void 0, children: /* @__PURE__ */ jsx(PreviewArt, { kind: c.preview }) }),
             /* @__PURE__ */ jsxs("div", { className: locked ? "opacity-50" : void 0, children: [
-              /* @__PURE__ */ jsxs("b", { className: "mb-1 flex items-start justify-between gap-2 text-sm", children: [
+              /* @__PURE__ */ jsxs("b", { className: "mb-1 flex items-start justify-between gap-2 text-[14px] leading-[22px]", children: [
                 /* @__PURE__ */ jsxs("span", { className: "flex min-w-0 flex-1 flex-wrap items-center gap-x-1.5 gap-y-1", children: [
                   /* @__PURE__ */ jsxs("span", { className: "min-w-0 break-words", children: [
                     inert || multiple ? "" : "\uFF0B ",
                     c.title
                   ] }),
-                  c.badge ? /* @__PURE__ */ jsx("span", { className: "rounded-full border border-current px-1.5 py-px text-[10px] font-semibold leading-none opacity-70", children: c.badge }) : null,
-                  c.recommended && !c.disabled && !c.added ? /* @__PURE__ */ jsx("span", { className: "rounded-full border border-current px-1.5 py-px text-[10px] font-semibold leading-none opacity-70", children: "\u304A\u3059\u3059\u3081" }) : null
+                  c.badge ? /* @__PURE__ */ jsx("span", { className: "rounded-full border border-current px-1.5 py-px text-[11px] font-semibold leading-none opacity-70", children: c.badge }) : null,
+                  c.recommended && !c.disabled && !c.added ? /* @__PURE__ */ jsx("span", { className: "rounded-full border border-current px-1.5 py-px text-[11px] font-semibold leading-none opacity-70", children: "\u304A\u3059\u3059\u3081" }) : null
                 ] }),
                 c.added ? /* @__PURE__ */ jsxs("span", { className: "relative inline-flex shrink-0 items-center gap-1 overflow-hidden whitespace-nowrap rounded-full px-2 py-0.5 text-[11px] font-semibold leading-none", children: [
                   /* @__PURE__ */ jsx("span", { "aria-hidden": true, className: "absolute inset-0 bg-current opacity-10" }),
@@ -135,7 +135,7 @@ function AddWidgetSheet({
                   "\u8FFD\u52A0\u6E08\u307F"
                 ] }) : null
               ] }),
-              c.description ? /* @__PURE__ */ jsx("small", { className: "text-xs leading-normal opacity-60", children: c.description }) : null
+              c.description ? /* @__PURE__ */ jsx("small", { className: "text-[12px] leading-normal opacity-60", children: c.description }) : null
             ] })
           ]
         },
@@ -163,7 +163,7 @@ function AddWidgetSheet({
             className: `fixed left-1/2 top-1/2 z-[41] flex h-[min(640px,80vh)] w-[min(768px,calc(100%-32px))] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden outline-none ${modalClassName}`,
             children: [
               /* @__PURE__ */ jsxs("div", { className: "flex shrink-0 items-center justify-between gap-3 px-5 pb-2 pt-4", children: [
-                /* @__PURE__ */ jsx("h4", { className: "text-base font-semibold", children: heading }),
+                /* @__PURE__ */ jsx("h4", { className: "text-[15px] leading-[22px] font-semibold", children: heading }),
                 /* @__PURE__ */ jsx("button", { type: "button", onClick: onClose, "aria-label": "\u9589\u3058\u308B", className: "rounded-full p-1.5 opacity-60 hover:opacity-100", children: /* @__PURE__ */ jsx("svg", { viewBox: "0 0 16 16", width: "16", height: "16", "aria-hidden": true, children: /* @__PURE__ */ jsx("path", { d: "M3.5 3.5l9 9m0-9l-9 9", fill: "none", stroke: "currentColor", strokeWidth: "1.8", strokeLinecap: "round" }) }) })
               ] }),
               /* @__PURE__ */ jsx("div", { className: "min-h-0 flex-1 overflow-y-auto px-5 pb-4", children: body }),
@@ -182,7 +182,7 @@ function AddWidgetSheet({
           className: `fixed bottom-0 left-1/2 z-[41] max-h-[70vh] w-[min(560px,100%)] -translate-x-1/2 overflow-auto outline-none px-4 pb-[calc(20px+env(safe-area-inset-bottom,0px))] pt-2.5 ${sheetClassName}`,
           children: [
             /* @__PURE__ */ jsx("div", { className: "mx-auto mb-2.5 mt-1 h-[5px] w-10 rounded-[3px] bg-current opacity-20" }),
-            /* @__PURE__ */ jsx("h4", { className: `${multiple ? "mb-1" : "mb-2.5"} text-base font-semibold`, children: heading }),
+            /* @__PURE__ */ jsx("h4", { className: `${multiple ? "mb-1" : "mb-2.5"} text-[15px] leading-[22px] font-semibold`, children: heading }),
             body,
             footer
           ]

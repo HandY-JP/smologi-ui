@@ -2,7 +2,7 @@
 import { Fragment, jsx, jsxs } from "react/jsx-runtime";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 const FIELD_BASE = "group flex h-10 w-full items-center gap-2 rounded-md px-2.5 text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--sb-text)]";
-const ROW_BASE = "flex w-full items-center gap-2 px-3 py-2 text-left text-sm transition-colors hover:bg-[var(--sb-popover-hover,var(--sb-popover-current-bg,var(--accent-subtle)))] focus-visible:bg-[var(--sb-popover-hover,var(--sb-popover-current-bg,var(--accent-subtle)))] focus-visible:outline-none disabled:cursor-default disabled:opacity-50";
+const ROW_BASE = "flex w-full items-center gap-2 px-3 py-2 text-left text-[14px] leading-[22px] transition-colors hover:bg-[var(--sb-popover-hover,var(--sb-popover-current-bg,var(--accent-subtle)))] focus-visible:bg-[var(--sb-popover-hover,var(--sb-popover-current-bg,var(--accent-subtle)))] focus-visible:outline-none disabled:cursor-default disabled:opacity-50";
 function Chevron({ open }) {
   return /* @__PURE__ */ jsx(
     "svg",
@@ -72,7 +72,7 @@ function StoreAccountSwitcher({
         href: emptyHref,
         title: currentLabel,
         className: `${FIELD_BASE} border border-orange-200 bg-orange-50 hover:bg-orange-100`,
-        children: /* @__PURE__ */ jsx("span", { className: "min-w-0 flex-1 truncate text-sm font-semibold text-orange-800", children: currentLabel })
+        children: /* @__PURE__ */ jsx("span", { className: "min-w-0 flex-1 truncate text-[14px] leading-[22px] font-semibold text-orange-800", children: currentLabel })
       }),
       emptyHint && /* @__PURE__ */ jsx("p", { className: "mt-1.5 px-0.5 text-[11px] leading-relaxed", style: { color: "var(--sb-label)" }, children: emptyHint })
     ] });
@@ -81,12 +81,12 @@ function StoreAccountSwitcher({
     const body = /* @__PURE__ */ jsxs(Fragment, { children: [
       /* @__PURE__ */ jsxs("span", { className: "min-w-0 flex-1", children: [
         /* @__PURE__ */ jsx("span", { className: "block truncate", style: item.checked ? { color: "var(--sb-popover-current-ink, var(--sb-accent-bg))", fontWeight: 600 } : void 0, children: item.label }),
-        item.sub && /* @__PURE__ */ jsx("span", { className: "block truncate text-[11px]", style: { color: "var(--sb-popover-muted, var(--sb-label))" }, children: item.sub })
+        item.sub && /* @__PURE__ */ jsx("span", { className: "block truncate text-[11px] leading-[16px]", style: { color: "var(--sb-popover-muted, var(--sb-label))" }, children: item.sub })
       ] }),
       item.badge && /* @__PURE__ */ jsx(
         "span",
         {
-          className: "flex-shrink-0 rounded px-1.5 py-0.5 text-[10px] font-semibold leading-none",
+          className: "flex-shrink-0 rounded px-1.5 py-0.5 text-[11px] font-semibold leading-none",
           style: { backgroundColor: "var(--sb-hover)", color: "var(--sb-popover-muted, var(--sb-label))" },
           children: item.badge
         }
@@ -94,7 +94,7 @@ function StoreAccountSwitcher({
       item.checked && /* @__PURE__ */ jsxs(
         "span",
         {
-          className: "flex-shrink-0 text-xs font-semibold",
+          className: "flex-shrink-0 text-[12px] leading-[18px] font-semibold",
           style: { color: "var(--sb-popover-current-ink, var(--sb-accent-bg))" },
           children: [
             /* @__PURE__ */ jsx("span", { "aria-hidden": "true", children: "\u2713 " }),
@@ -159,7 +159,7 @@ function StoreAccountSwitcher({
         className: `${FIELD_BASE} border hover:bg-[var(--sb-field-hover,var(--sb-hover))]`,
         style: { ...fieldStyle, color: "var(--sb-text)" },
         children: [
-          /* @__PURE__ */ jsx("span", { className: "min-w-0 flex-1 truncate text-sm font-semibold", children: currentLabel }),
+          /* @__PURE__ */ jsx("span", { className: "min-w-0 flex-1 truncate text-[14px] leading-[22px] font-semibold", children: currentLabel }),
           /* @__PURE__ */ jsx(Chevron, { open })
         ]
       }
@@ -177,7 +177,7 @@ function StoreAccountSwitcher({
             "div",
             {
               role: "status",
-              className: "px-3 py-2 text-xs",
+              className: "px-3 py-2 text-[12px] leading-[18px]",
               style: { color: "var(--sb-popover-muted, var(--sb-label))" },
               children: statusText
             }
@@ -185,7 +185,7 @@ function StoreAccountSwitcher({
             group.heading && /* @__PURE__ */ jsx(
               "div",
               {
-                className: "px-3 pb-0.5 pt-2 text-[11px] font-semibold",
+                className: "px-3 pb-0.5 pt-2 text-[11px] leading-[16px] font-semibold",
                 style: { color: "var(--sb-popover-muted, var(--sb-label))" },
                 children: group.heading
               }

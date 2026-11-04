@@ -11,7 +11,7 @@ const SIDEBAR_MENU_ICONS = {
   help: /* @__PURE__ */ jsx("svg", { className: "h-[18px] w-[18px] text-[var(--sb-label)]", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", strokeWidth: 2, "aria-hidden": "true", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M9.879 7.519a3 3 0 115.242 2.532c-.966.966-1.5 1.29-1.5 2.949M12 17.5h.01M12 3a9 9 0 100 18 9 9 0 000-18z" }) }),
   logout: /* @__PURE__ */ jsx("svg", { className: "h-[18px] w-[18px] text-[var(--sb-label)]", fill: "none", stroke: "currentColor", strokeWidth: 2, viewBox: "0 0 24 24", "aria-hidden": "true", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" }) })
 };
-const ITEM_CLASS = "flex w-full items-center gap-3 px-3 py-2.5 text-left text-sm text-[var(--sb-text)] transition-colors hover:bg-[var(--sb-hover)]";
+const ITEM_CLASS = "flex w-full items-center gap-3 px-3 py-2.5 text-left text-[14px] leading-[22px] text-[var(--sb-text)] transition-colors hover:bg-[var(--sb-hover)]";
 function AppSidebarAccountMenu({
   name,
   email,
@@ -55,7 +55,7 @@ function AppSidebarAccountMenu({
         style: { color: "var(--sb-text)" },
         children: [
           avatar,
-          /* @__PURE__ */ jsx("span", { className: "min-w-0 flex-1 truncate text-left text-base", children: display }),
+          /* @__PURE__ */ jsx("span", { className: "min-w-0 flex-1 truncate text-left text-[15px] leading-[22px]", children: display }),
           /* @__PURE__ */ jsx("svg", { className: "h-3.5 w-3.5 flex-shrink-0 text-[var(--sb-label)]", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", strokeWidth: 2, "aria-hidden": "true", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M8 15l4-4 4 4M8 9l4-4 4 4" }) })
         ]
       }
@@ -70,8 +70,8 @@ function AppSidebarAccountMenu({
           /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 px-3 py-3", children: [
             avatar,
             /* @__PURE__ */ jsxs("div", { className: "min-w-0", children: [
-              /* @__PURE__ */ jsx("p", { className: "truncate text-sm font-semibold", style: { color: "var(--sb-heading, var(--sb-text))" }, children: display }),
-              email && /* @__PURE__ */ jsx("p", { className: "truncate text-xs", style: { color: "var(--sb-label)" }, children: email })
+              /* @__PURE__ */ jsx("p", { className: "truncate text-[14px] leading-[22px] font-semibold", style: { color: "var(--sb-heading, var(--sb-text))" }, children: display }),
+              email && /* @__PURE__ */ jsx("p", { className: "truncate text-[12px] leading-[18px]", style: { color: "var(--sb-label)" }, children: email })
             ] })
           ] }),
           /* @__PURE__ */ jsxs("div", { className: "border-t py-1", style: { borderColor: "var(--sb-hover)" }, children: [

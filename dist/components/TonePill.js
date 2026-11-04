@@ -19,7 +19,7 @@ function TonePill({
     "span",
     {
       title,
-      className: `inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-px text-[11px] font-semibold ${TONE_CLASS[tone]} ${className}`,
+      className: `inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-px text-[11px] leading-[16px] font-semibold ${TONE_CLASS[tone]} ${className}`,
       children: [
         icon && /* @__PURE__ */ jsx("span", { "aria-hidden": true, className: "inline-flex flex-shrink-0", children: icon }),
         children

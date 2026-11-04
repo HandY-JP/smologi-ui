@@ -6,7 +6,7 @@ function SidebarAccountAvatar({ src, name }) {
   return src ? (
     // eslint-disable-next-line @next/next/no-img-element
     /* @__PURE__ */ jsx("img", { src, alt: name ?? "", className: "h-7 w-7 flex-shrink-0 rounded-full object-cover" })
-  ) : /* @__PURE__ */ jsx("span", { className: "flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-slate-600 text-xs font-medium text-white", children: name?.[0] ?? "?" });
+  ) : /* @__PURE__ */ jsx("span", { className: "flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-slate-600 text-[12px] leading-[18px] font-medium text-white", children: name?.[0] ?? "?" });
 }
 function SidebarAccountRow({
   avatar,
@@ -32,8 +32,8 @@ function SidebarAccountRow({
     children: /* @__PURE__ */ jsxs(Fragment, { children: [
       avatar,
       !collapsed && /* @__PURE__ */ jsxs("span", { className: "min-w-0 flex-1 text-left", children: [
-        /* @__PURE__ */ jsx("span", { className: "block truncate text-base", children: name }),
-        subText != null && /* @__PURE__ */ jsx("span", { className: "block truncate text-xs", style: { color: "var(--sb-label)" }, children: subText })
+        /* @__PURE__ */ jsx("span", { className: "block truncate text-[15px] leading-[22px]", children: name }),
+        subText != null && /* @__PURE__ */ jsx("span", { className: "block truncate text-[12px] leading-[18px]", style: { color: "var(--sb-label)" }, children: subText })
       ] })
     ] })
   };

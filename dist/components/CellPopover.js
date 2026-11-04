@@ -136,7 +136,7 @@ function CellPopover({
           onClick: (event) => event.stopPropagation(),
           onDoubleClick: (event) => event.stopPropagation(),
           children: [
-            /* @__PURE__ */ jsx("p", { className: "mb-2 text-[11px] font-semibold tracking-wide text-gray-500", children: panelLabel }),
+            /* @__PURE__ */ jsx("p", { className: "mb-2 text-[11px] leading-[16px] font-semibold tracking-wide text-gray-500", children: panelLabel }),
             panel
           ]
         }

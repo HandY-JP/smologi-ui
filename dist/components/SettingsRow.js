@@ -11,14 +11,14 @@ function SettingsRow({
   if (full) return /* @__PURE__ */ jsx("div", { className: "min-w-0", children });
   return /* @__PURE__ */ jsxs("div", { className: "grid gap-1.5 sm:grid-cols-[200px_minmax(0,1fr)] sm:items-start sm:gap-4", children: [
     /* @__PURE__ */ jsxs("div", { className: "pt-1.5", children: [
-      label && /* @__PURE__ */ jsx("label", { htmlFor, className: "block text-sm font-medium text-gray-700", children: label }),
+      label && /* @__PURE__ */ jsx("label", { htmlFor, className: "block text-[14px] leading-[22px] font-medium text-gray-700", children: label }),
       hint && /* @__PURE__ */ jsx("p", { className: "mt-0.5 text-[11px] leading-4 text-gray-400", children: hint })
     ] }),
     /* @__PURE__ */ jsx("div", { className: "min-w-0", children })
   ] });
 }
-const SETTINGS_INPUT_CLASS = "w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-[var(--sb-accent-bg)] focus:outline-none focus:ring-1 focus:ring-[var(--sb-accent-bg)] disabled:bg-gray-50 disabled:text-gray-400";
-const SETTINGS_GHOST_BUTTON_CLASS = "inline-flex h-8 items-center gap-1.5 rounded-md border border-gray-300 bg-white px-3 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50";
+const SETTINGS_INPUT_CLASS = "w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-[14px] leading-[22px] text-gray-900 placeholder:text-gray-400 focus:border-[var(--sb-accent-bg)] focus:outline-none focus:ring-1 focus:ring-[var(--sb-accent-bg)] disabled:bg-gray-50 disabled:text-gray-400";
+const SETTINGS_GHOST_BUTTON_CLASS = "inline-flex h-8 items-center gap-1.5 rounded-md border border-gray-300 bg-white px-3 text-[14px] leading-[22px] font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50";
 function SettingsToggle({
   checked,
   onChange,

@@ -103,7 +103,7 @@ function ToolMenu({ items, onClose, triggerRef }) {
                 mi.onClick();
                 onClose();
               },
-              className: "flex items-center rounded-lg px-3 py-2 text-left text-sm text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:text-gray-300 disabled:hover:bg-transparent",
+              className: "flex items-center rounded-lg px-3 py-2 text-left text-[14px] leading-[22px] text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:text-gray-300 disabled:hover:bg-transparent",
               children: mi.label
             }
           )
@@ -135,13 +135,13 @@ function buildToolListRows(items, expandedKey) {
 }
 function ToolListRowStatus({ item }) {
   if (item.status === "progress") {
-    return /* @__PURE__ */ jsx("span", { className: "flex-shrink-0 text-[11px] font-medium text-gray-400", children: "\u51E6\u7406\u4E2D" });
+    return /* @__PURE__ */ jsx("span", { className: "flex-shrink-0 text-[11px] leading-[16px] font-medium text-gray-400", children: "\u51E6\u7406\u4E2D" });
   }
   if (item.status === "done") {
-    return /* @__PURE__ */ jsx("span", { className: "flex-shrink-0 rounded-full bg-blue-50 px-2 py-0.5 text-[11px] font-semibold text-blue-600", children: item.doneCount != null ? `${item.doneCount.toLocaleString()}\u4EF6 \u3067\u304D\u3042\u304C\u308A` : "\u3067\u304D\u3042\u304C\u308A" });
+    return /* @__PURE__ */ jsx("span", { className: "flex-shrink-0 rounded-full bg-blue-50 px-2 py-0.5 text-[11px] leading-[16px] font-semibold text-blue-600", children: item.doneCount != null ? `${item.doneCount.toLocaleString()}\u4EF6 \u3067\u304D\u3042\u304C\u308A` : "\u3067\u304D\u3042\u304C\u308A" });
   }
   if (item.status === "failed") {
-    return /* @__PURE__ */ jsx("span", { className: "flex-shrink-0 text-[11px] font-medium text-red-600", children: item.statusMessage ?? "\u5931\u6557\u3057\u307E\u3057\u305F" });
+    return /* @__PURE__ */ jsx("span", { className: "flex-shrink-0 text-[11px] leading-[16px] font-medium text-red-600", children: item.statusMessage ?? "\u5931\u6557\u3057\u307E\u3057\u305F" });
   }
   return null;
 }
@@ -240,7 +240,7 @@ function ToolListPanel({
                     children: [
                       /* @__PURE__ */ jsx("span", { className: "flex h-4 w-4 flex-shrink-0 items-center justify-center text-gray-300 [&_svg]:h-4 [&_svg]:w-4", "aria-hidden": true, children: parent.icon }),
                       /* @__PURE__ */ jsxs("span", { className: "min-w-0 flex-1", children: [
-                        /* @__PURE__ */ jsx("span", { className: "block truncate text-[13px] font-medium text-gray-700", children: sub2.label }),
+                        /* @__PURE__ */ jsx("span", { className: "block truncate text-[13px] leading-[20px] font-medium text-gray-700", children: sub2.label }),
                         sub2.description && /* @__PURE__ */ jsx("span", { className: "mt-0.5 block text-[11px] leading-snug text-gray-400", children: sub2.description })
                       ] })
                     ]
@@ -283,8 +283,8 @@ function ToolListPanel({
                       }
                     ),
                     /* @__PURE__ */ jsxs("span", { className: "min-w-0 flex-1", children: [
-                      /* @__PURE__ */ jsx("span", { className: "block truncate text-sm font-semibold text-gray-800", children: item.label }),
-                      sub && /* @__PURE__ */ jsx("span", { className: "mt-0.5 block text-xs leading-snug text-gray-500", children: sub })
+                      /* @__PURE__ */ jsx("span", { className: "block truncate text-[14px] leading-[22px] font-semibold text-gray-800", children: item.label }),
+                      sub && /* @__PURE__ */ jsx("span", { className: "mt-0.5 block text-[12px] leading-snug text-gray-500", children: sub })
                     ] }),
                     /* @__PURE__ */ jsx(ToolListRowStatus, { item }),
                     hasMenu && /* @__PURE__ */ jsx(
@@ -302,7 +302,7 @@ function ToolListPanel({
           }),
           settingsLinks && settingsLinks.length > 0 && /* @__PURE__ */ jsxs(Fragment, { children: [
             /* @__PURE__ */ jsx("span", { className: "my-1 block h-px bg-gray-100", "aria-hidden": true }),
-            /* @__PURE__ */ jsx("div", { className: "px-2.5 pb-1 pt-1.5 text-[11px] font-semibold uppercase tracking-wide text-gray-400", children: "\u95A2\u9023\u3059\u308B\u8A2D\u5B9A" }),
+            /* @__PURE__ */ jsx("div", { className: "px-2.5 pb-1 pt-1.5 text-[11px] leading-[16px] font-semibold uppercase tracking-wide text-gray-400", children: "\u95A2\u9023\u3059\u308B\u8A2D\u5B9A" }),
             settingsLinks.map((link) => /* @__PURE__ */ jsxs(
               "button",
               {
@@ -318,8 +318,8 @@ function ToolListPanel({
                 children: [
                   /* @__PURE__ */ jsx("span", { className: "flex h-5 w-5 flex-shrink-0 items-center justify-center text-gray-400 [&_svg]:h-5 [&_svg]:w-5", "aria-hidden": true, children: SettingsGearIcon }),
                   /* @__PURE__ */ jsxs("span", { className: "min-w-0 flex-1", children: [
-                    /* @__PURE__ */ jsx("span", { className: "block truncate text-sm font-semibold text-gray-800", children: link.label }),
-                    link.description && /* @__PURE__ */ jsx("span", { className: "mt-0.5 block text-xs leading-snug text-gray-500", children: link.description })
+                    /* @__PURE__ */ jsx("span", { className: "block truncate text-[14px] leading-[22px] font-semibold text-gray-800", children: link.label }),
+                    link.description && /* @__PURE__ */ jsx("span", { className: "mt-0.5 block text-[12px] leading-snug text-gray-500", children: link.description })
                   ] })
                 ]
               },

@@ -101,20 +101,20 @@ function AppLauncherPopover({
         children: [
           header != null && /* @__PURE__ */ jsx("div", { className: "border-b px-5 py-4", style: { borderColor: POPOVER_LINE }, children: header }),
           /* @__PURE__ */ jsxs("div", { className: "max-h-[calc(100vh-9rem)] overflow-y-auto p-2", children: [
-            loading && /* @__PURE__ */ jsx("p", { className: "px-3 py-5 text-sm", style: { color: POPOVER_MUTED }, children: loadingText }),
-            failed && /* @__PURE__ */ jsx("p", { className: "px-3 py-5 text-sm", style: { color: POPOVER_MUTED }, children: failedText }),
+            loading && /* @__PURE__ */ jsx("p", { className: "px-3 py-5 text-[14px] leading-[22px]", style: { color: POPOVER_MUTED }, children: loadingText }),
+            failed && /* @__PURE__ */ jsx("p", { className: "px-3 py-5 text-[14px] leading-[22px]", style: { color: POPOVER_MUTED }, children: failedText }),
             apps.map((app) => {
               const icon = renderIcon ? renderIcon(app) : app.icon ?? (app.iconSrc ? /* @__PURE__ */ jsx("img", { src: app.iconSrc, alt: "", className: "h-10 w-10 shrink-0 rounded-xl shadow-sm" }) : null);
               const content = /* @__PURE__ */ jsxs(Fragment, { children: [
                 icon,
                 /* @__PURE__ */ jsxs("span", { className: "min-w-0 flex-1", children: [
-                  /* @__PURE__ */ jsxs("span", { className: "flex items-center text-sm font-semibold", style: { color: POPOVER_INK }, children: [
+                  /* @__PURE__ */ jsxs("span", { className: "flex items-center text-[14px] leading-[22px] font-semibold", style: { color: POPOVER_INK }, children: [
                     /* @__PURE__ */ jsx("span", { className: "truncate", children: app.name }),
                     renderNewDot?.(app)
                   ] }),
-                  app.description && /* @__PURE__ */ jsx("span", { className: "mt-0.5 block truncate text-xs", style: { color: POPOVER_MUTED }, children: app.description })
+                  app.description && /* @__PURE__ */ jsx("span", { className: "mt-0.5 block truncate text-[12px] leading-[18px]", style: { color: POPOVER_MUTED }, children: app.description })
                 ] }),
-                app.current ? /* @__PURE__ */ jsx("span", { className: "text-[10px] font-medium", style: { color: POPOVER_CURRENT_INK }, children: currentLabel }) : app.external ?? true ? /* @__PURE__ */ jsx("span", { style: { color: POPOVER_MUTED }, "aria-hidden": "true", children: "\u2197" }) : null
+                app.current ? /* @__PURE__ */ jsx("span", { className: "text-[11px] leading-[16px] font-medium", style: { color: POPOVER_CURRENT_INK }, children: currentLabel }) : app.external ?? true ? /* @__PURE__ */ jsx("span", { style: { color: POPOVER_MUTED }, "aria-hidden": "true", children: "\u2197" }) : null
               ] });
               if (app.current) {
                 return /* @__PURE__ */ jsx(

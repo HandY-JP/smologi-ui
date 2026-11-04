@@ -96,7 +96,7 @@ function SearchableSelect({
         role: "option",
         "aria-selected": on,
         onClick: () => pick(o.value),
-        className: `flex w-full items-center justify-between gap-2 rounded px-1.5 py-1.5 text-left text-sm ${on ? "bg-blue-50 text-blue-700" : "text-gray-700 hover:bg-gray-50"}`,
+        className: `flex w-full items-center justify-between gap-2 rounded px-1.5 py-1.5 text-left text-[14px] leading-[22px] ${on ? "bg-blue-50 text-blue-700" : "text-gray-700 hover:bg-gray-50"}`,
         children: [
           /* @__PURE__ */ jsx("span", { className: "truncate", children: o.label }),
           on && /* @__PURE__ */ jsx("svg", { className: "h-4 w-4 flex-shrink-0 text-blue-600", fill: "none", stroke: "currentColor", strokeWidth: 2.5, viewBox: "0 0 24 24", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M5 13l4 4L19 7" }) })
@@ -110,7 +110,7 @@ function SearchableSelect({
     setQuery("");
     setActiveIndex(-1);
   };
-  const panelBody = /* @__PURE__ */ jsx("div", { className: "max-h-full overflow-y-auto p-1", style: portalPanel ? void 0 : { maxHeight: "14rem" }, children: visibleOptions.length === 0 ? /* @__PURE__ */ jsx("div", { className: "px-2 py-2 text-xs text-gray-400", children: q ? `\u300C${query}\u300D\u306B\u4E00\u81F4\u3059\u308B\u9805\u76EE\u304C\u3042\u308A\u307E\u305B\u3093` : emptyText }) : visibleOptions.map((option, index) => /* @__PURE__ */ jsx("div", { className: index === activeIndex ? "rounded bg-blue-50" : "", children: renderRow(option, `${listboxId}-option-${index}`) }, `${option.value || "__empty__"}:${index}`)) });
+  const panelBody = /* @__PURE__ */ jsx("div", { className: "max-h-full overflow-y-auto p-1", style: portalPanel ? void 0 : { maxHeight: "14rem" }, children: visibleOptions.length === 0 ? /* @__PURE__ */ jsx("div", { className: "px-2 py-2 text-[12px] leading-[18px] text-gray-400", children: q ? `\u300C${query}\u300D\u306B\u4E00\u81F4\u3059\u308B\u9805\u76EE\u304C\u3042\u308A\u307E\u305B\u3093` : emptyText }) : visibleOptions.map((option, index) => /* @__PURE__ */ jsx("div", { className: index === activeIndex ? "rounded bg-blue-50" : "", children: renderRow(option, `${listboxId}-option-${index}`) }, `${option.value || "__empty__"}:${index}`)) });
   return /* @__PURE__ */ jsxs("div", { ref: rootRef, className: `relative ${inline ? "min-w-0 " : ""}${className}`, children: [
     /* @__PURE__ */ jsxs(
       "div",
@@ -119,8 +119,8 @@ function SearchableSelect({
           // 未フォーカス（候補を開いていない）ときは、文字の上でも ▾ と同じ手のカーソルにする
           // （2026-09-22 ユーザー決定。中身が input なので放っておくと I ビームになる）。
           // 開いて検索入力できる状態になったら input 側で cursor-text に戻す。
-          `relative flex h-full w-full min-w-0 items-center border-0 bg-transparent text-sm transition-colors ${disabled ? "cursor-not-allowed text-gray-400" : open ? "text-gray-900" : "cursor-pointer text-gray-700"}`
-        ) : `relative flex w-full items-center rounded-md border text-sm transition-colors ${disabled ? "cursor-not-allowed border-gray-200 bg-gray-50 text-gray-400" : open ? "border-blue-400 bg-white ring-2 ring-blue-100" : "border-gray-300 bg-white hover:border-gray-400"}`,
+          `relative flex h-full w-full min-w-0 items-center border-0 bg-transparent text-[14px] leading-[22px] transition-colors ${disabled ? "cursor-not-allowed text-gray-400" : open ? "text-gray-900" : "cursor-pointer text-gray-700"}`
+        ) : `relative flex w-full items-center rounded-md border text-[14px] leading-[22px] transition-colors ${disabled ? "cursor-not-allowed border-gray-200 bg-gray-50 text-gray-400" : open ? "border-blue-400 bg-white ring-2 ring-blue-100" : "border-gray-300 bg-white hover:border-gray-400"}`,
         children: [
           /* @__PURE__ */ jsx(
             "input",
@@ -163,7 +163,7 @@ function SearchableSelect({
               },
               placeholder: open ? searchPlaceholder : placeholder,
               disabled,
-              className: inline ? `min-w-0 flex-1 truncate bg-transparent py-0 px-1 pr-5 text-sm font-medium outline-none ${disabled ? "cursor-not-allowed" : open ? "cursor-text" : "cursor-pointer"} ${selectedLabel && !open ? disabled ? "text-gray-400" : "text-gray-700" : "text-gray-700 placeholder:text-gray-400"}` : `min-w-0 flex-1 bg-transparent px-2.5 py-2 pr-8 outline-none ${selectedLabel && !open ? disabled ? "text-gray-500" : "text-gray-700" : "text-gray-700 placeholder:text-gray-400"}`
+              className: inline ? `min-w-0 flex-1 truncate bg-transparent py-0 px-1 pr-5 text-[14px] leading-[22px] font-medium outline-none ${disabled ? "cursor-not-allowed" : open ? "cursor-text" : "cursor-pointer"} ${selectedLabel && !open ? disabled ? "text-gray-400" : "text-gray-700" : "text-gray-700 placeholder:text-gray-400"}` : `min-w-0 flex-1 bg-transparent px-2.5 py-2 pr-8 outline-none ${selectedLabel && !open ? disabled ? "text-gray-500" : "text-gray-700" : "text-gray-700 placeholder:text-gray-400"}`
             }
           ),
           /* @__PURE__ */ jsx(

@@ -32,14 +32,14 @@ function SplitInbox({
             {
               type: "button",
               onClick: onBack,
-              className: "inline-flex h-8 items-center gap-1 rounded-md px-2 text-sm font-medium text-gray-700 hover:bg-gray-100",
+              className: "inline-flex h-8 items-center gap-1 rounded-md px-2 text-[14px] leading-[22px] font-medium text-gray-700 hover:bg-gray-100",
               children: [
                 /* @__PURE__ */ jsx("span", { "aria-hidden": true, children: "\u2039" }),
                 backLabel
               ]
             }
           ) }),
-          /* @__PURE__ */ jsx("div", { className: "flex min-h-0 flex-1 flex-col overflow-y-auto", children: selected ? detail : emptyDetail ?? /* @__PURE__ */ jsx("div", { className: "p-8 text-center text-sm text-gray-400", children: "\u5DE6\u306E\u4E00\u89A7\u304B\u3089\u9078\u3093\u3067\u304F\u3060\u3055\u3044\u3002" }) })
+          /* @__PURE__ */ jsx("div", { className: "flex min-h-0 flex-1 flex-col overflow-y-auto", children: selected ? detail : emptyDetail ?? /* @__PURE__ */ jsx("div", { className: "p-8 text-center text-[14px] leading-[22px] text-gray-400", children: "\u5DE6\u306E\u4E00\u89A7\u304B\u3089\u9078\u3093\u3067\u304F\u3060\u3055\u3044\u3002" }) })
         ]
       }
     ),

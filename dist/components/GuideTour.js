@@ -155,7 +155,7 @@ function GuideTour({ storageKey, introTitle, introBody, steps, active = true, id
       "aria-label": step.title,
       children: [
         /* @__PURE__ */ jsxs("div", { className: "flex items-start justify-between gap-2", children: [
-          /* @__PURE__ */ jsxs("div", { className: "text-[11px] font-semibold tracking-wide text-blue-600", children: [
+          /* @__PURE__ */ jsxs("div", { className: "text-[11px] leading-[16px] font-semibold tracking-wide text-blue-600", children: [
             "\u30B9\u30C6\u30C3\u30D7 ",
             idx + 1,
             " / ",
@@ -163,13 +163,13 @@ function GuideTour({ storageKey, introTitle, introBody, steps, active = true, id
           ] }),
           /* @__PURE__ */ jsx("button", { type: "button", onClick: finish, className: "text-gray-300 hover:text-gray-500 leading-none", "aria-label": "\u30AC\u30A4\u30C9\u3092\u7D42\u4E86", title: "\u30AC\u30A4\u30C9\u3092\u7D42\u4E86\uFF08\u4EE5\u5F8C\u8868\u793A\u3057\u307E\u305B\u3093\uFF09", children: "\xD7" })
         ] }),
-        /* @__PURE__ */ jsx("h3", { className: "mt-0.5 text-sm font-semibold text-gray-900", children: step.title }),
+        /* @__PURE__ */ jsx("h3", { className: "mt-0.5 text-[14px] leading-[22px] font-semibold text-gray-900", children: step.title }),
         /* @__PURE__ */ jsx("div", { className: "mt-1.5 text-[13px] leading-relaxed text-gray-600", children: step.body }),
         /* @__PURE__ */ jsxs("div", { className: "mt-3 flex items-center justify-between", children: [
           /* @__PURE__ */ jsx("div", { className: "flex items-center gap-1", children: steps.map((_, i) => /* @__PURE__ */ jsx("span", { className: `h-1.5 w-1.5 rounded-full ${i === idx ? "bg-blue-600" : "bg-gray-200"}` }, i)) }),
           /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
-            idx > 0 && /* @__PURE__ */ jsx("button", { type: "button", onClick: () => setIdx(idx - 1), className: "rounded-md px-2.5 py-1.5 text-xs font-medium text-gray-500 hover:bg-gray-50", children: "\u623B\u308B" }),
-            isLast ? /* @__PURE__ */ jsx("button", { type: "button", onClick: finish, className: "rounded-md bg-blue-600 px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-blue-700", children: "\u30AC\u30A4\u30C9\u3092\u7D42\u4E86" }) : /* @__PURE__ */ jsx("button", { type: "button", onClick: () => setIdx(idx + 1), className: "rounded-md bg-blue-600 px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-blue-700", children: "\u6B21\u3078" })
+            idx > 0 && /* @__PURE__ */ jsx("button", { type: "button", onClick: () => setIdx(idx - 1), className: "rounded-md px-2.5 py-1.5 text-[12px] leading-[18px] font-medium text-gray-500 hover:bg-gray-50", children: "\u623B\u308B" }),
+            isLast ? /* @__PURE__ */ jsx("button", { type: "button", onClick: finish, className: "rounded-md bg-blue-600 px-3.5 py-1.5 text-[12px] leading-[18px] font-semibold text-white hover:bg-blue-700", children: "\u30AC\u30A4\u30C9\u3092\u7D42\u4E86" }) : /* @__PURE__ */ jsx("button", { type: "button", onClick: () => setIdx(idx + 1), className: "rounded-md bg-blue-600 px-3.5 py-1.5 text-[12px] leading-[18px] font-semibold text-white hover:bg-blue-700", children: "\u6B21\u3078" })
           ] })
         ] })
       ]
@@ -179,17 +179,17 @@ function GuideTour({ storageKey, introTitle, introBody, steps, active = true, id
     /* @__PURE__ */ jsxs(Fragment, { children: [
       phase === "intro" && /* @__PURE__ */ jsx("div", { className: "fixed inset-0 z-[1100] flex items-center justify-center bg-black/40 p-4", role: "dialog", "aria-modal": "true", "aria-label": introTitle, children: /* @__PURE__ */ jsxs("div", { className: "w-full max-w-md rounded-xl bg-white p-6 shadow-2xl row-fade-in", children: [
         /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
-          /* @__PURE__ */ jsx("span", { className: "inline-flex items-center rounded-full bg-blue-600 px-2 py-0.5 text-[10px] font-bold text-white", children: "GUIDE" }),
-          /* @__PURE__ */ jsx("h2", { className: "text-base font-semibold text-gray-900", children: introTitle })
+          /* @__PURE__ */ jsx("span", { className: "inline-flex items-center rounded-full bg-blue-600 px-2 py-0.5 text-[11px] leading-[16px] font-semibold text-white", children: "GUIDE" }),
+          /* @__PURE__ */ jsx("h2", { className: "text-[15px] leading-[22px] font-semibold text-gray-900", children: introTitle })
         ] }),
-        /* @__PURE__ */ jsx("div", { className: "mt-2 text-sm leading-relaxed text-gray-600", children: introBody }),
+        /* @__PURE__ */ jsx("div", { className: "mt-2 text-[14px] leading-relaxed text-gray-600", children: introBody }),
         /* @__PURE__ */ jsxs("div", { className: "mt-5 flex items-center justify-end gap-2", children: [
           /* @__PURE__ */ jsx(
             "button",
             {
               type: "button",
               onClick: finish,
-              className: "rounded-md px-3 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50",
+              className: "rounded-md px-3 py-2 text-[14px] leading-[22px] font-medium text-gray-500 hover:bg-gray-50",
               title: "\u4EE5\u5F8C\u3053\u306E\u6848\u5185\u306F\u8868\u793A\u3055\u308C\u307E\u305B\u3093",
               children: "\u4ECA\u306F\u898B\u306A\u3044"
             }
@@ -202,7 +202,7 @@ function GuideTour({ storageKey, introTitle, introBody, steps, active = true, id
                 setIdx(0);
                 setPhase("steps");
               },
-              className: "rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700",
+              className: "rounded-md bg-blue-600 px-4 py-2 text-[14px] leading-[22px] font-semibold text-white hover:bg-blue-700",
               children: startLabel
             }
           )
