@@ -37,6 +37,7 @@ export * from "./components/SearchableSelect.js";
 export * from "./components/Modal.js";
 export * from "./components/LargeModal.js";
 export * from "./components/ConfirmDialog.js";
+export * from "./components/ConfirmProvider.js";
 export * from "./components/Toast.js";
 export * from "./components/Tooltip.js";
 export * from "./components/CellPopover.js";

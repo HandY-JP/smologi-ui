@@ -37,6 +37,7 @@ export * from './components/SearchableSelect';
 export * from './components/Modal';
 export * from './components/LargeModal';
 export * from './components/ConfirmDialog';
+export * from './components/ConfirmProvider';
 export * from './components/Toast';
 export * from './components/Tooltip';
 export * from './components/CellPopover';

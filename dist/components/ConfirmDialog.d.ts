@@ -1,6 +1,6 @@
 import { type ModalLayer } from './Modal';
 export type ConfirmTone = 'danger' | 'primary';
-export declare function ConfirmDialog({ open, title, lines, confirmLabel, cancelLabel, tone, busy, layer, closeOnBackdrop, overlayClassName, panelClassName, onConfirm, onClose, }: {
+export declare function ConfirmDialog({ open, title, lines, confirmLabel, cancelLabel, tone, busy, layer, closeOnBackdrop, hideCancel, overlayClassName, panelClassName, onConfirm, onClose, }: {
     open: boolean;
     title: string;
     /** 本文。1行1段落で出す */
@@ -16,6 +16,8 @@ export declare function ConfirmDialog({ open, title, lines, confirmLabel, cancel
      * 削除などの破壊的確認で誤爆を避けたいときは false を渡す（Escape とキャンセルは残る）。
      */
     closeOnBackdrop?: boolean;
+    /** true でキャンセルを出さず、確定ボタン1つのお知らせにする（useNotice 用）。Escape・背景クリックは onClose。 */
+    hideCancel?: boolean;
     overlayClassName?: string;
     panelClassName?: string;
     onConfirm: () => void;

@@ -19,6 +19,7 @@ function ConfirmDialog({
   busy = false,
   layer = "base",
   closeOnBackdrop,
+  hideCancel = false,
   overlayClassName,
   panelClassName,
   onConfirm,
@@ -39,7 +40,7 @@ function ConfirmDialog({
       overlayClassName,
       panelClassName,
       footer: /* @__PURE__ */ jsxs(Fragment, { children: [
-        /* @__PURE__ */ jsx(
+        !hideCancel && /* @__PURE__ */ jsx(
           "button",
           {
             type: "button",
@@ -54,6 +55,7 @@ function ConfirmDialog({
           "button",
           {
             type: "button",
+            "data-autofocus": hideCancel ? true : void 0,
             onClick: onConfirm,
             disabled: busy,
             className: `inline-flex items-center gap-2 rounded-lg px-3.5 py-2 text-[14px] leading-[22px] font-medium text-white transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${TONE_CONFIRM_BUTTON[tone]}`,
