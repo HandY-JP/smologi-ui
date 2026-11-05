@@ -15,7 +15,6 @@
 import {
   createContext,
   useContext,
-  useEffect,
   useLayoutEffect,
   useRef,
   useState,
@@ -23,6 +22,7 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 import { filterDateRangeError } from '../lib/filter-controls';
+import { useDismiss } from './Modal';
 
 // ------------------------------------------------------------
 // 適用中チップ
@@ -56,7 +56,7 @@ export function ActiveFilterChips({
           key={chip.key}
           className="inline-flex items-center gap-1 rounded-full border border-[var(--sb-accent-bg)]/40 bg-[var(--sb-accent-bg)]/5 py-0.5 pl-2.5 pr-1 text-[12px] leading-[18px] text-[var(--sb-accent-bg)]"
         >
-          <span className="text-gray-500">{chip.label}:</span>
+          <span className="text-[rgb(var(--ink-muted))]">{chip.label}:</span>
           <span className="font-medium">{chip.valueLabel}</span>
           <button
             type="button"
@@ -74,7 +74,7 @@ export function ActiveFilterChips({
         <button
           type="button"
           onClick={onClearAll}
-          className="text-[12px] leading-[18px] text-gray-400 underline-offset-2 hover:text-gray-700 hover:underline"
+          className="text-[12px] leading-[18px] text-[rgb(var(--ink-muted))] underline-offset-2 hover:text-[rgb(var(--ink))] hover:underline"
         >
           すべて解除
         </button>
@@ -127,6 +127,7 @@ export function FilterTriggerButton({
   onToggle,
   title,
   ariaControls,
+  iconBadge = 'dot',
 }: {
   label?: string;
   activeCount: number;
@@ -134,6 +135,11 @@ export function FilterTriggerButton({
   onToggle: () => void;
   title?: string;
   ariaControls?: string;
+  /**
+   * 畳んだ検索バーの中（じょうごアイコンだけ）での適用中の示し方。既定は従来どおり赤いドット。
+   * 'count' は件数バッジ（作成モーダルの商品検索など、条件が多く件数を見せたい所だけ）。
+   */
+  iconBadge?: 'dot' | 'count';
 }) {
   const iconOnly = useContext(CollapsedFilterTriggerContext);
   const triggerTitle = title ?? (activeCount > 0 ? `${label}（${activeCount}件の条件を指定中）` : label);
@@ -154,7 +160,7 @@ export function FilterTriggerButton({
         className={`relative flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--search-accent)] ${
           activeCount > 0 || open
             ? 'text-[var(--search-accent)] hover:bg-[var(--search-accent-light)]'
-            : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+            : 'text-[rgb(var(--ink-muted))] hover:bg-[rgb(var(--surface-subtle))] hover:text-[rgb(var(--ink))]'
         }`}
       >
         <svg className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden>
@@ -164,9 +170,17 @@ export function FilterTriggerButton({
             d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z"
           />
         </svg>
-        {activeCount > 0 && (
+        {activeCount > 0 && iconBadge === 'count' && (
           <span
-            className="pointer-events-none absolute right-1 top-1 h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"
+            className="pointer-events-none absolute -right-0.5 -top-0.5 min-w-[1.125rem] rounded-full bg-[var(--search-accent)] px-1 text-center text-[11px] font-semibold leading-[1.125rem] text-[rgb(var(--on-accent))] ring-2 ring-[rgb(var(--surface))]"
+            aria-hidden
+          >
+            {activeCount}
+          </span>
+        )}
+        {activeCount > 0 && iconBadge === 'dot' && (
+          <span
+            className="pointer-events-none absolute right-1 top-1 h-2 w-2 rounded-full bg-[rgb(var(--danger-solid))] ring-2 ring-white"
             aria-hidden
           />
         )}
@@ -185,7 +199,7 @@ export function FilterTriggerButton({
       className={`relative mr-1.5 flex h-8 min-w-[7rem] items-center justify-center rounded-full px-7 text-[12px] font-semibold leading-none transition-colors ${
         activeCount > 0 || open
           ? 'bg-[var(--search-accent-light)] text-[var(--search-accent)]'
-          : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900'
+          : 'text-[rgb(var(--ink-muted))] hover:bg-[rgb(var(--surface-subtle))] hover:text-[rgb(var(--ink))]'
       }`}
     >
       {label}
@@ -222,6 +236,7 @@ export function FilterPopover({
   align = 'right',
   triggerTitle,
   panelPortal = false,
+  triggerBadge = 'dot',
 }: {
   /** 適用中の条件数（検索語も含めること） */
   activeCount: number;
@@ -254,9 +269,13 @@ export function FilterPopover({
    * トリガーを置くとき用。既定は false ＝従来どおりトリガーの直下に absolute 配置。
    */
   panelPortal?: boolean;
+  /** 畳んだ検索バーの中での適用中の示し方（FilterTriggerButton の iconBadge）。 */
+  triggerBadge?: 'dot' | 'count';
 }) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
+  // portal したパネルの DOM（外側クリック判定用。useDismiss は RefObject で受ける）。
+  const panelRef = useRef<HTMLDivElement | null>(null);
   // portal したパネルの DOM。実寸（幅）を測って画面内へクランプするので ref ではなく state で受ける
   // （マウントで effect を再実行させ、初回描画のペイント前に測り直すため）。
   const [panelNode, setPanelNode] = useState<HTMLDivElement | null>(null);
@@ -313,39 +332,33 @@ export function FilterPopover({
     };
   }, [open, panelPortal, align, panelNode]);
 
-  useEffect(() => {
-    if (!open) return;
-    const onPointerDown = (event: MouseEvent) => {
-      const target = event.target as Node;
-      if (rootRef.current?.contains(target)) return;
-      // portal したパネルは rootRef の外にあるので、パネル内クリックで閉じないよう別に見る。
-      if (panelNode?.contains(target)) return;
-      setOpen(false);
-    };
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setOpen(false);
-    };
-    document.addEventListener('mousedown', onPointerDown);
-    document.addEventListener('keydown', onKeyDown);
-    return () => {
-      document.removeEventListener('mousedown', onPointerDown);
-      document.removeEventListener('keydown', onKeyDown);
-    };
-  }, [open, panelNode]);
+  // 外側クリック（検索欄を含むパネルの外のどこでも）と Escape で閉じる。共通の useDismiss を使う:
+  //  - Escape はモーダルと同じスタックに積まれる＝作成モーダルの中で押してもポップオーバーだけが閉じる
+  //    （以前は document の bubble で待っていたため、先にモーダルが Escape を握りつぶして
+  //     モーダルごと閉じていた）。
+  //  - mousedown は capture で拾う（モーダルのパネルが onMouseDown で伝播を止めても取りこぼさない）。
+  //  - 内側＝トリガー（rootRef）と portal したパネル。パネル内の選択肢・ドロップダウンの操作では閉じない。
+  // 閉じたらフォーカスをじょうご（トリガー）へ戻す。外側の入力欄などを押した場合は、この後の
+  // mousedown の既定動作でフォーカスがそちらへ移るので横取りにはならない。
+  const dismiss = () => {
+    setOpen(false);
+    rootRef.current?.querySelector<HTMLButtonElement>('button[aria-expanded]')?.focus({ preventScroll: true });
+  };
+  useDismiss(panelPortal ? panelRef : rootRef, dismiss, { enabled: open, ignore: rootRef });
 
   const clearDisabled = !onClearAll || activeCount === 0;
 
   const panelBody = (
     <>
       {tabs && (
-        <div className="mb-3 flex gap-1 rounded-lg bg-gray-100 p-1">
+        <div className="mb-3 flex gap-1 rounded-lg bg-[rgb(var(--surface-subtle))] p-1">
           {tabs.items.map((item) => (
             <button
               key={item.key}
               type="button"
               onClick={() => tabs.onChange(item.key)}
               className={`flex-1 rounded-md px-3 py-1.5 text-[14px] leading-[22px] font-medium ${
-                tabs.active === item.key ? 'bg-white text-[var(--sb-accent-bg)] shadow-sm' : 'text-gray-500'
+                tabs.active === item.key ? 'bg-[rgb(var(--surface))] text-[var(--sb-accent-bg)] shadow-sm' : 'text-[rgb(var(--ink-muted))]'
               }`}
             >
               {item.label}
@@ -356,14 +369,14 @@ export function FilterPopover({
 
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <span className="text-[14px] leading-[22px] font-semibold text-gray-700">{title}</span>
-          {description && <p className="mt-0.5 text-[12px] leading-[18px] text-gray-400">{description}</p>}
+          <span className="text-[14px] leading-[22px] font-semibold text-[rgb(var(--ink))]">{title}</span>
+          {description && <p className="mt-0.5 text-[12px] leading-[18px] text-[rgb(var(--ink-muted))]">{description}</p>}
         </div>
         <button
           type="button"
           onClick={onClearAll}
           disabled={clearDisabled}
-          className="shrink-0 text-[12px] leading-[18px] text-gray-400 hover:text-gray-700 disabled:opacity-40"
+          className="shrink-0 text-[12px] leading-[18px] text-[rgb(var(--ink-muted))] hover:text-[rgb(var(--ink))] disabled:opacity-40"
         >
           すべてクリア
         </button>
@@ -373,13 +386,13 @@ export function FilterPopover({
         {children}
       </div>
 
-      {footer && <div className="mt-3 flex justify-end border-t border-gray-100 pt-3">{footer}</div>}
+      {footer && <div className="mt-3 flex justify-end border-t border-[rgb(var(--line))] pt-3">{footer}</div>}
     </>
   );
   // 幅は columns から決める（呼び出し側の panelWidthClass 指定があればそちらを優先）。
   const resolvedWidthClass = panelWidthClass ?? (columns === 2 ? 'w-[44rem]' : 'w-80');
   // overscroll-contain: パネル内を末端まで送ってもページ側がスクロールしない（一覧が動いてしまうのを防ぐ）。
-  const panelClass = `${resolvedWidthClass} max-w-[calc(100vw-3rem)] overflow-y-auto overscroll-contain rounded-lg border border-gray-200 bg-white p-4 shadow-xl`;
+  const panelClass = `${resolvedWidthClass} max-w-[calc(100vw-3rem)] overflow-y-auto overscroll-contain rounded-lg border border-[rgb(var(--line))] bg-[rgb(var(--surface))] p-4 shadow-xl`;
 
   return (
     <div
@@ -393,6 +406,7 @@ export function FilterPopover({
         // 位置は開くたびに測り直す（前回の位置で一瞬出るのを防ぐ）。
         onToggle={() => { setPanelPosition(null); setOpen((value) => !value); }}
         title={triggerTitle}
+        iconBadge={triggerBadge}
       />
 
       {/* 非 portal（トップバーのピル内など）は absolute のまま。ただし条件が多い画面では
@@ -409,7 +423,7 @@ export function FilterPopover({
       {open && panelPortal && panelPosition && typeof document !== 'undefined'
         ? createPortal(
             <div
-              ref={setPanelNode}
+              ref={(node) => { panelRef.current = node; setPanelNode(node); }}
               // モーダル（z-90）より下・画面内の粘着ヘッダーより上。
               className={`fixed z-[80] ${panelClass}`}
               style={{ top: panelPosition.top, left: panelPosition.left, maxHeight: panelPosition.maxHeight }}
@@ -461,8 +475,8 @@ export function FilterSection({
   children: ReactNode;
 }) {
   return (
-    <section className={first ? '' : 'border-t border-gray-100 pt-3'}>
-      <h3 className="mb-2 flex items-center gap-1.5 text-[11px] leading-[16px] font-semibold tracking-wide text-gray-400">
+    <section className={first ? '' : 'border-t border-[rgb(var(--line))] pt-3'}>
+      <h3 className="mb-2 flex items-center gap-1.5 text-[11px] leading-[16px] font-semibold tracking-wide text-[rgb(var(--ink-muted))]">
         <span>{title}</span>
         {active && (
           <>
@@ -512,7 +526,7 @@ export function FilterChipToggle({
       className={`inline-flex items-center whitespace-nowrap rounded-full border px-2.5 py-1 text-[12px] leading-[18px] font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--search-accent)] ${
         pressed
           ? 'border-[var(--search-accent)] bg-[var(--search-accent)] text-white shadow-sm'
-          : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-900'
+          : 'border-[rgb(var(--line))] bg-[rgb(var(--surface))] text-[rgb(var(--ink-muted))] hover:border-[rgb(var(--line-strong))] hover:bg-[rgb(var(--surface-subtle))] hover:text-[rgb(var(--ink))]'
       }`}
     >
       {label}
@@ -532,7 +546,7 @@ export function FilterChipGroup({
 }) {
   return (
     <div>
-      {label && <div className="mb-1.5 text-[12px] leading-[18px] font-medium text-gray-600">{label}</div>}
+      {label && <div className="mb-1.5 text-[12px] leading-[18px] font-medium text-[rgb(var(--ink-muted))]">{label}</div>}
       <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label={ariaLabel ?? label}>
         {children}
       </div>
@@ -555,15 +569,15 @@ export function FilterField({
 }) {
   return (
     <div className={span === 2 ? 'sm:col-span-2' : undefined}>
-      <span className="mb-1 block text-[12px] leading-[18px] text-gray-500">{label}</span>
+      <span className="mb-1 block text-[12px] leading-[18px] text-[rgb(var(--ink-muted))]">{label}</span>
       {children}
-      {hint && <p className="mt-1 text-[11px] leading-[16px] text-gray-400">{hint}</p>}
+      {hint && <p className="mt-1 text-[11px] leading-[16px] text-[rgb(var(--ink-muted))]">{hint}</p>}
     </div>
   );
 }
 
 const FILTER_INPUT_CLASS =
-  'w-full rounded-md border border-gray-300 bg-white px-2 py-2 text-[14px] leading-[22px] text-gray-700 focus:outline-none focus:ring-1 focus:ring-[var(--sb-accent-bg)]';
+  'w-full rounded-md border border-[rgb(var(--line-strong))] bg-[rgb(var(--surface))] px-2 py-2 text-[14px] leading-[22px] text-[rgb(var(--ink))] focus:outline-none focus:ring-1 focus:ring-[var(--sb-accent-bg)]';
 
 /** パネル内の共通 <select>（ラベル付き）。 */
 export function FilterSelect({
@@ -579,7 +593,7 @@ export function FilterSelect({
 }) {
   return (
     <label className="block">
-      <span className="mb-1 block text-[12px] leading-[18px] text-gray-500">{label}</span>
+      <span className="mb-1 block text-[12px] leading-[18px] text-[rgb(var(--ink-muted))]">{label}</span>
       <select value={value} onChange={(event) => onChange(event.target.value)} className={FILTER_INPUT_CLASS}>
         {options.map((option) => (
           <option key={option.value} value={option.value}>{option.label}</option>
@@ -603,17 +617,17 @@ export function FilterCheckbox({
 }) {
   const toneClass =
     tone === 'rose'
-      ? 'text-rose-600 focus:ring-rose-500'
+      ? 'text-[rgb(var(--danger-ink))] focus:ring-[rgb(var(--danger-solid))]'
       : tone === 'gray'
-        ? 'text-gray-600 focus:ring-gray-500'
+        ? 'text-[rgb(var(--ink-muted))] focus:ring-gray-500'
         : 'text-[var(--sb-accent-bg)] focus:ring-[var(--sb-accent-bg)]';
   return (
-    <label className="flex cursor-pointer items-center gap-2 text-[12px] leading-[18px] text-gray-700">
+    <label className="flex cursor-pointer items-center gap-2 text-[12px] leading-[18px] text-[rgb(var(--ink))]">
       <input
         type="checkbox"
         checked={checked}
         onChange={(event) => onChange(event.target.checked)}
-        className={`h-4 w-4 rounded border-gray-300 ${toneClass}`}
+        className={`h-4 w-4 rounded border-[rgb(var(--line-strong))] ${toneClass}`}
       />
       {label}
     </label>
@@ -645,10 +659,10 @@ export function FilterDateRange({
   const error = filterDateRangeError(from, to);
   return (
     <div className="sm:col-span-2">
-      {label && <p className="mb-1 text-[12px] leading-[18px] font-semibold text-gray-600">{label}</p>}
+      {label && <p className="mb-1 text-[12px] leading-[18px] font-semibold text-[rgb(var(--ink-muted))]">{label}</p>}
       <div className="grid grid-cols-2 gap-2">
         <label>
-          <span className="mb-1 block text-[12px] leading-[18px] text-gray-500">{fromLabel}</span>
+          <span className="mb-1 block text-[12px] leading-[18px] text-[rgb(var(--ink-muted))]">{fromLabel}</span>
           <input
             type="date"
             value={from}
@@ -659,7 +673,7 @@ export function FilterDateRange({
           />
         </label>
         <label>
-          <span className="mb-1 block text-[12px] leading-[18px] text-gray-500">{toLabel}</span>
+          <span className="mb-1 block text-[12px] leading-[18px] text-[rgb(var(--ink-muted))]">{toLabel}</span>
           <input
             type="date"
             value={to}
@@ -670,7 +684,7 @@ export function FilterDateRange({
           />
         </label>
       </div>
-      {error && <p className="mt-1 text-[12px] leading-[18px] text-red-600">{error}</p>}
+      {error && <p className="mt-1 text-[12px] leading-[18px] text-[rgb(var(--danger-ink))]">{error}</p>}
     </div>
   );
 }

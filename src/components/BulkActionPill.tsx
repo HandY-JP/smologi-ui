@@ -61,8 +61,8 @@ export type BulkPillAction = {
   render?: ReactNode;
 };
 
-const MENU_CLASS = 'absolute bottom-full z-[60] mb-2 w-80 max-w-[calc(100vw-2rem)] overflow-hidden rounded-xl border border-gray-200 bg-white p-1.5 text-left shadow-xl';
-const MENU_ITEM_CLASS = 'flex w-full items-start justify-between gap-4 rounded-lg px-3 py-2.5 text-left text-[14px] leading-[22px] font-medium text-gray-700 transition-colors hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--sb-accent-bg)] disabled:cursor-not-allowed disabled:opacity-40';
+const MENU_CLASS = 'absolute bottom-full z-[60] mb-2 w-80 max-w-[calc(100vw-2rem)] overflow-hidden rounded-xl border border-[rgb(var(--line))] bg-[rgb(var(--surface))] p-1.5 text-left shadow-xl';
+const MENU_ITEM_CLASS = 'flex w-full items-start justify-between gap-4 rounded-lg px-3 py-2.5 text-left text-[14px] leading-[22px] font-medium text-[rgb(var(--ink))] transition-colors hover:bg-[rgb(var(--surface-subtle))] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--sb-accent-bg)] disabled:cursor-not-allowed disabled:opacity-40';
 
 function actionClass(tone: BulkPillAction['tone']): string {
   if (tone === 'primary') return 'sb-bulk-primary';
@@ -104,7 +104,7 @@ function BulkPillActionButton({
     >
       {action.menuItems.map((item) => (
         <div key={item.key}>
-          {item.separatorBefore && <div className="my-1 border-t border-gray-100" role="separator" />}
+          {item.separatorBefore && <div className="my-1 border-t border-[rgb(var(--line))]" role="separator" />}
           <WithReason reason={item.disabled ? item.disabledReason : undefined}>
             <button
               type="button"
@@ -116,11 +116,11 @@ function BulkPillActionButton({
               <span className="min-w-0">
                 <span className="block truncate">{item.label}</span>
                 {item.description && (
-                  <span className="mt-0.5 block truncate text-[11px] leading-[16px] font-normal text-gray-400">{item.description}</span>
+                  <span className="mt-0.5 block truncate text-[11px] leading-[16px] font-normal text-[rgb(var(--ink-muted))]">{item.description}</span>
                 )}
               </span>
               {typeof item.count === 'number' && (
-                <span className="shrink-0 text-[12px] leading-[18px] tabular-nums text-gray-400">{item.count.toLocaleString()}件</span>
+                <span className="shrink-0 text-[12px] leading-[18px] tabular-nums text-[rgb(var(--ink-muted))]">{item.count.toLocaleString()}件</span>
               )}
             </button>
           </WithReason>
@@ -204,13 +204,19 @@ function BulkPillActionButton({
 }
 
 export function BulkActionPill({
-  ariaLabel, dataTour, selectedCount, selectedLabel = '件選択', stats = [],
+  ariaLabel, dataTour, selectedCount = 0, selectedLabel = '件選択', statusText, stats = [],
   leading, primary = [], secondary = [], onClear, clearLabel = '選択解除', error,
 }: {
   ariaLabel: string;
   dataTour?: string;
-  selectedCount: number;
+  /** 選んだ行の件数。statusText を渡す画面（選択という概念が無い請求の締め）では省略できる。 */
+  selectedCount?: number;
   selectedLabel?: string;
+  /**
+   * 「N件選択」の代わりに出す状態テキスト。選択行が無い画面（請求の締め＝
+   * 「2026年9月 ・ 締められます」）で、ピルの流儀だけ borrow するために使う。
+   */
+  statusText?: ReactNode;
   /** 「CSV未出力 3」など、選んだ行の残作業。 */
   stats?: BulkPillStat[];
   /** 状態テキストの直後（例: 「すべて選択（N件）」）。 */
@@ -248,7 +254,7 @@ export function BulkActionPill({
   const closeMenu = () => setOpenMenuKey(null);
 
   return (
-    <div ref={pillRef} className="sb-bulk-layer">
+    <div ref={pillRef} data-bottom-bar className="sb-bulk-layer">
       <div
         role="group"
         aria-label={ariaLabel}
@@ -256,7 +262,9 @@ export function BulkActionPill({
         className="sb-bulk-bar flex flex-wrap items-center justify-center gap-x-3 gap-y-2 rounded-full px-5 py-2.5"
       >
         <span className="flex flex-wrap items-center gap-x-2 gap-y-0.5 whitespace-nowrap text-[14px] leading-[22px]">
-          <span className="font-semibold tabular-nums">{selectedCount.toLocaleString()}{selectedLabel}</span>
+          <span className="font-semibold tabular-nums">
+            {statusText ?? `${selectedCount.toLocaleString()}${selectedLabel}`}
+          </span>
           {stats.map((stat) => (
             <span key={stat.key} className="inline-flex items-center gap-1" title={stat.title}>
               <span className="sb-bulk-stat-sep" aria-hidden="true">・</span>
@@ -302,7 +310,7 @@ export function BulkActionPill({
         )}
       </div>
       {error && (
-        <p className="max-w-[min(48rem,100%)] rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-[12px] leading-[18px] text-red-700 shadow-lg" role="alert">
+        <p className="max-w-[min(48rem,100%)] rounded-xl border border-[rgb(var(--danger-ink)/0.25)] bg-[rgb(var(--danger-soft))] px-3 py-2 text-[12px] leading-[18px] text-[rgb(var(--danger-ink))] shadow-lg" role="alert">
           {error}
         </p>
       )}

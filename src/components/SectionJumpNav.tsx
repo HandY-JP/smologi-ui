@@ -115,7 +115,7 @@ function OverflowMenu({
       ref={menuRef}
       role="menu"
       style={{ top: position.top, left: position.left, width: MENU_WIDTH_PX }}
-      className="fixed z-[60] flex max-h-[60vh] flex-col overflow-y-auto rounded-xl border border-gray-200 bg-white p-1 shadow-xl"
+      className="fixed z-[60] flex max-h-[60vh] flex-col overflow-y-auto rounded-xl border border-[rgb(var(--line))] bg-[rgb(var(--surface))] p-1 shadow-xl"
     >
       {items.map((item) => (
         <button
@@ -123,13 +123,13 @@ function OverflowMenu({
           type="button"
           role="menuitem"
           onClick={() => { onJump(item.key); onClose(); }}
-          className={`flex items-center gap-2 rounded-lg px-3 py-2 text-left text-[14px] leading-[22px] transition-colors hover:bg-gray-50 ${
-            item.key === activeKey ? 'font-semibold text-gray-900' : 'text-gray-700'
+          className={`flex items-center gap-2 rounded-lg px-3 py-2 text-left text-[14px] leading-[22px] transition-colors hover:bg-[rgb(var(--surface-subtle))] ${
+            item.key === activeKey ? 'font-semibold text-[rgb(var(--ink))]' : 'text-[rgb(var(--ink))]'
           }`}
         >
           {item.dotClassName && <span className={`h-2 w-2 shrink-0 rounded-full ${item.dotClassName}`} aria-hidden />}
           <span className="min-w-0 flex-1 truncate">{item.label}</span>
-          <span className="shrink-0 text-[12px] leading-[18px] text-gray-400">{item.count}</span>
+          <span className="shrink-0 text-[12px] leading-[18px] text-[rgb(var(--ink-muted))]">{item.count}</span>
         </button>
       ))}
     </div>,

@@ -330,6 +330,38 @@ B2B は globals.css で `--surface` を同じ形式（`r g b`）で持ってい�
 
 ---
 
+### v0.18.0 の変更点（スモロジ本体の新しい部品の機能・色を取り込み）
+
+スモロジ本体の `components/ui|layout` の複製にだけあった機能を、**任意の props**として共通パーツへ入れた。
+既定値は変えていない（変えたものは下の「既定が変わるもの」）。
+
+- **色**: `gray-*` / `rose-*` / `emerald-*` などの固定色をやめ、`palette.css` の意味名トークンへ。
+  Tailwind の preset が無いアプリ（amazon-app）でも効くよう、`text-[rgb(var(--ink))]` の任意値形式で書いてある
+  （`palette.css` に無いトークンは使っていない＝追加なし）。
+- **Modal**: `dirty`（入力途中は背景クリック・Escape の前に「入力内容が失われます。閉じますか」の確認バー）/
+  `headerAside`（タイトルの右に補足）/ `compactHeader`（薄いヘッダー。既定 false）。
+  mousedown は capture フェーズで拾うようにした（`useDismiss`）。
+- **LargeModal**: `dirty` / `size='wide'`（幅 min(1280px,94vw)）/ `showCloseButton` / `compactHeader`。
+- **ConfirmDialog**: `closeOnBackdrop`（false で背景クリックでは閉じない。省略時は従来どおり閉じる）。
+- **Toast**: `showSuccess/showError/showInfo/showWarning/show` の最後の引数に `{ action: { label, onClick }, durationMs }`
+  （従来の数値 ms もそのまま）。`<ToastProvider defaultDurationMs actionDurationMs>`。ホバー中は消えない。
+  `data-bottom-bar` の要素があれば、その上に出る（`--bottom-bar-h`。`useBottomBarHeightVar` も export）。
+- **SummaryTile**: `variant='flat'`（枠なし）。
+- **BulkActionPill**: `statusText`（「N件選択」の代わりの状態テキスト）/ `selectedCount` を省略可 / ルートに `data-bottom-bar`。
+  `StickyPagerBar`（Pagination.tsx）のルートにも `data-bottom-bar`。
+- **FloatingGlassDock**: `viewControl`。**TopToolCapsule**: `TopToolItem.extraDot`。
+- **FilterPopover**: `triggerBadge='count'`（`FilterTriggerButton` は `iconBadge`）。外側クリック・Escape は `useDismiss`
+  （モーダルの中で Escape するとポップオーバーだけ閉じる）。
+- **SearchableSelect**: `option.title`（ホバー補足）。開くのは同時に 1 つ・Tab で他へ移ったら閉じる・祖先のスクロールで閉じる。
+- **SettingsRow / SettingsSection**: `layout='wide'`（xl 以上で 2 カラム・コントロール 720px 上限・区画の余白）。
+  `SettingsValue` / `SettingsSubheading` / `SettingsDisclosure` / `SETTINGS_TEXTAREA_CLASS` / `SETTINGS_PRIMARY_BUTTON_CLASS` /
+  `SETTINGS_LABEL_CLASS` / `SETTINGS_DANGER_BUTTON_CLASS` / `SETTINGS_INPUT_H9_CLASS` / `SETTINGS_GHOST_BUTTON_H9_CLASS` /
+  `SETTINGS_CONTROL_MAX_W` を追加。
+
+**既定が変わるもの**: 色（上記）/ TopToolCapsule のメニュー幅 208→264px / SearchableSelect の候補行が Tab 順から外れる
+/ Toast の z-index 60→100 とホバー中は消えない。**入れていないもの**: `StickySectionHeader`（押し出し・trailing 1 本化は
+アプリの globals.css と一体）、`GuideTour`、`ColumnHeaderMenu`。
+
 ## 部品
 
 ### トップバー

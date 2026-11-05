@@ -10,7 +10,7 @@
 //   over = z-[90] … ドロワー・パネルの上にさらに重ねる確認ダイアログ
 // これ以上の段は作らないこと（増やすと「どれが上か」を誰も把握できなくなる）。
 
-import { useEffect, useId, useRef, type ReactNode, type RefObject } from 'react';
+import { useEffect, useId, useRef, useState, type ReactNode, type RefObject } from 'react';
 import { createPortal } from 'react-dom';
 
 export type ModalLayer = 'base' | 'over';
@@ -83,6 +83,11 @@ function useEscapeDismiss(enabled: boolean, onDismiss: () => void): void {
  * 外側クリック（mousedown）と Escape で閉じる共通フック。
  * ポップオーバー・ドロップダウンなど、モーダルシェルを使わない要素向け。
  * ref には「内側」とみなす要素を渡す（トリガーボタンも内側にしたい場合は ignore に渡す）。
+ *
+ * - Escape はモーダルと同じスタックに積む＝モーダルの中のポップオーバーで Escape を押すと
+ *   ポップオーバーだけが閉じる（下のモーダルまで一緒に閉じない）。
+ * - mousedown は capture フェーズで拾う。モーダルのパネルは onMouseDown で伝播を止めている
+ *   （背景クリック判定のため）ので、bubble で待つと中身の操作を取りこぼす環境がある。
  */
 export function useDismiss(
   ref: RefObject<HTMLElement | null>,
@@ -103,8 +108,8 @@ export function useDismiss(
       if (ignore?.current?.contains(target)) return;
       onDismissRef.current();
     };
-    document.addEventListener('mousedown', onMouseDown);
-    return () => document.removeEventListener('mousedown', onMouseDown);
+    document.addEventListener('mousedown', onMouseDown, true);
+    return () => document.removeEventListener('mousedown', onMouseDown, true);
   }, [enabled, ref, ignore]);
 }
 
@@ -121,6 +126,8 @@ export interface ModalProps {
    * 本文の先頭ではなくヘッダーに置きたいときに使う。title がある場合だけ出る。
    */
   headerRight?: ReactNode;
+  /** タイトルのすぐ右（同じ行）に並べる補足（枚数の要約など）。title がある場合だけ出る。 */
+  headerAside?: ReactNode;
   /** title を出さないときのアクセシブル名。 */
   ariaLabel?: string;
   /** 重ね順。既定は base（z-[70]）。ドロワーの上に出すものだけ over（z-[90]）。 */
@@ -129,10 +136,24 @@ export interface ModalProps {
   /** Escape と背景クリックで閉じられるか。フォーム系は false にして誤操作の取りこぼしを防ぐ。 */
   dismissable?: boolean;
   /**
-   * 背景クリックで閉じるか。既定は dismissable と同じ。
+   * 背景クリックで閉じるか。既定は true（2026-09-23 ユーザー決定:
+   * 「ポップアップの外を押したら閉じる」を共通部品の既定にする）。
+   * dismissable が false のときは、この値に関わらず閉じない。
    * 入力途中の誤爆だけを防ぎたい（Escape と × は残す）フォームモーダル向けに false を渡す。
    */
   closeOnBackdrop?: boolean;
+  /**
+   * 入力途中かどうか。true のときは背景クリック・Escape で即座には閉じず、
+   * フッター上に「入力内容が失われます。閉じますか」の確認バーを出す
+   * （ConfirmDialog の入れ子は使わない）。既定 false＝従来どおり即閉じる。
+   * 下書きが自動保存されるフォーム（localStorage 等）では渡さないこと。
+   */
+  dirty?: boolean;
+  /**
+   * ヘッダーを薄く（最小 44px・上下余白を詰める）する。既定 false＝従来の余白（py-4）。
+   * 本文の表示領域を広げたい作業モーダル向け（スモロジ本体の既定の見た目）。
+   */
+  compactHeader?: boolean;
   /**
    * パネルの高さ上限。既定は max-h-[85vh]。
    * 縦の短いノートPCで本文を目一杯使いたいモーダルだけ dvh 指定に差し替える。
@@ -158,11 +179,14 @@ export function Modal({
   title,
   subtitle,
   headerRight,
+  headerAside,
   ariaLabel,
   layer = 'base',
   size = 'md',
   dismissable = true,
   closeOnBackdrop,
+  dirty = false,
+  compactHeader = false,
   panelMaxHeightClassName = 'max-h-[85vh]',
   showCloseButton,
   role = 'dialog',
@@ -180,11 +204,14 @@ export function Modal({
       title={title}
       subtitle={subtitle}
       headerRight={headerRight}
+      headerAside={headerAside}
       ariaLabel={ariaLabel}
       layer={layer}
       size={size}
       dismissable={dismissable}
       closeOnBackdrop={closeOnBackdrop}
+      dirty={dirty}
+      compactHeader={compactHeader}
       panelMaxHeightClassName={panelMaxHeightClassName}
       showCloseButton={showCloseButton}
       role={role}
@@ -204,11 +231,14 @@ function ModalBody({
   title,
   subtitle,
   headerRight,
+  headerAside,
   ariaLabel,
   layer,
   size,
   dismissable,
-  closeOnBackdrop,
+  closeOnBackdrop = true,
+  dirty = false,
+  compactHeader = false,
   panelMaxHeightClassName,
   showCloseButton,
   role,
@@ -222,10 +252,21 @@ function ModalBody({
   const titleId = useId();
   const panelRef = useRef<HTMLDivElement | HTMLFormElement | null>(null);
   const closable = dismissable !== false;
-  const backdropClosable = (closeOnBackdrop ?? closable) && closable;
+  // 背景クリックの既定は true（2026-09-23 ユーザー決定）。dismissable=false のときは
+  // closeOnBackdrop に関わらず閉じない。
+  const backdropClosable = closeOnBackdrop && closable;
   const withCloseButton = showCloseButton ?? closable;
 
-  useEscapeDismiss(closable, onClose);
+  // 入力途中（dirty）のときは、背景クリック・Escape で即座に onClose を呼ばず、
+  // フッター上の確認バーを一度だけ挟む。× ボタン・footer 内の自前キャンセルは
+  // 呼び出し側の onClose をそのまま使うので対象外（誤操作系の2経路だけを守る）。
+  const [confirmDirtyClose, setConfirmDirtyClose] = useState(false);
+  const requestClose = () => {
+    if (dirty) { setConfirmDirtyClose(true); return; }
+    onClose();
+  };
+
+  useEscapeDismiss(closable, requestClose);
 
   useEffect(() => lockBodyScroll(), []);
 
@@ -246,7 +287,7 @@ function ModalBody({
   }, []);
 
   const panelClass = [
-    'flex w-full flex-col overflow-hidden rounded-xl bg-white shadow-xl outline-none',
+    'flex w-full flex-col overflow-hidden rounded-xl bg-[rgb(var(--surface))] shadow-xl outline-none',
     panelMaxHeightClassName ?? 'max-h-[85vh]',
     SIZE_MAX_W[size ?? 'md'],
     panelClassName,
@@ -265,18 +306,24 @@ function ModalBody({
   const inner = (
     <>
       {title != null && (
-        <div className="flex items-start gap-3 border-b border-gray-200 px-5 py-4">
+        <div className={compactHeader
+          ? 'flex min-h-11 shrink-0 items-center gap-3 border-b border-[rgb(var(--line))] px-5 py-1.5'
+          : 'flex items-start gap-3 border-b border-[rgb(var(--line))] px-5 py-4'}
+        >
           <div className="min-w-0 flex-1">
-            <h2 id={titleId} className="text-[15px] leading-[22px] font-semibold text-gray-900">{title}</h2>
-            {subtitle != null && <p className="mt-0.5 text-[12px] leading-[18px] text-gray-500">{subtitle}</p>}
+            <div className="flex min-w-0 flex-wrap items-baseline gap-x-3">
+              <h2 id={titleId} className={`shrink-0 text-[15px] font-semibold text-[rgb(var(--ink))] ${compactHeader ? 'leading-6' : 'leading-[22px]'}`}>{title}</h2>
+              {headerAside != null && <div className="min-w-0 basis-full text-[14px] leading-[22px] text-[rgb(var(--ink-muted))] sm:basis-auto">{headerAside}</div>}
+            </div>
+            {subtitle != null && <p className={compactHeader ? 'text-[12px] leading-4 text-[rgb(var(--ink-muted))]' : 'mt-0.5 text-[12px] leading-[18px] text-[rgb(var(--ink-muted))]'}>{subtitle}</p>}
           </div>
-          {headerRight != null && <div className="flex shrink-0 items-center gap-2 self-center">{headerRight}</div>}
+          {headerRight != null && <div className={`flex shrink-0 items-center gap-2${compactHeader ? '' : ' self-center'}`}>{headerRight}</div>}
           {withCloseButton && (
             <button
               type="button"
               onClick={onClose}
               aria-label="閉じる"
-              className="-mr-1 rounded-md p-1 text-[22px] leading-none text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+              className={`${compactHeader ? '-mr-2 inline-flex h-8 w-8 items-center justify-center' : '-mr-1 p-1'} rounded-md text-[22px] leading-none text-[rgb(var(--ink-muted))] transition-colors hover:bg-[rgb(var(--surface-subtle))] hover:text-[rgb(var(--ink))]`}
             >
               ×
             </button>
@@ -286,8 +333,29 @@ function ModalBody({
       <div className={`min-h-0 flex-1 overflow-y-auto overscroll-contain ${bodyClassName ?? ''}`}>
         {children}
       </div>
+      {confirmDirtyClose && (
+        <div className="flex shrink-0 flex-wrap items-center justify-between gap-2 border-t border-[rgb(var(--warning-ink)/0.25)] bg-[rgb(var(--warning-soft))] px-5 py-2.5">
+          <span className="text-[12px] leading-[18px] font-medium text-[rgb(var(--warning-ink))]">入力内容が失われます。閉じますか</span>
+          <div className="flex shrink-0 items-center gap-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="rounded-md border border-[rgb(var(--warning-ink)/0.25)] bg-[rgb(var(--surface))] px-2.5 py-1 text-[12px] leading-[18px] font-semibold text-[rgb(var(--warning-ink))] transition-colors hover:bg-[rgb(var(--warning-soft))]"
+            >
+              閉じる
+            </button>
+            <button
+              type="button"
+              onClick={() => setConfirmDirtyClose(false)}
+              className="rounded-md bg-[rgb(var(--warning-solid))] px-2.5 py-1 text-[12px] leading-[18px] font-semibold text-[rgb(var(--on-accent))] transition-colors hover:bg-[rgb(var(--warning-solid)/0.9)]"
+            >
+              続ける
+            </button>
+          </div>
+        </div>
+      )}
       {footer != null && (
-        <div className="flex shrink-0 justify-end gap-2 border-t border-gray-200 px-5 py-3">
+        <div className="flex shrink-0 justify-end gap-2 border-t border-[rgb(var(--line))] px-5 py-3">
           {footer}
         </div>
       )}
@@ -302,7 +370,7 @@ function ModalBody({
       // 画面が狭くてサイドバーぶんを引くとパネルが潰れる場合は、22rem を下回らない範囲までしかずらさない。
       style={{ paddingLeft: 'calc(1rem + min(var(--app-content-left, 0px), max(0px, 100vw - 22rem)))' }}
       role="presentation"
-      onMouseDown={(event) => { if (event.target === event.currentTarget && backdropClosable) onClose(); }}
+      onMouseDown={(event) => { if (event.target === event.currentTarget && backdropClosable) requestClose(); }}
     >
       {onSubmit
         ? <form {...panelProps} onSubmit={onSubmit}>{inner}</form>

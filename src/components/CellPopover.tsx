@@ -173,7 +173,7 @@ export function CellPopover({
           setOpenKey(open ? null : popoverKey);
         }}
         className={triggerClassName
-          ?? `block w-full cursor-pointer rounded-md px-1 py-0.5 transition-colors hover:bg-blue-50/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${open ? 'bg-blue-50' : ''}`}
+          ?? `block w-full cursor-pointer rounded-md px-1 py-0.5 transition-colors hover:bg-[rgb(var(--accent-soft)/0.7)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(var(--accent))] ${open ? 'bg-[rgb(var(--accent-soft))]' : ''}`}
       >
         {children}
       </button>
@@ -192,12 +192,12 @@ export function CellPopover({
           }}
           // themed-popover-panel: ダークでは白（→ #1e293b）のままだと一覧カードと同じ面色になり
           // 境界が消えるため、globals.css 側でワントーン明るい面＋濃い枠・影に差し替える。
-          className="themed-popover-panel fixed z-[60] rounded-lg border border-gray-200 bg-white p-3 text-left shadow-xl"
+          className="themed-popover-panel fixed z-[60] rounded-lg border border-[rgb(var(--line))] bg-[rgb(var(--surface))] p-3 text-left shadow-xl"
           onMouseDown={(event) => event.stopPropagation()}
           onClick={(event) => event.stopPropagation()}
           onDoubleClick={(event) => event.stopPropagation()}
         >
-          <p className="mb-2 text-[11px] leading-[16px] font-semibold tracking-wide text-gray-500">{panelLabel}</p>
+          <p className="mb-2 text-[11px] leading-[16px] font-semibold tracking-wide text-[rgb(var(--ink-muted))]">{panelLabel}</p>
           {panel}
         </div>,
         document.body,

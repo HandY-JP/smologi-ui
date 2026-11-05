@@ -96,7 +96,7 @@ export function ProductThumb({
 
   if (!src || failed) {
     return (
-      <div className={`${sizeCls} rounded bg-gray-50 flex items-center justify-center flex-shrink-0 text-gray-300`} aria-hidden>
+      <div className={`${sizeCls} rounded bg-[rgb(var(--surface-subtle))] flex items-center justify-center flex-shrink-0 text-[rgb(var(--ink-faint))]`} aria-hidden>
         <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
@@ -133,7 +133,7 @@ export function ProductThumb({
       // cover だと縦長/横長の画像が見切れてしまう。
       // 囲い（枠線）は付けず画像を直接見せる。ホバーのリングだけ拡大可能の合図として残す
       className={`${sizeCls} rounded object-contain flex-shrink-0 ${
-        enlargeOnClick ? 'cursor-zoom-in hover:ring-2 hover:ring-blue-300 transition' : ''
+        enlargeOnClick ? 'cursor-zoom-in hover:ring-2 hover:ring-[rgb(var(--accent)/0.3)] transition' : ''
       }`}
     />
   );
@@ -173,7 +173,7 @@ export function ProductThumb({
             src={src}
             alt={alt}
             onClick={(e) => e.stopPropagation()}
-            className="max-h-[90vh] max-w-[90vw] object-contain rounded shadow-2xl bg-white"
+            className="max-h-[90vh] max-w-[90vw] object-contain rounded shadow-2xl bg-[rgb(var(--surface))]"
           />
           {alt && (
             <div className="absolute bottom-4 left-1/2 -translate-x-1/2 max-w-[80vw] text-center text-[12px] leading-[18px] text-white/80 bg-black/40 rounded-full px-3 py-1 truncate">

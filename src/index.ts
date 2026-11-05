@@ -73,6 +73,7 @@ export * from './components/SplitInbox';
 export * from './components/DiscountTicket';
 export * from './components/PeriodProgress';
 export * from './lib/period';
+export * from './lib/use-bottom-bar-height-var';
 export * from './components/EmptyState';
 
 // ---- 連携ページ・ショップ設定（v0.14.0） ----

@@ -70,8 +70,8 @@ export interface TopToolItem {
   placement?: TopToolPlacement;
   primary?: boolean;
   /**
-   * ON/OFF のトグルボタン（商品マスタの「編集モード」）で、いま ON であることを示す。
-   * アンバーで点灯し `aria-pressed` を持つ（primary との併用は想定しない）。
+   * ON/OFF のトグル（商品詳細の「ログ」など）で、いま ON であることを示す。
+   * `aria-pressed` を持ち、注意色（warning トークン）で点灯する（primary との併用は想定しない）。
    */
   active?: boolean;
   disabled?: boolean;
@@ -90,6 +90,12 @@ export interface TopToolItem {
   disabledReason?: string;
   /** status バッジ自体をクリックしたときの処理（ダウンロード一覧を開く等）。渡さなければボタン本体の onClick を使う。 */
   onStatusClick?: () => void;
+  /**
+   * status とは独立の小さい丸（success-solid）。件数もチェック演出も持たない「新着」の目印だけを
+   * 出したいとき用（例: 受注取込の完了帯が画面外にあるあいだ、更新アイコンに点を出す。2026-09-30）。
+   * status の done/failed バッジと同時には使わない想定（両方 true のときは status 側を優先する）。
+   */
+  extraDot?: boolean;
 }
 
 const TOOL_TIP_MARGIN_PX = 8;
@@ -145,12 +151,13 @@ function ToolTooltip({ text, triggerRef }: { text: string; triggerRef: React.Ref
   );
 }
 
-const TOOL_MENU_WIDTH_PX = 208; // w-52
+// 2026-10-05 オーナー決定: 「履歴CSV（標準）（N件）」など長い項目名が折り返さないよう 208→264 に広げた。
+const TOOL_MENU_WIDTH_PX = 264; // w-66
 const TOOL_MENU_MARGIN_PX = 8;
 const TOOL_MENU_GAP_PX = 6; // トリガーとの隙間（mt-1.5 相当）
 
 // 本番崩れ修正（2026-09-14・Opus 実物レビュー）: 通常時は道具バー自身が sticky なトップバーの
-// 中（z-30）にあり、absolute 配置のメニューは「下段（第2行）のグループ/絞り込みチップ列」や
+// 中（z-40）にあり、absolute 配置のメニューは「下段（第2行）のグループ/絞り込みチップ列」や
 // 一覧の sticky 見出し等、祖先の重ね順次第でその下に潜って先頭項目が隠れることがあった
 // （CSV▾／PDF▾／アクション▾、道具バーのドロップダウンすべてで共通の部品のため
 // 一括りに直す）。body へ createPortal し、position: fixed でトリガーの実測位置から自前で
@@ -202,17 +209,17 @@ function ToolMenu({ items, onClose, triggerRef }: { items: TopToolMenuItem[]; on
       ref={menuRef}
       role="menu"
       style={{ top: position.top, left: position.left, width: TOOL_MENU_WIDTH_PX }}
-      className="fixed z-[60] flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white p-1 shadow-xl"
+      className="fixed z-[60] flex flex-col overflow-hidden rounded-xl border border-[rgb(var(--line))] bg-[rgb(var(--surface))] p-1 shadow-xl"
     >
       {items.map((mi, i) => (
         <Fragment key={mi.key}>
-          {mi.separatorBefore && i > 0 && <span className="my-1 block h-px bg-gray-100" aria-hidden />}
+          {mi.separatorBefore && i > 0 && <span className="my-1 block h-px bg-[rgb(var(--surface-subtle))]" aria-hidden />}
         <button
           type="button"
           role="menuitem"
           disabled={mi.disabled}
           onClick={() => { mi.onClick(); onClose(); }}
-          className="flex items-center rounded-lg px-3 py-2 text-left text-[14px] leading-[22px] text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:text-gray-300 disabled:hover:bg-transparent"
+          className="flex items-center rounded-lg px-3 py-2 text-left text-[14px] leading-[22px] text-[rgb(var(--ink))] transition-colors hover:bg-[rgb(var(--surface-subtle))] disabled:cursor-not-allowed disabled:text-[rgb(var(--ink-faint))] disabled:hover:bg-transparent"
         >
           {mi.label}
         </button>
@@ -275,18 +282,18 @@ function buildToolListRows(items: TopToolItem[], expandedKey: string | null): To
 /** 行の右端に出す状態（帯のバッジと同じ情報を、一覧では言葉で出す）。 */
 function ToolListRowStatus({ item }: { item: TopToolItem }) {
   if (item.status === 'progress') {
-    return <span className="flex-shrink-0 text-[11px] leading-[16px] font-medium text-gray-400">処理中</span>;
+    return <span className="flex-shrink-0 text-[11px] leading-[16px] font-medium text-[rgb(var(--ink-muted))]">処理中</span>;
   }
   if (item.status === 'done') {
     return (
-      <span className="flex-shrink-0 rounded-full bg-blue-50 px-2 py-0.5 text-[11px] leading-[16px] font-semibold text-blue-600">
+      <span className="flex-shrink-0 rounded-full bg-[rgb(var(--accent-soft))] px-2 py-0.5 text-[11px] leading-[16px] font-semibold text-[rgb(var(--accent-ink))]">
         {item.doneCount != null ? `${item.doneCount.toLocaleString()}件 できあがり` : 'できあがり'}
       </span>
     );
   }
   if (item.status === 'failed') {
     return (
-      <span className="flex-shrink-0 text-[11px] leading-[16px] font-medium text-red-600">
+      <span className="flex-shrink-0 text-[11px] leading-[16px] font-medium text-[rgb(var(--danger-ink))]">
         {item.statusMessage ?? '失敗しました'}
       </span>
     );
@@ -370,7 +377,7 @@ function ToolListPanel({
       role="menu"
       aria-label="道具の一覧"
       style={{ top: position.top, left: position.left, width: TOOL_LIST_WIDTH_PX }}
-      className="fixed z-[60] flex max-h-[min(70vh,560px)] flex-col overflow-y-auto rounded-xl border border-gray-200 bg-white p-1.5 shadow-xl"
+      className="fixed z-[60] flex max-h-[min(70vh,560px)] flex-col overflow-y-auto rounded-xl border border-[rgb(var(--line))] bg-[rgb(var(--surface))] p-1.5 shadow-xl"
       onKeyDown={(e) => {
         if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp' && e.key !== 'Home' && e.key !== 'End') return;
         e.preventDefault();
@@ -387,7 +394,7 @@ function ToolListPanel({
           const { parent, sub } = row;
           return (
             <Fragment key={row.key}>
-            {sub.separatorBefore && <span className="my-1 block h-px bg-gray-100" aria-hidden />}
+            {sub.separatorBefore && <span className="my-1 block h-px bg-[rgb(var(--surface-subtle))]" aria-hidden />}
             <button
               type="button"
               role="menuitem"
@@ -395,16 +402,16 @@ function ToolListPanel({
               aria-disabled={sub.disabled || undefined}
               onClick={() => { if (sub.disabled) return; sub.onClick(); onClose(); }}
               className={`flex w-full items-center gap-2.5 rounded-lg py-1.5 pl-9 pr-2.5 text-left transition-colors ${
-                sub.disabled ? 'cursor-not-allowed opacity-40' : 'hover:bg-gray-50 focus:bg-gray-50 focus:outline-none'
+                sub.disabled ? 'cursor-not-allowed opacity-40' : 'hover:bg-[rgb(var(--surface-subtle))] focus:bg-[rgb(var(--surface-subtle))] focus:outline-none'
               }`}
             >
-              <span className="flex h-4 w-4 flex-shrink-0 items-center justify-center text-gray-300 [&_svg]:h-4 [&_svg]:w-4" aria-hidden>
+              <span className="flex h-4 w-4 flex-shrink-0 items-center justify-center text-[rgb(var(--ink-faint))] [&_svg]:h-4 [&_svg]:w-4" aria-hidden>
                 {parent.icon}
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block truncate text-[13px] leading-[20px] font-medium text-gray-700">{sub.label}</span>
+                <span className="block truncate text-[13px] leading-[20px] font-medium text-[rgb(var(--ink))]">{sub.label}</span>
                 {sub.description && (
-                  <span className="mt-0.5 block text-[11px] leading-snug text-gray-400">{sub.description}</span>
+                  <span className="mt-0.5 block text-[11px] leading-snug text-[rgb(var(--ink-muted))]">{sub.description}</span>
                 )}
               </span>
             </button>
@@ -421,7 +428,7 @@ function ToolListPanel({
         const sub = inert && item.disabled && item.disabledReason ? item.disabledReason : item.description;
         return (
           <Fragment key={row.key}>
-            {row.separator && <span className="my-1 block h-px bg-gray-100" aria-hidden />}
+            {row.separator && <span className="my-1 block h-px bg-[rgb(var(--surface-subtle))]" aria-hidden />}
             <button
               type="button"
               role="menuitem"
@@ -435,25 +442,25 @@ function ToolListPanel({
                 onClose();
               }}
               className={`flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left transition-colors ${
-                inert ? 'cursor-not-allowed opacity-45' : 'hover:bg-gray-50 focus:bg-gray-50 focus:outline-none'
+                inert ? 'cursor-not-allowed opacity-45' : 'hover:bg-[rgb(var(--surface-subtle))] focus:bg-[rgb(var(--surface-subtle))] focus:outline-none'
               }`}
             >
               <span
                 className={`flex h-5 w-5 flex-shrink-0 items-center justify-center [&_svg]:h-5 [&_svg]:w-5 ${
-                  item.primary ? 'text-blue-600' : item.active ? 'text-amber-500' : 'text-gray-400'
+                  item.primary ? 'text-[rgb(var(--accent-ink))]' : item.active ? 'text-[rgb(var(--warning-ink))]' : 'text-[rgb(var(--ink-muted))]'
                 }`}
                 aria-hidden
               >
                 {item.icon}
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block truncate text-[14px] leading-[22px] font-semibold text-gray-800">{item.label}</span>
-                {sub && <span className="mt-0.5 block text-[12px] leading-snug text-gray-500">{sub}</span>}
+                <span className="block truncate text-[14px] leading-[22px] font-semibold text-[rgb(var(--ink))]">{item.label}</span>
+                {sub && <span className="mt-0.5 block text-[12px] leading-snug text-[rgb(var(--ink-muted))]">{sub}</span>}
               </span>
               <ToolListRowStatus item={item} />
               {hasMenu && (
                 <span
-                  className={`flex-shrink-0 text-gray-400 transition-transform [&_svg]:h-4 [&_svg]:w-4 ${expanded ? 'rotate-180' : '-rotate-90'}`}
+                  className={`flex-shrink-0 text-[rgb(var(--ink-muted))] transition-transform [&_svg]:h-4 [&_svg]:w-4 ${expanded ? 'rotate-180' : '-rotate-90'}`}
                   aria-hidden
                 >
                   {CaretDownIcon}
@@ -465,8 +472,8 @@ function ToolListPanel({
       })}
       {settingsLinks && settingsLinks.length > 0 && (
         <>
-          <span className="my-1 block h-px bg-gray-100" aria-hidden />
-          <div className="px-2.5 pb-1 pt-1.5 text-[11px] leading-[16px] font-semibold uppercase tracking-wide text-gray-400">
+          <span className="my-1 block h-px bg-[rgb(var(--surface-subtle))]" aria-hidden />
+          <div className="px-2.5 pb-1 pt-1.5 text-[11px] leading-[16px] font-semibold uppercase tracking-wide text-[rgb(var(--ink-muted))]">
             関連する設定
           </div>
           {settingsLinks.map((link) => (
@@ -482,15 +489,15 @@ function ToolListPanel({
                 else if (link.href) window.location.assign(link.href);
                 onClose();
               }}
-              className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left transition-colors hover:bg-gray-50 focus:bg-gray-50 focus:outline-none"
+              className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left transition-colors hover:bg-[rgb(var(--surface-subtle))] focus:bg-[rgb(var(--surface-subtle))] focus:outline-none"
             >
-              <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center text-gray-400 [&_svg]:h-5 [&_svg]:w-5" aria-hidden>
+              <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center text-[rgb(var(--ink-muted))] [&_svg]:h-5 [&_svg]:w-5" aria-hidden>
                 {SettingsGearIcon}
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block truncate text-[14px] leading-[22px] font-semibold text-gray-800">{link.label}</span>
+                <span className="block truncate text-[14px] leading-[22px] font-semibold text-[rgb(var(--ink))]">{link.label}</span>
                 {link.description && (
-                  <span className="mt-0.5 block text-[12px] leading-snug text-gray-500">{link.description}</span>
+                  <span className="mt-0.5 block text-[12px] leading-snug text-[rgb(var(--ink-muted))]">{link.description}</span>
                 )}
               </span>
             </button>
@@ -568,6 +575,9 @@ function ToolButton({ item, variant }: { item: TopToolItem; variant: 'normal' | 
           >
             {item.status === 'done' ? (item.doneCount != null ? Math.min(99, item.doneCount) : '') : '!'}
           </span>
+        )}
+        {!dot && item.extraDot && (
+          <span aria-hidden className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-[rgb(var(--success-solid))]" />
         )}
       </button>
       {/* メニューを開いている間は吹き出しを出さない（メニューと重なるため）。

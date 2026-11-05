@@ -12,12 +12,12 @@ import { Modal, type ModalLayer } from './Modal';
 export type ConfirmTone = 'danger' | 'primary';
 
 const TONE_ICON: Record<ConfirmTone, string> = {
-  danger: 'bg-rose-50 text-rose-600',
-  primary: 'bg-blue-50 text-blue-600',
+  danger: 'bg-[rgb(var(--danger-soft))] text-[rgb(var(--danger-ink))]',
+  primary: 'bg-[rgb(var(--accent-soft))] text-[rgb(var(--accent-ink))]',
 };
 
 const TONE_CONFIRM_BUTTON: Record<ConfirmTone, string> = {
-  danger: 'bg-rose-600 hover:bg-rose-700',
+  danger: 'bg-[rgb(var(--danger-solid))] hover:bg-[rgb(var(--danger-solid)/0.9)]',
   primary: 'bg-[var(--sb-accent-bg)] hover:bg-[var(--accent-hover)]',
 };
 
@@ -30,6 +30,7 @@ export function ConfirmDialog({
   tone = 'danger',
   busy = false,
   layer = 'base',
+  closeOnBackdrop,
   overlayClassName,
   panelClassName,
   onConfirm,
@@ -45,6 +46,11 @@ export function ConfirmDialog({
   busy?: boolean;
   /** ドロワー・パネルの上に重ねるときは 'over'。 */
   layer?: ModalLayer;
+  /**
+   * 背景クリックで閉じるか。省略時は Modal の既定（busy でなければ閉じる）。
+   * 削除などの破壊的確認で誤爆を避けたいときは false を渡す（Escape とキャンセルは残る）。
+   */
+  closeOnBackdrop?: boolean;
   overlayClassName?: string;
   panelClassName?: string;
   onConfirm: () => void;
@@ -59,6 +65,7 @@ export function ConfirmDialog({
       layer={layer}
       size="md"
       dismissable={!busy}
+      closeOnBackdrop={closeOnBackdrop}
       bodyClassName="p-5"
       overlayClassName={overlayClassName}
       panelClassName={panelClassName}
@@ -69,7 +76,7 @@ export function ConfirmDialog({
             data-autofocus
             onClick={onClose}
             disabled={busy}
-            className="rounded-lg border border-gray-300 bg-white px-3.5 py-2 text-[14px] leading-[22px] font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:opacity-50"
+            className="rounded-lg border border-[rgb(var(--line-strong))] bg-[rgb(var(--surface))] px-3.5 py-2 text-[14px] leading-[22px] font-medium text-[rgb(var(--ink))] transition-colors hover:bg-[rgb(var(--surface-subtle))] disabled:opacity-50"
           >
             {cancelLabel}
           </button>
@@ -96,11 +103,11 @@ export function ConfirmDialog({
           </svg>
         </span>
         <div className="min-w-0 flex-1">
-          <h2 className="text-[14px] leading-[22px] font-semibold text-slate-900">{title}</h2>
+          <h2 className="text-[14px] leading-[22px] font-semibold text-[rgb(var(--ink))]">{title}</h2>
           {lines.length > 0 && (
             <ul className="mt-2 space-y-1.5">
               {lines.map((line) => (
-                <li key={line} className="text-[12px] leading-5 text-slate-600">{line}</li>
+                <li key={line} className="text-[12px] leading-5 text-[rgb(var(--ink-muted))]">{line}</li>
               ))}
             </ul>
           )}

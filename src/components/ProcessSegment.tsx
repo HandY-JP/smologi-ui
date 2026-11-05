@@ -49,8 +49,8 @@ function FilterChipPill({ c, chipRef }: { c: FilterChipItem; chipRef?: (node: HT
   const full = c.field ? `${c.field}: ${c.label}` : c.label;
   return (
     <span ref={chipRef} className="sb-group-chip" title={full}>
-      {c.field && <span className="text-gray-500">{c.field}: </span>}
-      <span className="text-gray-800">{c.label}</span>
+      {c.field && <span className="text-[rgb(var(--ink-muted))]">{c.field}: </span>}
+      <span className="text-[rgb(var(--ink))]">{c.label}</span>
       {c.onRemove && (
         <button type="button" onClick={c.onRemove} aria-label={`${full}の条件を解除`} className="ml-0.5 opacity-70 hover:opacity-100">×</button>
       )}
@@ -109,10 +109,10 @@ export function FilterChipRow({ chips }: { chips: FilterChipItem[] }) {
       </div>
       {/* 行頭に「じょうご＋絞り込み」を1回だけ（2026-09-22 ユーザー決定）。何の行なのかを示す。 */}
       <span className="flex shrink-0 items-center gap-1" aria-hidden>
-        <svg className="h-3.5 w-3.5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+        <svg className="h-3.5 w-3.5 text-[rgb(var(--ink-muted))]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 4.5h16.5l-6.6 7.7v4.55l-3.3 1.65v-6.2L3.75 4.5z" />
         </svg>
-        <span className="text-[12px] leading-[18px] text-gray-500">絞り込み</span>
+        <span className="text-[12px] leading-[18px] text-[rgb(var(--ink-muted))]">絞り込み</span>
       </span>
       {/* 表示側: nowrap（折り返さない）。計測結果で絞り込んだ配列だけを描画する。
           溢れ計算の基準（利用できる幅）は、行頭ラベルと「すべて解除」を除いた**この箱**の幅。 */}
@@ -130,7 +130,7 @@ export function FilterChipRow({ chips }: { chips: FilterChipItem[] }) {
         <button
           type="button"
           onClick={() => { for (const c of chips) c.onRemove?.(); }}
-          className="shrink-0 text-[12px] leading-[18px] text-gray-500 underline-offset-2 hover:text-gray-700 hover:underline"
+          className="shrink-0 text-[12px] leading-[18px] text-[rgb(var(--ink-muted))] underline-offset-2 hover:text-[rgb(var(--ink))] hover:underline"
         >
           すべて解除
         </button>

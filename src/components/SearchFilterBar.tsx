@@ -123,14 +123,14 @@ export function SearchFilterBar({
             ? 'shrink-0 gap-0.5'
             // themed-search-pill: ダークで input の一括指定（背景 #0f172a）がピルの丸い面に
             // 四角く乗るのを防ぐフック（globals.css）。面はこのピル側だけが持つ。
-            : `themed-search-pill min-w-[20rem] flex-1 rounded-full border bg-gray-50 focus-within:bg-white focus-within:ring-2 ${
+            : `themed-search-pill min-w-[20rem] flex-1 rounded-full border bg-[rgb(var(--surface-subtle))] focus-within:bg-[rgb(var(--surface))] focus-within:ring-2 ${
                 dirty
-                  ? 'border-amber-400 focus-within:border-amber-500 focus-within:ring-amber-500/15'
+                  ? 'border-[rgb(var(--warning-ink)/0.4)] focus-within:border-[rgb(var(--warning-solid))] focus-within:ring-[rgb(var(--warning-solid)/0.15)]'
                   // ring は var() に透過修飾子（/15）が効かない（Tailwind v3 がユーティリティごと
                   // 捨てるため、既定の青いリングが出てしまう）。透過済みの --accent-ring を使う。
                   // themed-search-box: 平常時の枠は、ダークだけ入力欄と同じ濃さ（#334155）に落とす。
                   // border-gray-300（ダーク #475569）のままだと隣の入力欄より一段明るく浮くため。
-                  : 'themed-search-box border-gray-300 focus-within:border-[var(--search-accent)] focus-within:ring-[var(--accent-ring)]'
+                  : 'themed-search-box border-[rgb(var(--line-strong))] focus-within:border-[var(--search-accent)] focus-within:ring-[var(--accent-ring)]'
               }`
         }`}
       >
@@ -144,9 +144,9 @@ export function SearchFilterBar({
           className={`flex shrink-0 items-center justify-center transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
             collapsed
               // 畳んだ状態は枠なしの ghost ボタン。ホバーで薄い背景を出して押せると分かるようにする。
-              ? 'h-9 w-9 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--search-accent)]'
+              ? 'h-9 w-9 rounded-lg text-[rgb(var(--ink-muted))] hover:bg-[rgb(var(--surface-subtle))] hover:text-[rgb(var(--ink))] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--search-accent)]'
               : `h-full w-11 rounded-l-full ${
-                  dirty ? 'text-amber-600' : 'text-gray-400 hover:text-[var(--search-accent)]'
+                  dirty ? 'text-[rgb(var(--warning-ink))]' : 'text-[rgb(var(--ink-muted))] hover:text-[var(--search-accent)]'
                 }`
           }`}
         >
@@ -179,14 +179,14 @@ export function SearchFilterBar({
             onKeyDown={onInputKeyDown}
             onBlur={collapsible ? onInputBlur : undefined}
             placeholder={placeholder}
-            className="h-full min-w-0 flex-1 border-0 bg-transparent pr-2 text-[14px] leading-[22px] text-gray-900 outline-none placeholder:text-gray-400"
+            className="h-full min-w-0 flex-1 border-0 bg-transparent pr-2 text-[14px] leading-[22px] text-[rgb(var(--ink))] outline-none placeholder:text-[rgb(var(--ink-faint))]"
           />
         )}
         {filterControl}
       </div>
       </CollapsedFilterTriggerProvider>
       {countLabel ? (
-        <span className="w-24 shrink-0 whitespace-nowrap text-right text-[12px] leading-[18px] tabular-nums text-gray-500">
+        <span className="w-24 shrink-0 whitespace-nowrap text-right text-[12px] leading-[18px] tabular-nums text-[rgb(var(--ink-muted))]">
           {countLabel}
         </span>
       ) : null}

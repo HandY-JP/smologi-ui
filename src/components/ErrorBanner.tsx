@@ -33,7 +33,7 @@ export function ErrorBanner({
   return (
     <div
       role="alert"
-      className={`rounded-md border border-red-200 bg-red-50 text-red-700 ${SIZE_CLASS[size]} ${className}`}
+      className={`rounded-md border border-[rgb(var(--danger-ink)/0.25)] bg-[rgb(var(--danger-soft))] text-[rgb(var(--danger-ink))] ${SIZE_CLASS[size]} ${className}`}
     >
       {message}
       {children}

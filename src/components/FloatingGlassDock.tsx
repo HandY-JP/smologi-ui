@@ -130,6 +130,7 @@ export function FloatingGlassDock({
   /** 実際の FilterPopover/ShipmentFilterMenu を渡す（collapsed 表示で件数バッジ付きの
    *  じょうごトリガーになる）。呼び出し側の renderXxxFilter(true) をそのまま渡せばよい。 */
   filterControl,
+  viewControl,
   filterChips = [],
   processTrailing,
   showProcess = true,
@@ -162,6 +163,8 @@ export function FloatingGlassDock({
   searchAriaLabel?: string;
   searchInputRef?: RefObject<HTMLInputElement | null>;
   filterControl?: ReactNode;
+  /** 検索カプセル右端、絞り込みの手前に置く保存ビューのブックマーク（TopbarSearchDock の viewControl と同じ）。 */
+  viewControl?: ReactNode;
   filterChips?: FloatingFilterChip[];
   /** 工程（セグメント）カプセルの中、ピル列の直後に置く追加要素（商品マスタの保存ビュー「▾」）。 */
   processTrailing?: ReactNode;
@@ -305,7 +308,7 @@ export function FloatingGlassDock({
               <span className="sb-glass-div" aria-hidden />
             </>
           )}
-          <span className="flex items-center text-gray-400" aria-hidden>
+          <span className="flex items-center text-[rgb(var(--ink-muted))]" aria-hidden>
             <svg width={17} height={17} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-4.35-4.35M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z" />
             </svg>
@@ -322,6 +325,7 @@ export function FloatingGlassDock({
           {/* 適用中チップは一覧側（ヘッダーの絞り込み）が出す。ここからは出さない
               ＝畳み時の検索カプセルに絞り込みチップが二重表示されるのを防ぐ
               （TopbarSearchDock.tsx と同じ流儀）。 */}
+          {viewControl}
           {filterControl && (
             <FilterChipsHostProvider host={null}>
               <CollapsedFilterTriggerProvider collapsed>
