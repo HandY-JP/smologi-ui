@@ -487,8 +487,7 @@ function TopToolCapsule({
   const hiddenStatus = hiddenFailed ? { status: "failed", count: 0 } : hiddenDone ? { status: "done", count: hiddenDoneCount } : null;
   const warnedRef = useRef(false);
   useEffect(() => {
-    const nodeEnv = globalThis.process?.env?.NODE_ENV;
-    if (nodeEnv === "production" || warnedRef.current) return;
+    if (typeof process === "undefined" || process.env.NODE_ENV === "production" || warnedRef.current) return;
     const overflow = overflowedBarItems(orderedItems, barKeys);
     if (overflow.length === 0) return;
     warnedRef.current = true;

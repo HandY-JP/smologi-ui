@@ -6,14 +6,15 @@ import { useBottomBarHeightVar } from "../lib/use-bottom-bar-height-var.js";
 const TOAST_DEFAULT_DURATION_MS = 3e3;
 const TOAST_ACTION_DURATION_MS = 1e4;
 function resolveOptions(options, defaults) {
-  if (typeof options === "number") return { durationMs: options };
+  if (typeof options === "number") return { durationMs: options, passThrough: false };
   if (options && typeof options === "object") {
     return {
       durationMs: options.durationMs ?? (options.action ? defaults.actionMs : defaults.defaultMs),
-      action: options.action
+      action: options.action,
+      passThrough: !options.action && !!options.passThrough
     };
   }
-  return { durationMs: defaults.defaultMs };
+  return { durationMs: defaults.defaultMs, passThrough: false };
 }
 const ToastContext = createContext(null);
 function useToast() {
@@ -69,9 +70,9 @@ function ToastProvider({
     entry.timeoutId = setTimeout(() => dismiss(id), entry.remainingMs);
   }, [dismiss]);
   const show = useCallback((message, type = "info", options) => {
-    const { durationMs, action } = resolveOptions(options, { defaultMs: defaultDurationMs, actionMs: actionDurationMs });
+    const { durationMs, action, passThrough } = resolveOptions(options, { defaultMs: defaultDurationMs, actionMs: actionDurationMs });
     const id = Date.now() + Math.random();
-    setToasts((prev) => [...prev, { id, type, message, action, durationMs }]);
+    setToasts((prev) => [...prev, { id, type, message, action, durationMs, passThrough }]);
     scheduleDismiss(id, durationMs);
   }, [scheduleDismiss, defaultDurationMs, actionDurationMs]);
   const api = {
@@ -87,7 +88,7 @@ function ToastProvider({
       "div",
       {
         "data-toast-type": t.type,
-        className: "pointer-events-auto max-w-[min(90vw,36rem)] px-4 py-2.5 rounded-lg shadow-lg text-[14px] leading-[22px] font-medium text-white flex items-start gap-2 toast-enter",
+        className: `${t.passThrough ? "pointer-events-none" : "pointer-events-auto"} max-w-[min(90vw,36rem)] px-4 py-2.5 rounded-lg shadow-lg text-[14px] leading-[22px] font-medium text-white flex items-start gap-2 toast-enter`,
         style: { backgroundColor: STYLES[t.type].bg },
         onMouseEnter: () => pause(t.id),
         onMouseLeave: () => resume(t.id),
@@ -116,6 +117,7 @@ export {
   TOAST_ACTION_DURATION_MS,
   TOAST_DEFAULT_DURATION_MS,
   ToastProvider,
+  resolveOptions,
   useToast
 };
 //# sourceMappingURL=Toast.js.map

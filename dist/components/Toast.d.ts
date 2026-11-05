@@ -8,6 +8,12 @@ interface ToastOptions {
     durationMs?: number;
     /** トースト内に置く単一の操作ボタン（例: 「ダウンロード」）。 */
     action?: ToastAction;
+    /**
+     * true にすると、トーストの上でもクリックが下の画面へ通る（ホバーで止まらない）。
+     * 操作の直後にすぐ次のボタンを押す画面で、トーストが重なって押せなくなるのを防ぐ用。
+     * action 付きのトーストではボタンを押せなくなるため無視する。省略時は従来どおり。
+     */
+    passThrough?: boolean;
 }
 type DurationArg = number | ToastOptions | undefined;
 interface ToastApi {
@@ -20,6 +26,14 @@ interface ToastApi {
 }
 export declare const TOAST_DEFAULT_DURATION_MS = 3000;
 export declare const TOAST_ACTION_DURATION_MS = 10000;
+export declare function resolveOptions(options: DurationArg, defaults: {
+    defaultMs: number;
+    actionMs: number;
+}): {
+    durationMs: number;
+    action?: ToastAction;
+    passThrough: boolean;
+};
 export declare function useToast(): ToastApi;
 export declare function ToastProvider({ children, defaultDurationMs, actionDurationMs, }: {
     children: React.ReactNode;

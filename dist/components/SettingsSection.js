@@ -77,7 +77,7 @@ function SettingsEmpty({ children }) {
   return /* @__PURE__ */ jsx("p", { className: "py-6 text-center text-[14px] leading-[22px] text-[rgb(var(--ink-muted))]", children });
 }
 function SettingsReadOnlyNotice({ children }) {
-  return /* @__PURE__ */ jsx("p", { className: "mb-4 rounded-md border border-[rgb(var(--warning-ink)/0.25)] bg-[rgb(var(--warning-soft))] px-3 py-2 text-[14px] leading-[22px] text-[rgb(var(--warning-ink))]", children: children ?? "\u95B2\u89A7\u306E\u307F\u306E\u6A29\u9650\u3067\u3059\u3002\u5185\u5BB9\u306E\u5909\u66F4\u306F\u3067\u304D\u307E\u305B\u3093\u3002" });
+  return /* @__PURE__ */ jsx("p", { className: "mb-4 max-w-[68ch] rounded-md border border-[rgb(var(--warning-ink)/0.25)] bg-[rgb(var(--warning-soft))] px-3 py-2 text-[14px] leading-[22px] text-[rgb(var(--warning-ink))]", children: children ?? "\u95B2\u89A7\u306E\u307F\u306E\u6A29\u9650\u3067\u3059\u3002\u5185\u5BB9\u306E\u5909\u66F4\u306F\u3067\u304D\u307E\u305B\u3093\u3002" });
 }
 function SettingsDisclosure({
   kind = "advanced",
