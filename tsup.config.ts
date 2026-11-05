@@ -25,4 +25,7 @@ export default defineConfig({
   target: 'es2022',
   platform: 'browser',
   external: ['react', 'react-dom'],
+  // tsup は既定で process.env.NODE_ENV を "production" に置換する。利用側のバンドラ(Next)に置換を任せるため
+  // 式をそのまま残す(TopToolCapsule の開発時警告が dist で常に無効になるのを防ぐ)。
+  define: { 'process.env.NODE_ENV': 'process.env.NODE_ENV' },
 });

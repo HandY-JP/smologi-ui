@@ -143,7 +143,7 @@ export function SettingsEmpty({ children }: { children: ReactNode }) {
 /** 閲覧のみ権限のときに区画の先頭へ出す帯（全区分で同じ文言・同じ見た目にする）。 */
 export function SettingsReadOnlyNotice({ children }: { children?: ReactNode }) {
   return (
-    <p className="mb-4 rounded-md border border-[rgb(var(--warning-ink)/0.25)] bg-[rgb(var(--warning-soft))] px-3 py-2 text-[14px] leading-[22px] text-[rgb(var(--warning-ink))]">
+    <p className="mb-4 max-w-[68ch] rounded-md border border-[rgb(var(--warning-ink)/0.25)] bg-[rgb(var(--warning-soft))] px-3 py-2 text-[14px] leading-[22px] text-[rgb(var(--warning-ink))]">
       {children ?? '閲覧のみの権限です。内容の変更はできません。'}
     </p>
   );

@@ -15,6 +15,9 @@ import { Fragment, useEffect, useLayoutEffect, useRef, useState, type ReactNode 
 import { createPortal } from 'react-dom';
 import { orderToolItems, overflowedBarItems, selectBarItemKeys, type TopToolPlacement } from '../lib/top-tool-placement';
 
+// @types/node を持たないパッケージ用の最小宣言(このファイル内だけ。型は出力しない)。
+declare const process: { env: { NODE_ENV?: string } };
+
 export interface TopToolMenuItem {
   key: string;
   label: string;
@@ -712,9 +715,9 @@ export function TopToolCapsule({
   // 開発時だけ、帯からあふれた道具を知らせる（並びを決め直す合図。1回だけ）。
   const warnedRef = useRef(false);
   useEffect(() => {
-    // パッケージは @types/node を持たないので process は globalThis 経由で読む(バンドラが置換しなくても動く)。
-    const nodeEnv = (globalThis as { process?: { env?: { NODE_ENV?: string } } }).process?.env?.NODE_ENV;
-    if (nodeEnv === 'production' || warnedRef.current) return;
+    // `process.env.NODE_ENV` はリテラルのまま書く(Next のバンドラが置換する)。置換されない環境でも
+    // 落ちないよう typeof で守る。パッケージは @types/node を持たないので process は下で最小限だけ宣言している。
+    if (typeof process === 'undefined' || process.env.NODE_ENV === 'production' || warnedRef.current) return;
     const overflow = overflowedBarItems(orderedItems, barKeys);
     if (overflow.length === 0) return;
     warnedRef.current = true;

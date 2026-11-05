@@ -15,6 +15,12 @@ interface ToastOptions {
   durationMs?: number;
   /** トースト内に置く単一の操作ボタン（例: 「ダウンロード」）。 */
   action?: ToastAction;
+  /**
+   * true にすると、トーストの上でもクリックが下の画面へ通る（ホバーで止まらない）。
+   * 操作の直後にすぐ次のボタンを押す画面で、トーストが重なって押せなくなるのを防ぐ用。
+   * action 付きのトーストではボタンを押せなくなるため無視する。省略時は従来どおり。
+   */
+  passThrough?: boolean;
 }
 
 interface ToastItem {
@@ -23,6 +29,7 @@ interface ToastItem {
   message: string;
   action?: ToastAction;
   durationMs: number;
+  passThrough: boolean;
 }
 
 type DurationArg = number | ToastOptions | undefined;
@@ -41,18 +48,19 @@ interface ToastApi {
 export const TOAST_DEFAULT_DURATION_MS = 3000;
 export const TOAST_ACTION_DURATION_MS = 10000;
 
-function resolveOptions(
+export function resolveOptions(
   options: DurationArg,
   defaults: { defaultMs: number; actionMs: number },
-): { durationMs: number; action?: ToastAction } {
-  if (typeof options === 'number') return { durationMs: options };
+): { durationMs: number; action?: ToastAction; passThrough: boolean } {
+  if (typeof options === 'number') return { durationMs: options, passThrough: false };
   if (options && typeof options === 'object') {
     return {
       durationMs: options.durationMs ?? (options.action ? defaults.actionMs : defaults.defaultMs),
       action: options.action,
+      passThrough: !options.action && !!options.passThrough,
     };
   }
-  return { durationMs: defaults.defaultMs };
+  return { durationMs: defaults.defaultMs, passThrough: false };
 }
 
 const ToastContext = createContext<ToastApi | null>(null);
@@ -130,9 +138,9 @@ export function ToastProvider({
   }, [dismiss]);
 
   const show = useCallback((message: string, type: ToastType = 'info', options?: DurationArg) => {
-    const { durationMs, action } = resolveOptions(options, { defaultMs: defaultDurationMs, actionMs: actionDurationMs });
+    const { durationMs, action, passThrough } = resolveOptions(options, { defaultMs: defaultDurationMs, actionMs: actionDurationMs });
     const id = Date.now() + Math.random();
-    setToasts(prev => [...prev, { id, type, message, action, durationMs }]);
+    setToasts(prev => [...prev, { id, type, message, action, durationMs, passThrough }]);
     scheduleDismiss(id, durationMs);
   }, [scheduleDismiss, defaultDurationMs, actionDurationMs]);
 
@@ -154,7 +162,7 @@ export function ToastProvider({
             data-toast-type={t.type}
             // 長文（警告など）が画面外へはみ出さないよう幅を制限し、アイコンは1行目に揃える。
             // ホバー中は自動で消えない。
-            className="pointer-events-auto max-w-[min(90vw,36rem)] px-4 py-2.5 rounded-lg shadow-lg text-[14px] leading-[22px] font-medium text-white flex items-start gap-2 toast-enter"
+            className={`${t.passThrough ? 'pointer-events-none' : 'pointer-events-auto'} max-w-[min(90vw,36rem)] px-4 py-2.5 rounded-lg shadow-lg text-[14px] leading-[22px] font-medium text-white flex items-start gap-2 toast-enter`}
             style={{ backgroundColor: STYLES[t.type].bg }}
             onMouseEnter={() => pause(t.id)}
             onMouseLeave={() => resume(t.id)}

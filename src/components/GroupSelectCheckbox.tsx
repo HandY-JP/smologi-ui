@@ -31,7 +31,7 @@ export function GroupSelectCheckbox({ checked, indeterminate, onToggle, label }:
         onChange={onToggle}
         aria-label={label}
         title={label}
-        className="h-4 w-4 cursor-pointer rounded border-gray-300 text-[var(--sb-accent-bg)] focus:ring-[var(--sb-accent-bg)]"
+        className="h-4 w-4 cursor-pointer rounded border-[rgb(var(--line-strong))] text-[var(--sb-accent-bg)] focus:ring-[var(--sb-accent-bg)]"
       />
     </span>
   );

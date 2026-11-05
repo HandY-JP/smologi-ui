@@ -142,6 +142,17 @@ describe('Toast', () => {
     expect(document.body.textContent).not.toContain('出力しました');
   });
 
+  it('passThrough: 指定したトーストだけクリックが下へ通る（action 付きでは無視）', () => {
+    const api = setup();
+    act(() => api.showSuccess('通す', { passThrough: true }));
+    act(() => api.showSuccess('通さない'));
+    act(() => api.showSuccess('ボタン付き', { passThrough: true, action: { label: '開く', onClick: () => {} } }));
+    const card = (text: string) => Array.from(document.querySelectorAll<HTMLElement>('[data-toast-type]')).find((e) => e.textContent?.includes(text))!;
+    expect(card('通す').className).toContain('pointer-events-none');
+    expect(card('通さない').className).toContain('pointer-events-auto');
+    expect(card('ボタン付き').className).toContain('pointer-events-auto');
+  });
+
   it('既定の表示時間は 3 秒（従来どおり）。数値の第2引数・{durationMs} は個別に上書きできる', () => {
     vi.useFakeTimers();
     const api = setup();

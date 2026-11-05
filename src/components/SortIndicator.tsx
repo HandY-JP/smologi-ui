@@ -6,7 +6,7 @@
  */
 export function SortIndicator({ active, dir }: { active: boolean; dir?: 'asc' | 'desc' }) {
   return (
-    <span className={`text-[11px] leading-none ${active ? 'text-[var(--sb-accent-bg)]' : 'text-gray-300'}`} aria-hidden>
+    <span className={`text-[11px] leading-none ${active ? 'text-[var(--sb-accent-bg)]' : 'text-[rgb(var(--ink-faint))]'}`} aria-hidden>
       {active ? (dir === 'asc' ? '▲' : '▼') : '↕'}
     </span>
   );

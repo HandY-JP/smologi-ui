@@ -76,7 +76,7 @@ export function HelpHint({
   return (
     <Tooltip content={text} side={side} wrap={wrap} wrapWidth={wrapWidth}>
       <span
-        className={`inline-flex items-center justify-center w-3.5 h-3.5 rounded-full bg-gray-200 text-gray-600 text-[11px] leading-[16px] font-semibold cursor-help hover:bg-gray-300 transition-colors ${className}`}
+        className={`inline-flex items-center justify-center w-3.5 h-3.5 rounded-full bg-[rgb(var(--surface-muted))] text-[rgb(var(--ink-muted))] text-[11px] leading-[16px] font-semibold cursor-help hover:bg-[rgb(var(--line-strong))] transition-colors ${className}`}
         aria-label="ヘルプ"
       >
         ?
