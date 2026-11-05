@@ -168,6 +168,15 @@ export interface ModalProps {
   panelClassName?: string;
   /** 下部に固定するボタン列。渡すと区切り線付きのフッターになる。 */
   footer?: ReactNode;
+  /**
+   * フッターの並べ方。既定は 'flex justify-end gap-2'（ボタンを右寄せ）。
+   * 左に補足・右にボタン、のように中身で幅いっぱいに組むときは 'block' を渡す。
+   */
+  footerClassName?: string;
+  /**
+   * 狭い画面（sm 未満）で画面の下端に寄せて出す（ボトムシート風）。sm 以上は従来どおり中央。既定 false。
+   */
+  mobileSheet?: boolean;
   /** 渡すとパネルが <form> になる（Enter 送信を効かせたいフォームモーダル向け）。 */
   onSubmit?: (event: React.FormEvent) => void;
   children?: ReactNode;
@@ -194,6 +203,8 @@ export function Modal({
   overlayClassName = '',
   panelClassName = '',
   footer,
+  footerClassName,
+  mobileSheet = false,
   onSubmit,
   children,
 }: ModalProps) {
@@ -219,6 +230,8 @@ export function Modal({
       overlayClassName={overlayClassName}
       panelClassName={panelClassName}
       footer={footer}
+      footerClassName={footerClassName}
+      mobileSheet={mobileSheet}
       onSubmit={onSubmit}
     >
       {children}
@@ -246,6 +259,8 @@ function ModalBody({
   overlayClassName,
   panelClassName,
   footer,
+  footerClassName = 'flex justify-end gap-2',
+  mobileSheet = false,
   onSubmit,
   children,
 }: Omit<ModalProps, 'open'>) {
@@ -315,7 +330,7 @@ function ModalBody({
               <h2 id={titleId} className={`shrink-0 text-[15px] font-semibold text-[rgb(var(--ink))] ${compactHeader ? 'leading-6' : 'leading-[22px]'}`}>{title}</h2>
               {headerAside != null && <div className="min-w-0 basis-full text-[14px] leading-[22px] text-[rgb(var(--ink-muted))] sm:basis-auto">{headerAside}</div>}
             </div>
-            {subtitle != null && <p className={compactHeader ? 'text-[12px] leading-4 text-[rgb(var(--ink-muted))]' : 'mt-0.5 text-[12px] leading-[18px] text-[rgb(var(--ink-muted))]'}>{subtitle}</p>}
+            {subtitle != null && <div className={compactHeader ? 'text-[12px] leading-4 text-[rgb(var(--ink-muted))]' : 'mt-0.5 text-[12px] leading-[18px] text-[rgb(var(--ink-muted))]'}>{subtitle}</div>}
           </div>
           {headerRight != null && <div className={`flex shrink-0 items-center gap-2${compactHeader ? '' : ' self-center'}`}>{headerRight}</div>}
           {withCloseButton && (
@@ -355,7 +370,7 @@ function ModalBody({
         </div>
       )}
       {footer != null && (
-        <div className="flex shrink-0 justify-end gap-2 border-t border-[rgb(var(--line))] px-5 py-3">
+        <div className={`shrink-0 border-t border-[rgb(var(--line))] px-5 py-3 ${footerClassName}`}>
           {footer}
         </div>
       )}
@@ -364,7 +379,7 @@ function ModalBody({
 
   const body = (
     <div
-      className={`fixed inset-0 flex items-center justify-center bg-black/40 p-4 ${LAYER_Z[layer ?? 'base']} ${overlayClassName}`}
+      className={`fixed inset-0 flex ${mobileSheet ? 'items-end sm:items-center' : 'items-center'} justify-center bg-black/40 p-4 ${LAYER_Z[layer ?? 'base']} ${overlayClassName}`}
       // 背景は全画面を覆ったまま、パネルだけ「本文領域（サイドバーの右）」の中央へ寄せる。
       // --app-content-left はサイドバーのあるレイアウトだけが配る（AppContentLeftVar）。
       // 画面が狭くてサイドバーぶんを引くとパネルが潰れる場合は、22rem を下回らない範囲までしかずらさない。

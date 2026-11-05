@@ -48,6 +48,7 @@ export function ProductThumb({
   boxClassName,
   boxPixels,
   placeholder = 'image',
+  framed = false,
 }: {
   src: string | null | undefined;
   /** 生成済みサムネ（96px webp）のURL。空 / 未指定なら src にフォールバックする */
@@ -67,6 +68,8 @@ export function ProductThumb({
   boxPixels?: number;
   /** プレースホルダーの絵柄。'box' は入荷・出荷の一覧で使っている箱アイコン。 */
   placeholder?: 'image' | 'box';
+  /** 画像とプレースホルダーに細い枠線と白地を付ける（既定 false＝囲いなし）。 */
+  framed?: boolean;
 }) {
   const [failed, setFailed] = useState(false);
   const [thumbFailed, setThumbFailed] = useState(false);
@@ -96,7 +99,7 @@ export function ProductThumb({
 
   if (!src || failed) {
     return (
-      <div className={`${sizeCls} rounded bg-[rgb(var(--surface-subtle))] flex items-center justify-center flex-shrink-0 text-[rgb(var(--ink-faint))]`} aria-hidden>
+      <div className={`${sizeCls} rounded bg-[rgb(var(--surface-subtle))] ${framed ? 'border border-[rgb(var(--line))] ' : ''}flex items-center justify-center flex-shrink-0 text-[rgb(var(--ink-faint))]`} aria-hidden>
         <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
@@ -132,7 +135,7 @@ export function ProductThumb({
       // 商品画像は正方形でないことが多いので、切り抜かず全体を収める（object-contain）。
       // cover だと縦長/横長の画像が見切れてしまう。
       // 囲い（枠線）は付けず画像を直接見せる。ホバーのリングだけ拡大可能の合図として残す
-      className={`${sizeCls} rounded object-contain flex-shrink-0 ${
+      className={`${sizeCls} rounded object-contain flex-shrink-0 ${framed ? 'border border-[rgb(var(--line))] bg-[rgb(var(--surface))] ' : ''}${
         enlargeOnClick ? 'cursor-zoom-in hover:ring-2 hover:ring-[rgb(var(--accent)/0.3)] transition' : ''
       }`}
     />

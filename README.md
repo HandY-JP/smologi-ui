@@ -364,6 +364,11 @@ B2B は globals.css で `--surface` を同じ形式（`r g b`）で持ってい�
   `SETTINGS_LABEL_CLASS` / `SETTINGS_DANGER_BUTTON_CLASS` / `SETTINGS_INPUT_H9_CLASS` / `SETTINGS_GHOST_BUTTON_H9_CLASS` /
   `SETTINGS_CONTROL_MAX_W` を追加。
 
+- **Modal**（追加）: `mobileSheet`（sm 未満だけ画面の下端に寄せる。B2B の下からせり上がる配置）/ `footerClassName`
+  （フッターの並べ方。既定 `'flex justify-end gap-2'`、左に補足・右にボタンを幅いっぱいに組むときは `'block'`）。
+  `subtitle` は `<div>` で包む（中に要素を入れても入れ子の警告が出ない）。
+- **ProductThumb**（追加）: `framed`（画像とプレースホルダーに細い枠線と地を付ける。既定 false＝従来どおり囲いなし）。
+
 **既定が変わるもの**: 色（上記）/ TopToolCapsule のメニュー幅 208→264px / SearchableSelect の候補行が Tab 順から外れる
 / Toast の z-index 60→100 とホバー中は消えない。**入れていないもの**: `StickySectionHeader`（押し出し・trailing 1 本化は
 アプリの globals.css と一体）、`GuideTour`、`ColumnHeaderMenu`。
