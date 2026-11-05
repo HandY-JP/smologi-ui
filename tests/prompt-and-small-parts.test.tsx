@@ -202,6 +202,7 @@ describe('Skeleton / TonePill', () => {
   it('Skeleton の tone で背景だけ変わる（既定は従来どおり）', () => {
     expect(renderToStaticMarkup(h(Skeleton, { className: 'h-3' }))).toContain('bg-[rgb(var(--surface-muted))]');
     expect(renderToStaticMarkup(h(Skeleton, { tone: 'subtle' }))).toContain('bg-[rgb(var(--surface-subtle))]');
+    expect(renderToStaticMarkup(h(Skeleton, { tone: 'surface' }))).toContain('bg-[rgb(var(--surface))]');
     expect(renderToStaticMarkup(h(Skeleton, { tone: 'accent' }))).toContain('bg-[var(--accent-subtle)]');
   });
   it('TonePill の size md・solid・ariaLabel（件数バッジ用）', () => {
