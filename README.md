@@ -343,6 +343,12 @@ B2B は globals.css で `--surface` を同じ形式（`r g b`）で持ってい�
   mousedown は capture フェーズで拾うようにした（`useDismiss`）。
 - **LargeModal**: `dirty` / `size='wide'`（幅 min(1280px,94vw)）/ `showCloseButton` / `compactHeader`。
 - **ConfirmDialog**: `closeOnBackdrop`（false で背景クリックでは閉じない。省略時は従来どおり閉じる）。
+  `hideCancel`（キャンセルを出さずボタン1つのお知らせにする）。
+- **ConfirmProvider / useConfirm / useNotice**: `window.confirm` / `alert` の置き換え（Promise 版）。
+  アプリの根元（ToastProvider の隣）に `<ConfirmProvider>` を1つ置き、
+  `const confirm = useConfirm(); if (!(await confirm({ title, description?, confirmLabel, cancelLabel = 'あとで', tone?: 'danger' | 'default' }))) return;`。
+  読んでから進んでほしい案内だけ `await useNotice()({ title, description?, closeLabel = 'OK' })`（短い成功・失敗のお知らせはトースト）。
+  呼び出しが重なったら順番待ち。Escape・背景クリック・キャンセルは false。見た目は ConfirmDialog と同じ（既定の重ね順は `over`）。
 - **Toast**: `showSuccess/showError/showInfo/showWarning/show` の最後の引数に `{ action: { label, onClick }, durationMs }`
   （従来の数値 ms もそのまま）。`<ToastProvider defaultDurationMs actionDurationMs>`。ホバー中は消えない。
   `data-bottom-bar` の要素があれば、その上に出る（`--bottom-bar-h`。`useBottomBarHeightVar` も export）。

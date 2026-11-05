@@ -31,6 +31,7 @@ export function ConfirmDialog({
   busy = false,
   layer = 'base',
   closeOnBackdrop,
+  hideCancel = false,
   overlayClassName,
   panelClassName,
   onConfirm,
@@ -51,6 +52,8 @@ export function ConfirmDialog({
    * 削除などの破壊的確認で誤爆を避けたいときは false を渡す（Escape とキャンセルは残る）。
    */
   closeOnBackdrop?: boolean;
+  /** true でキャンセルを出さず、確定ボタン1つのお知らせにする（useNotice 用）。Escape・背景クリックは onClose。 */
+  hideCancel?: boolean;
   overlayClassName?: string;
   panelClassName?: string;
   onConfirm: () => void;
@@ -71,17 +74,20 @@ export function ConfirmDialog({
       panelClassName={panelClassName}
       footer={
         <>
+          {!hideCancel && (
+            <button
+              type="button"
+              data-autofocus
+              onClick={onClose}
+              disabled={busy}
+              className="rounded-lg border border-[rgb(var(--line-strong))] bg-[rgb(var(--surface))] px-3.5 py-2 text-[14px] leading-[22px] font-medium text-[rgb(var(--ink))] transition-colors hover:bg-[rgb(var(--surface-subtle))] disabled:opacity-50"
+            >
+              {cancelLabel}
+            </button>
+          )}
           <button
             type="button"
-            data-autofocus
-            onClick={onClose}
-            disabled={busy}
-            className="rounded-lg border border-[rgb(var(--line-strong))] bg-[rgb(var(--surface))] px-3.5 py-2 text-[14px] leading-[22px] font-medium text-[rgb(var(--ink))] transition-colors hover:bg-[rgb(var(--surface-subtle))] disabled:opacity-50"
-          >
-            {cancelLabel}
-          </button>
-          <button
-            type="button"
+            data-autofocus={hideCancel ? true : undefined}
             onClick={onConfirm}
             disabled={busy}
             className={`inline-flex items-center gap-2 rounded-lg px-3.5 py-2 text-[14px] leading-[22px] font-medium text-white transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${TONE_CONFIRM_BUTTON[tone]}`}

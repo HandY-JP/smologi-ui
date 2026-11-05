@@ -59,6 +59,7 @@ export * from './components/SearchableSelect';
 export * from './components/Modal';
 export * from './components/LargeModal';
 export * from './components/ConfirmDialog';
+export * from './components/ConfirmProvider';
 
 // ---- 小物 ----
 export * from './components/Toast';
