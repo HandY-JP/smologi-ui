@@ -349,6 +349,11 @@ B2B は globals.css で `--surface` を同じ形式（`r g b`）で持ってい�
   `const confirm = useConfirm(); if (!(await confirm({ title, description?, confirmLabel, cancelLabel = 'あとで', tone?: 'danger' | 'default' }))) return;`。
   読んでから進んでほしい案内だけ `await useNotice()({ title, description?, closeLabel = 'OK' })`（短い成功・失敗のお知らせはトースト）。
   呼び出しが重なったら順番待ち。Escape・背景クリック・キャンセルは false。見た目は ConfirmDialog と同じ（既定の重ね順は `over`）。
+  初期フォーカスは danger がキャンセル、それ以外は実行ボタン（Enter = OK）、`usePrompt` は入力欄。
+  `useConfirmOnce()`: 使い方は useConfirm と同じで、開いている間の再呼び出しは積まずに false（連打・キー連打での二重確認→二重実行を防ぐ。金額・在庫・出荷の操作向け）。
+  `isConfirmDialogOpen()`: 確認（useConfirm / useNotice / usePrompt / ConfirmDialog）が開いている間 true。
+  window の capture フェーズで Escape を拾う自前リスナーは、先頭で `if (isConfirmDialogOpen()) return;` として確認の Escape を確認側に任せる
+  （しないと、確認を閉じる Escape で下のモーダルまで閉じる）。
 - **Toast**: `showSuccess/showError/showInfo/showWarning/show` の最後の引数に `{ action: { label, onClick }, durationMs }`
   （従来の数値 ms もそのまま）。`<ToastProvider defaultDurationMs actionDurationMs>`。ホバー中は消えない。
   `data-bottom-bar` の要素があれば、その上に出る（`--bottom-bar-h`。`useBottomBarHeightVar` も export）。

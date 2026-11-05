@@ -84,6 +84,11 @@ describe('usePrompt', () => {
     expect(b.value).toBeNull();
   });
 
+  it('prompt は入力欄が初期フォーカスを持つ', () => {
+    ask(base);
+    expect(document.activeElement).toBe(field());
+  });
+
   it('required は空白だけの間は実行できず、Enter でも送れない', async () => {
     const out = ask({ ...base, required: true });
     expect(buttonByText('差し戻す')!.disabled).toBe(true);
@@ -103,6 +108,10 @@ describe('usePrompt', () => {
     const out = ask(base);
     type(field(), 'あ');
     keyDown(field(), { key: 'Enter', isComposing: true });
+    await act(async () => {});
+    expect(out.done).toBe(false);
+    // Safari: isComposing が false のまま keyCode 229
+    keyDown(field(), { key: 'Enter', keyCode: 229 });
     await act(async () => {});
     expect(out.done).toBe(false);
     keyDown(field(), { key: 'Enter' });

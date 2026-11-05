@@ -11,6 +11,8 @@
 //   const reason = await prompt({ title: '差し戻し理由', label: '理由', confirmLabel: '差し戻す', required: true });  // 取り消しは null
 //
 // - 呼び出しが重なったら順番待ち（キュー）にして、前のが閉じてから次を出す。
+// - 初期フォーカス: 危険（danger）はキャンセル、それ以外は実行ボタン（Enter = OK）、prompt は入力欄。
+// - window の capture で Escape を拾う自前リスナーは isConfirmDialogOpen()（ConfirmDialog.tsx）が true の間は無視すること。
 // - Escape・背景クリック・キャンセルは false（notice は閉じるだけ）。
 // - Provider が外れたとき（画面遷移など）、待っている確認は false で終わらせる。
 
@@ -129,8 +131,8 @@ function PromptField({
           type="text"
           onChange={(e) => set(e.target.value)}
           onKeyDown={(e) => {
-            // IME の変換確定の Enter では送らない
-            if (e.key === 'Enter' && !e.nativeEvent.isComposing) { e.preventDefault(); onSubmit(); }
+            // IME の変換確定の Enter では送らない（Safari は isComposing が false で keyCode 229 を返す）
+            if (e.key === 'Enter' && !e.nativeEvent.isComposing && e.keyCode !== 229) { e.preventDefault(); onSubmit(); }
           }}
         />
       )}
@@ -233,6 +235,27 @@ function useApi(): Api {
 /** `await confirm({...})` で、実行なら true、やめる（キャンセル・Escape・背景クリック）なら false。 */
 export function useConfirm(): ConfirmFn {
   return useApi().confirm;
+}
+
+/**
+ * useConfirm の「同時に1つだけ」版。確認が開いている間に同じ画面からもう一度呼ばれたら、
+ * 順番待ちに積まず、すぐ false を返す（連打・キーボードの連続入力で、同じ操作の確認が二重に積まれて
+ * 二度実行されるのを防ぐ）。確認が閉じたら（OK でもキャンセルでも）また呼べる。
+ * 呼び出し側は `const confirm = useConfirmOnce();` と置き換えるだけでよい（使い方は useConfirm と同じ）。
+ * 金額・在庫・出荷など、二度走ると困る操作のある画面で使う。
+ */
+export function useConfirmOnce(): ConfirmFn {
+  const confirm = useApi().confirm;
+  const pending = useRef(false);
+  return useCallback(async (options: ConfirmOptions) => {
+    if (pending.current) return false;
+    pending.current = true;
+    try {
+      return await confirm(options);
+    } finally {
+      pending.current = false;
+    }
+  }, [confirm]);
 }
 
 /** ボタン1つの案内。閉じられたら解決する。読んでから先へ進んでほしい内容だけに使う。 */

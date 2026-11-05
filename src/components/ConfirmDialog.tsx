@@ -7,7 +7,7 @@
 // シェル（オーバーレイ・重ね順・Escape・背景クリック）は Modal に委ねる。
 // 実行中（busy）は Escape・背景クリックで閉じない。
 
-import type { ReactNode } from 'react';
+import { useEffect, type ReactNode } from 'react';
 import { Modal, type ModalLayer } from './Modal';
 
 export type ConfirmTone = 'danger' | 'primary';
@@ -21,6 +21,21 @@ const TONE_CONFIRM_BUTTON: Record<ConfirmTone, string> = {
   danger: 'bg-[rgb(var(--danger-solid))] hover:bg-[rgb(var(--danger-solid)/0.9)]',
   primary: 'bg-[var(--sb-accent-bg)] hover:bg-[var(--accent-hover)]',
 };
+
+// 開いている確認ダイアログの数。window の capture で Escape を拾う画面側のリスナーが、
+// 確認の Escape（=キャンセル）まで奪って自分のモーダルを閉じないよう、isConfirmDialogOpen() で見分ける。
+let openCount = 0;
+
+/**
+ * ConfirmProvider（useConfirm / useNotice / usePrompt）や ConfirmDialog が開いている間 true。
+ * window の capture フェーズで Escape を拾う自前のリスナーは、先頭で
+ *   if (isConfirmDialogOpen()) return;
+ * と書き、確認の Escape を確認側に任せること（閉じるのは確認だけ・下のモーダルは残す）。
+ * SSR では常に false。
+ */
+export function isConfirmDialogOpen(): boolean {
+  return openCount > 0;
+}
 
 export function ConfirmDialog({
   open,
@@ -66,6 +81,14 @@ export function ConfirmDialog({
   onConfirm: () => void;
   onClose: () => void;
 }) {
+  useEffect(() => {
+    if (!open) return;
+    openCount += 1;
+    return () => { openCount -= 1; };
+  }, [open]);
+  // 初期フォーカス: 入力欄があるときは入力欄。危険な操作はキャンセル（Enter の押し間違いで実行しない）。
+  // それ以外は実行ボタン（window.confirm と同じく Enter = OK）。
+  const focusConfirm = !children && (hideCancel || tone !== 'danger');
   return (
     <Modal
       open={open}
@@ -84,7 +107,7 @@ export function ConfirmDialog({
           {!hideCancel && (
             <button
               type="button"
-              data-autofocus={children ? undefined : true}
+              data-autofocus={children || focusConfirm ? undefined : true}
               onClick={onClose}
               disabled={busy}
               className="rounded-lg border border-[rgb(var(--line-strong))] bg-[rgb(var(--surface))] px-3.5 py-2 text-[14px] leading-[22px] font-medium text-[rgb(var(--ink))] transition-colors hover:bg-[rgb(var(--surface-subtle))] disabled:opacity-50"
@@ -94,7 +117,7 @@ export function ConfirmDialog({
           )}
           <button
             type="button"
-            data-autofocus={hideCancel ? true : undefined}
+            data-autofocus={focusConfirm ? true : undefined}
             onClick={onConfirm}
             disabled={busy || confirmDisabled}
             className={`inline-flex items-center gap-2 rounded-lg px-3.5 py-2 text-[14px] leading-[22px] font-medium text-white transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${TONE_CONFIRM_BUTTON[tone]}`}

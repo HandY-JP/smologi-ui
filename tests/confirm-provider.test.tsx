@@ -3,7 +3,8 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { act, createElement as h, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
-import { ConfirmProvider, useConfirm, useNotice, descriptionToLines, type ConfirmFn, type NoticeFn } from '../src/components/ConfirmProvider';
+import { isConfirmDialogOpen } from '../src/components/ConfirmDialog';
+import { ConfirmProvider, useConfirm, useConfirmOnce, useNotice, descriptionToLines, type ConfirmFn, type NoticeFn } from '../src/components/ConfirmProvider';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -95,6 +96,54 @@ describe('useConfirm', () => {
     click(buttonByText('あとで'));
     ask({ title: '送信しますか？', confirmLabel: '送信する' });
     expect(buttonByText('送信する')!.className).not.toContain('--danger-solid');
+  });
+
+  it('初期フォーカス: danger はキャンセル、それ以外は実行ボタン（Enter = OK）', () => {
+    ask({ ...base, tone: 'danger' });
+    expect(document.activeElement).toBe(buttonByText('あとで'));
+    click(buttonByText('あとで'));
+    ask({ title: '送信しますか？', confirmLabel: '送信する' });
+    expect(document.activeElement).toBe(buttonByText('送信する'));
+    click(buttonByText('あとで'));
+    act(() => { void notice({ title: '完了しました' }); });
+    expect(document.activeElement).toBe(buttonByText('OK'));
+  });
+
+  it('isConfirmDialogOpen: 開いている間だけ true（キュー待ちの切り替えでも途切れない）', async () => {
+    expect(isConfirmDialogOpen()).toBe(false);
+    ask(base);
+    expect(isConfirmDialogOpen()).toBe(true);
+    // window の capture で Escape を拾う画面側リスナーの想定
+    let seen: boolean | null = null;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') seen = isConfirmDialogOpen(); };
+    window.addEventListener('keydown', onKey, true);
+    press('Escape');
+    window.removeEventListener('keydown', onKey, true);
+    await act(async () => {});
+    expect(seen).toBe(true);
+    expect(isConfirmDialogOpen()).toBe(false);
+  });
+
+  it('useConfirmOnce: 開いている間の再呼び出しは積まずに false、閉じたらまた呼べる', async () => {
+    let once!: ConfirmFn;
+    const OnceProbe = () => { once = useConfirmOnce(); return null; };
+    mount(h(ConfirmProvider, null, h(Probe), h(OnceProbe)));
+    const first: { value?: boolean } = {};
+    const second: { value?: boolean } = {};
+    act(() => { void once(base).then((v) => { first.value = v; }); });
+    act(() => { void once(base).then((v) => { second.value = v; }); });
+    await act(async () => {});
+    expect(second.value).toBe(false);
+    expect(document.querySelectorAll('[role="alertdialog"]').length).toBe(1);
+    expect(first.value).toBeUndefined();
+    click(buttonByText('あとで'));
+    await act(async () => {});
+    expect(first.value).toBe(false);
+    const third: { value?: boolean } = {};
+    act(() => { void once(base).then((v) => { third.value = v; }); });
+    click(buttonByText('削除する'));
+    await act(async () => {});
+    expect(third.value).toBe(true);
   });
 
   it('Provider が外れたら待っている確認は false で終わる', async () => {
