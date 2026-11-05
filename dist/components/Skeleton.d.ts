@@ -1,4 +1,4 @@
-export type SkeletonTone = 'muted' | 'subtle' | 'accent';
+export type SkeletonTone = 'muted' | 'subtle' | 'surface' | 'accent';
 export declare function Skeleton({ className, tone }: {
     className?: string;
     tone?: SkeletonTone;
