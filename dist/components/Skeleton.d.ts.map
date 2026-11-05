@@ -1,1 +1,1 @@
-{"version":3,"file":"Skeleton.d.ts","sourceRoot":"","sources":["../../src/components/Skeleton.tsx"],"names":[],"mappings":"AAEA,wBAAgB,QAAQ,CAAC,EAAE,SAAc,EAAE,EAAE;IAAE,SAAS,CAAC,EAAE,MAAM,CAAA;CAAE,+BAElE"}
+{"version":3,"file":"Skeleton.d.ts","sourceRoot":"","sources":["../../src/components/Skeleton.tsx"],"names":[],"mappings":"AAEA,MAAM,MAAM,YAAY,GAAG,OAAO,GAAG,QAAQ,GAAG,QAAQ,CAAC;AAUzD,wBAAgB,QAAQ,CAAC,EAAE,SAAc,EAAE,IAAc,EAAE,EAAE;IAAE,SAAS,CAAC,EAAE,MAAM,CAAC;IAAC,IAAI,CAAC,EAAE,YAAY,CAAA;CAAE,+BAEvG"}

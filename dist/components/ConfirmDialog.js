@@ -22,6 +22,8 @@ function ConfirmDialog({
   hideCancel = false,
   overlayClassName,
   panelClassName,
+  children,
+  confirmDisabled = false,
   onConfirm,
   onClose
 }) {
@@ -44,7 +46,7 @@ function ConfirmDialog({
           "button",
           {
             type: "button",
-            "data-autofocus": true,
+            "data-autofocus": children ? void 0 : true,
             onClick: onClose,
             disabled: busy,
             className: "rounded-lg border border-[rgb(var(--line-strong))] bg-[rgb(var(--surface))] px-3.5 py-2 text-[14px] leading-[22px] font-medium text-[rgb(var(--ink))] transition-colors hover:bg-[rgb(var(--surface-subtle))] disabled:opacity-50",
@@ -57,7 +59,7 @@ function ConfirmDialog({
             type: "button",
             "data-autofocus": hideCancel ? true : void 0,
             onClick: onConfirm,
-            disabled: busy,
+            disabled: busy || confirmDisabled,
             className: `inline-flex items-center gap-2 rounded-lg px-3.5 py-2 text-[14px] leading-[22px] font-medium text-white transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${TONE_CONFIRM_BUTTON[tone]}`,
             children: [
               busy && /* @__PURE__ */ jsx("span", { className: "h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/40 border-t-white", "aria-hidden": "true" }),
@@ -70,7 +72,8 @@ function ConfirmDialog({
         /* @__PURE__ */ jsx("span", { className: `flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${TONE_ICON[tone]}`, children: /* @__PURE__ */ jsx("svg", { className: "h-5 w-5", fill: "none", stroke: "currentColor", strokeWidth: 1.8, viewBox: "0 0 24 24", "aria-hidden": "true", children: tone === "danger" ? /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M12 9v4m0 4h.01M10.3 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.7 3.86a2 2 0 0 0-3.4 0Z" }) : /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M11.25 11.25h1.5v5.25m-.75-9h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" }) }) }),
         /* @__PURE__ */ jsxs("div", { className: "min-w-0 flex-1", children: [
           /* @__PURE__ */ jsx("h2", { className: "text-[14px] leading-[22px] font-semibold text-[rgb(var(--ink))]", children: title }),
-          lines.length > 0 && /* @__PURE__ */ jsx("ul", { className: "mt-2 space-y-1.5", children: lines.map((line) => /* @__PURE__ */ jsx("li", { className: "text-[12px] leading-5 text-[rgb(var(--ink-muted))]", children: line }, line)) })
+          lines.length > 0 && /* @__PURE__ */ jsx("ul", { className: "mt-2 space-y-1.5", children: lines.map((line) => /* @__PURE__ */ jsx("li", { className: "text-[12px] leading-5 text-[rgb(var(--ink-muted))]", children: line }, line)) }),
+          children
         ] })
       ] })
     }

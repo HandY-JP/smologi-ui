@@ -1,6 +1,7 @@
+import type { ReactNode } from 'react';
 import { type ModalLayer } from './Modal';
 export type ConfirmTone = 'danger' | 'primary';
-export declare function ConfirmDialog({ open, title, lines, confirmLabel, cancelLabel, tone, busy, layer, closeOnBackdrop, hideCancel, overlayClassName, panelClassName, onConfirm, onClose, }: {
+export declare function ConfirmDialog({ open, title, lines, confirmLabel, cancelLabel, tone, busy, layer, closeOnBackdrop, hideCancel, overlayClassName, panelClassName, children, confirmDisabled, onConfirm, onClose, }: {
     open: boolean;
     title: string;
     /** 本文。1行1段落で出す */
@@ -20,6 +21,10 @@ export declare function ConfirmDialog({ open, title, lines, confirmLabel, cancel
     hideCancel?: boolean;
     overlayClassName?: string;
     panelClassName?: string;
+    /** 本文の下に置くもの（入力欄など。usePrompt が使う）。あるときは入力欄側が初期フォーカスを持つ（data-autofocus を付けること）。 */
+    children?: ReactNode;
+    /** 実行ボタンだけを押せなくする（入力が必須で空のとき）。 */
+    confirmDisabled?: boolean;
     onConfirm: () => void;
     onClose: () => void;
 }): import("react").JSX.Element;

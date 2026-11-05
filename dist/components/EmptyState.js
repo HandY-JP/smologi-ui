@@ -4,11 +4,17 @@ const LOADING_TEXT = "\u8AAD\u307F\u8FBC\u307F\u4E2D\u2026";
 function EmptyState({
   message = "\u30C7\u30FC\u30BF\u304C\u3042\u308A\u307E\u305B\u3093\u3002",
   loading = false,
+  icon,
+  description,
+  bare = false,
   className = "",
   children
 }) {
-  return /* @__PURE__ */ jsxs("div", { className: `rounded-lg border border-gray-200 bg-white p-10 text-center text-[14px] leading-[22px] text-gray-400 ${className}`, children: [
-    /* @__PURE__ */ jsx("p", { children: loading ? LOADING_TEXT : message }),
+  const rich = !loading && (icon != null || description != null);
+  return /* @__PURE__ */ jsxs("div", { className: `${bare ? "" : "rounded-lg border border-[rgb(var(--line))] bg-[rgb(var(--surface))] "}p-10 text-center text-[14px] leading-[22px] text-[rgb(var(--ink-muted))] ${className}`, children: [
+    !loading && icon && /* @__PURE__ */ jsx("div", { className: "mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-[rgb(var(--surface-subtle))] text-[rgb(var(--ink-muted))]", children: icon }),
+    /* @__PURE__ */ jsx("p", { className: rich ? "font-semibold text-[rgb(var(--ink))]" : void 0, children: loading ? LOADING_TEXT : message }),
+    !loading && description && /* @__PURE__ */ jsx("p", { className: "mt-1 text-[12px] leading-[18px]", children: description }),
     !loading && children && /* @__PURE__ */ jsx("div", { className: "mt-3", children })
   ] });
 }
