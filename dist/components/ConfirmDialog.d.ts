@@ -1,6 +1,14 @@
-import type { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import { type ModalLayer } from './Modal';
 export type ConfirmTone = 'danger' | 'primary';
+/**
+ * ConfirmProvider（useConfirm / useNotice / usePrompt）や ConfirmDialog が開いている間 true。
+ * window の capture フェーズで Escape を拾う自前のリスナーは、先頭で
+ *   if (isConfirmDialogOpen()) return;
+ * と書き、確認の Escape を確認側に任せること（閉じるのは確認だけ・下のモーダルは残す）。
+ * SSR では常に false。
+ */
+export declare function isConfirmDialogOpen(): boolean;
 export declare function ConfirmDialog({ open, title, lines, confirmLabel, cancelLabel, tone, busy, layer, closeOnBackdrop, hideCancel, overlayClassName, panelClassName, children, confirmDisabled, onConfirm, onClose, }: {
     open: boolean;
     title: string;

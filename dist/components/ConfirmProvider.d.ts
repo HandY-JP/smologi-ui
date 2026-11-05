@@ -58,6 +58,14 @@ export declare function ConfirmProvider({ children, panelClassName }: {
 }): import("react").JSX.Element;
 /** `await confirm({...})` で、実行なら true、やめる（キャンセル・Escape・背景クリック）なら false。 */
 export declare function useConfirm(): ConfirmFn;
+/**
+ * useConfirm の「同時に1つだけ」版。確認が開いている間に同じ画面からもう一度呼ばれたら、
+ * 順番待ちに積まず、すぐ false を返す（連打・キーボードの連続入力で、同じ操作の確認が二重に積まれて
+ * 二度実行されるのを防ぐ）。確認が閉じたら（OK でもキャンセルでも）また呼べる。
+ * 呼び出し側は `const confirm = useConfirmOnce();` と置き換えるだけでよい（使い方は useConfirm と同じ）。
+ * 金額・在庫・出荷など、二度走ると困る操作のある画面で使う。
+ */
+export declare function useConfirmOnce(): ConfirmFn;
 /** ボタン1つの案内。閉じられたら解決する。読んでから先へ進んでほしい内容だけに使う。 */
 export declare function useNotice(): NoticeFn;
 /** `await prompt({...})` で、入力された文字列（加工なし）。やめる（キャンセル・Escape・背景クリック）なら null。window.prompt の置き換え。 */

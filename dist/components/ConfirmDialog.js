@@ -1,5 +1,6 @@
 "use client";
 import { Fragment, jsx, jsxs } from "react/jsx-runtime";
+import { useEffect } from "react";
 import { Modal } from "./Modal.js";
 const TONE_ICON = {
   danger: "bg-[rgb(var(--danger-soft))] text-[rgb(var(--danger-ink))]",
@@ -9,6 +10,10 @@ const TONE_CONFIRM_BUTTON = {
   danger: "bg-[rgb(var(--danger-solid))] hover:bg-[rgb(var(--danger-solid)/0.9)]",
   primary: "bg-[var(--sb-accent-bg)] hover:bg-[var(--accent-hover)]"
 };
+let openCount = 0;
+function isConfirmDialogOpen() {
+  return openCount > 0;
+}
 function ConfirmDialog({
   open,
   title,
@@ -27,6 +32,14 @@ function ConfirmDialog({
   onConfirm,
   onClose
 }) {
+  useEffect(() => {
+    if (!open) return;
+    openCount += 1;
+    return () => {
+      openCount -= 1;
+    };
+  }, [open]);
+  const focusConfirm = !children && (hideCancel || tone !== "danger");
   return /* @__PURE__ */ jsx(
     Modal,
     {
@@ -46,7 +59,7 @@ function ConfirmDialog({
           "button",
           {
             type: "button",
-            "data-autofocus": children ? void 0 : true,
+            "data-autofocus": children || focusConfirm ? void 0 : true,
             onClick: onClose,
             disabled: busy,
             className: "rounded-lg border border-[rgb(var(--line-strong))] bg-[rgb(var(--surface))] px-3.5 py-2 text-[14px] leading-[22px] font-medium text-[rgb(var(--ink))] transition-colors hover:bg-[rgb(var(--surface-subtle))] disabled:opacity-50",
@@ -57,7 +70,7 @@ function ConfirmDialog({
           "button",
           {
             type: "button",
-            "data-autofocus": hideCancel ? true : void 0,
+            "data-autofocus": focusConfirm ? true : void 0,
             onClick: onConfirm,
             disabled: busy || confirmDisabled,
             className: `inline-flex items-center gap-2 rounded-lg px-3.5 py-2 text-[14px] leading-[22px] font-medium text-white transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${TONE_CONFIRM_BUTTON[tone]}`,
@@ -80,6 +93,7 @@ function ConfirmDialog({
   );
 }
 export {
-  ConfirmDialog
+  ConfirmDialog,
+  isConfirmDialogOpen
 };
 //# sourceMappingURL=ConfirmDialog.js.map

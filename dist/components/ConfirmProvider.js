@@ -52,7 +52,7 @@ function PromptField({
         type: "text",
         onChange: (e) => set(e.target.value),
         onKeyDown: (e) => {
-          if (e.key === "Enter" && !e.nativeEvent.isComposing) {
+          if (e.key === "Enter" && !e.nativeEvent.isComposing && e.keyCode !== 229) {
             e.preventDefault();
             onSubmit();
           }
@@ -143,6 +143,19 @@ function useApi() {
 function useConfirm() {
   return useApi().confirm;
 }
+function useConfirmOnce() {
+  const confirm = useApi().confirm;
+  const pending = useRef(false);
+  return useCallback(async (options) => {
+    if (pending.current) return false;
+    pending.current = true;
+    try {
+      return await confirm(options);
+    } finally {
+      pending.current = false;
+    }
+  }, [confirm]);
+}
 function useNotice() {
   return useApi().notice;
 }
@@ -155,6 +168,7 @@ export {
   DEFAULT_NOTICE_LABEL,
   descriptionToLines,
   useConfirm,
+  useConfirmOnce,
   useNotice,
   usePrompt
 };
