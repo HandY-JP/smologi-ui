@@ -53,8 +53,8 @@ export interface TopToolItem {
     placement?: TopToolPlacement;
     primary?: boolean;
     /**
-     * ON/OFF のトグルボタン（商品マスタの「編集モード」）で、いま ON であることを示す。
-     * アンバーで点灯し `aria-pressed` を持つ（primary との併用は想定しない）。
+     * ON/OFF のトグル（商品詳細の「ログ」など）で、いま ON であることを示す。
+     * `aria-pressed` を持ち、注意色（warning トークン）で点灯する（primary との併用は想定しない）。
      */
     active?: boolean;
     disabled?: boolean;
@@ -73,6 +73,12 @@ export interface TopToolItem {
     disabledReason?: string;
     /** status バッジ自体をクリックしたときの処理（ダウンロード一覧を開く等）。渡さなければボタン本体の onClick を使う。 */
     onStatusClick?: () => void;
+    /**
+     * status とは独立の小さい丸（success-solid）。件数もチェック演出も持たない「新着」の目印だけを
+     * 出したいとき用（例: 受注取込の完了帯が画面外にあるあいだ、更新アイコンに点を出す。2026-09-30）。
+     * status の done/failed バッジと同時には使わない想定（両方 true のときは status 側を優先する）。
+     */
+    extraDot?: boolean;
 }
 export declare function TopToolCapsule({ ariaLabel, items, settingsLinks, variant, dataTour, listPanel, maxBarItems, }: {
     ariaLabel: string;

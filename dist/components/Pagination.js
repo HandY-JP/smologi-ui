@@ -2,8 +2,8 @@
 import { Fragment, jsx, jsxs } from "react/jsx-runtime";
 import { Children, cloneElement, isValidElement } from "react";
 import { LIST_PAGE_SIZE_OPTIONS } from "../lib/list-page-size.js";
-const PAGER_BUTTON = "h-8 rounded-full px-3 text-[12px] leading-[18px] text-gray-700 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-100";
-const PAGER_BUTTON_COMPACT = "flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[14px] leading-[22px] text-gray-700 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-100";
+const PAGER_BUTTON = "h-8 rounded-full px-3 text-[12px] leading-[18px] text-[rgb(var(--ink))] disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[rgb(var(--surface-subtle))]";
+const PAGER_BUTTON_COMPACT = "flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[14px] leading-[22px] text-[rgb(var(--ink))] disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[rgb(var(--surface-subtle))]";
 function computePaginationView(total, page, pageSize) {
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
   const safePage = Math.min(Math.max(1, page), totalPages);
@@ -27,11 +27,11 @@ function Pagination({
   const { totalPages, safePage, start, end } = computePaginationView(total, page, pageSize);
   if (compact) {
     return /* @__PURE__ */ jsxs("div", { className: `flex items-center gap-1 text-[14px] leading-[22px] ${className}`, children: [
-      /* @__PURE__ */ jsxs("span", { className: "whitespace-nowrap px-0.5 text-[12px] leading-[18px] tabular-nums text-gray-500", children: [
+      /* @__PURE__ */ jsxs("span", { className: "whitespace-nowrap px-0.5 text-[12px] leading-[18px] tabular-nums text-[rgb(var(--ink-muted))]", children: [
         total.toLocaleString("ja-JP"),
         unitLabel
       ] }),
-      /* @__PURE__ */ jsx("span", { "aria-hidden": "true", className: "mx-0.5 h-4 w-px bg-gray-200/70" }),
+      /* @__PURE__ */ jsx("span", { "aria-hidden": "true", className: "mx-0.5 h-4 w-px bg-[rgb(var(--surface-muted)/0.7)]" }),
       /* @__PURE__ */ jsx(
         "button",
         {
@@ -43,7 +43,7 @@ function Pagination({
           children: "\u2039"
         }
       ),
-      /* @__PURE__ */ jsxs("span", { className: "px-0.5 font-semibold tabular-nums text-gray-800", children: [
+      /* @__PURE__ */ jsxs("span", { className: "px-0.5 font-semibold tabular-nums text-[rgb(var(--ink))]", children: [
         safePage,
         " / ",
         totalPages
@@ -60,7 +60,7 @@ function Pagination({
         }
       ),
       onPageSizeChange && /* @__PURE__ */ jsxs(Fragment, { children: [
-        /* @__PURE__ */ jsx("span", { "aria-hidden": "true", className: "mx-1 h-4 w-px bg-gray-200/70" }),
+        /* @__PURE__ */ jsx("span", { "aria-hidden": "true", className: "mx-1 h-4 w-px bg-[rgb(var(--surface-muted)/0.7)]" }),
         /* @__PURE__ */ jsxs("div", { className: "relative flex items-center", children: [
           /* @__PURE__ */ jsx(
             "select",
@@ -69,24 +69,24 @@ function Pagination({
               onChange: (e) => onPageSizeChange(Number(e.target.value)),
               "aria-label": "1\u30DA\u30FC\u30B8\u306E\u4EF6\u6570",
               title: "\u8868\u793A\u4EF6\u6570\uFF08\u6B21\u306B\u958B\u3044\u305F\u3068\u304D\u3082\u540C\u3058\u4EF6\u6570\u3067\u8868\u793A\u3057\u307E\u3059\uFF09",
-              className: "appearance-none rounded-full bg-transparent py-1 pl-1 pr-3.5 text-[12px] leading-[18px] text-gray-700 focus:outline-none",
+              className: "appearance-none rounded-full bg-transparent py-1 pl-1 pr-3.5 text-[12px] leading-[18px] text-[rgb(var(--ink))] focus:outline-none",
               children: pageSizeOptions.map((opt) => /* @__PURE__ */ jsxs("option", { value: opt, children: [
                 opt,
                 unitLabel
               ] }, opt))
             }
           ),
-          /* @__PURE__ */ jsx("span", { "aria-hidden": "true", className: "pointer-events-none absolute right-0 text-[11px] leading-[16px] text-gray-400", children: "\u23F7" })
+          /* @__PURE__ */ jsx("span", { "aria-hidden": "true", className: "pointer-events-none absolute right-0 text-[11px] leading-[16px] text-[rgb(var(--ink-muted))]", children: "\u23F7" })
         ] })
       ] })
     ] });
   }
   return /* @__PURE__ */ jsxs("div", { className: `flex flex-wrap items-center gap-2 text-[14px] leading-[22px] ${className}`, children: [
-    /* @__PURE__ */ jsx("div", { className: "whitespace-nowrap text-[12px] leading-[18px] text-gray-600", children: total === 0 ? `0${unitLabel}` : `${total}${unitLabel}\u4E2D ${start}-${end}${unitLabel}\u3092\u8868\u793A` }),
+    /* @__PURE__ */ jsx("div", { className: "whitespace-nowrap text-[12px] leading-[18px] text-[rgb(var(--ink-muted))]", children: total === 0 ? `0${unitLabel}` : `${total}${unitLabel}\u4E2D ${start}-${end}${unitLabel}\u3092\u8868\u793A` }),
     /* @__PURE__ */ jsxs("div", { className: "flex flex-wrap items-center justify-end gap-1", children: [
       /* @__PURE__ */ jsx("button", { type: "button", onClick: () => onPageChange(1), disabled: safePage <= 1, className: PAGER_BUTTON, children: "\u6700\u521D\u3078" }),
       /* @__PURE__ */ jsx("button", { type: "button", onClick: () => onPageChange(safePage - 1), disabled: safePage <= 1, className: PAGER_BUTTON, children: "\u524D\u3078" }),
-      /* @__PURE__ */ jsxs("span", { className: "px-1 font-semibold tabular-nums text-gray-800", children: [
+      /* @__PURE__ */ jsxs("span", { className: "px-1 font-semibold tabular-nums text-[rgb(var(--ink))]", children: [
         safePage,
         " / ",
         totalPages
@@ -118,7 +118,7 @@ function Pagination({
           onChange: (e) => onPageSizeChange(Number(e.target.value)),
           "aria-label": "\u8868\u793A\u4EF6\u6570",
           title: "\u8868\u793A\u4EF6\u6570\uFF08\u6B21\u306B\u958B\u3044\u305F\u3068\u304D\u3082\u540C\u3058\u4EF6\u6570\u3067\u8868\u793A\u3057\u307E\u3059\uFF09",
-          className: "ml-1 h-8 rounded-full border border-gray-200/80 bg-white/70 px-2 text-[12px] leading-[18px] text-gray-700",
+          className: "ml-1 h-8 rounded-full border border-[rgb(var(--line)/0.8)] bg-white/70 px-2 text-[12px] leading-[18px] text-[rgb(var(--ink))]",
           children: pageSizeOptions.map((opt) => /* @__PURE__ */ jsxs("option", { value: opt, children: [
             opt,
             "/\u30DA\u30FC\u30B8"
@@ -135,7 +135,7 @@ function StickyPagerBar({
   children
 }) {
   const compactChildren = Children.map(children, (child) => isValidElement(child) ? cloneElement(child, { compact: true }) : child);
-  return /* @__PURE__ */ jsx("div", { className: `pointer-events-none sticky bottom-3 z-[26] flex justify-end ${className ?? ""}`, children: /* @__PURE__ */ jsx(
+  return /* @__PURE__ */ jsx("div", { "data-bottom-bar": true, className: `pointer-events-none sticky bottom-3 z-[26] flex justify-end ${className ?? ""}`, children: /* @__PURE__ */ jsx(
     "div",
     {
       title,

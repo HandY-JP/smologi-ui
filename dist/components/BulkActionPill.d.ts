@@ -54,11 +54,17 @@ export type BulkPillAction = {
     /** 既存の独自ポップオーバー部品（出荷グループ選択など）をそのまま置く口。 */
     render?: ReactNode;
 };
-export declare function BulkActionPill({ ariaLabel, dataTour, selectedCount, selectedLabel, stats, leading, primary, secondary, onClear, clearLabel, error, }: {
+export declare function BulkActionPill({ ariaLabel, dataTour, selectedCount, selectedLabel, statusText, stats, leading, primary, secondary, onClear, clearLabel, error, }: {
     ariaLabel: string;
     dataTour?: string;
-    selectedCount: number;
+    /** 選んだ行の件数。statusText を渡す画面（選択という概念が無い請求の締め）では省略できる。 */
+    selectedCount?: number;
     selectedLabel?: string;
+    /**
+     * 「N件選択」の代わりに出す状態テキスト。選択行が無い画面（請求の締め＝
+     * 「2026年9月 ・ 締められます」）で、ピルの流儀だけ borrow するために使う。
+     */
+    statusText?: ReactNode;
     /** 「CSV未出力 3」など、選んだ行の残作業。 */
     stats?: BulkPillStat[];
     /** 状態テキストの直後（例: 「すべて選択（N件）」）。 */

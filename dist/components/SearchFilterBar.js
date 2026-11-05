@@ -69,7 +69,7 @@ function SearchFilterBar({
       {
         ref: searchBoxRef,
         role: "search",
-        className: `relative flex h-11 items-center transition-colors ${collapsed ? "shrink-0 gap-0.5" : `themed-search-pill min-w-[20rem] flex-1 rounded-full border bg-gray-50 focus-within:bg-white focus-within:ring-2 ${dirty ? "border-amber-400 focus-within:border-amber-500 focus-within:ring-amber-500/15" : "themed-search-box border-gray-300 focus-within:border-[var(--search-accent)] focus-within:ring-[var(--accent-ring)]"}`}`,
+        className: `relative flex h-11 items-center transition-colors ${collapsed ? "shrink-0 gap-0.5" : `themed-search-pill min-w-[20rem] flex-1 rounded-full border bg-[rgb(var(--surface-subtle))] focus-within:bg-[rgb(var(--surface))] focus-within:ring-2 ${dirty ? "border-[rgb(var(--warning-ink)/0.4)] focus-within:border-[rgb(var(--warning-solid))] focus-within:ring-[rgb(var(--warning-solid)/0.15)]" : "themed-search-box border-[rgb(var(--line-strong))] focus-within:border-[var(--search-accent)] focus-within:ring-[var(--accent-ring)]"}`}`,
         children: [
           /* @__PURE__ */ jsx(
             "button",
@@ -83,7 +83,7 @@ function SearchFilterBar({
               "aria-expanded": collapsible ? !collapsed : void 0,
               "aria-label": loading ? "\u691C\u7D22\u4E2D" : collapsed ? inputAriaLabel : dirty ? "\u5909\u66F4\u3057\u305F\u6761\u4EF6\u3067\u518D\u691C\u7D22" : "\u691C\u7D22",
               title: loading ? "\u691C\u7D22\u4E2D" : collapsed ? inputAriaLabel : dirty ? "\u5909\u66F4\u3057\u305F\u6761\u4EF6\u3067\u518D\u691C\u7D22" : "\u691C\u7D22",
-              className: `flex shrink-0 items-center justify-center transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${collapsed ? "h-9 w-9 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--search-accent)]" : `h-full w-11 rounded-l-full ${dirty ? "text-amber-600" : "text-gray-400 hover:text-[var(--search-accent)]"}`}`,
+              className: `flex shrink-0 items-center justify-center transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${collapsed ? "h-9 w-9 rounded-lg text-[rgb(var(--ink-muted))] hover:bg-[rgb(var(--surface-subtle))] hover:text-[rgb(var(--ink))] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--search-accent)]" : `h-full w-11 rounded-l-full ${dirty ? "text-[rgb(var(--warning-ink))]" : "text-[rgb(var(--ink-muted))] hover:text-[var(--search-accent)]"}`}`,
               children: loading ? /* @__PURE__ */ jsx("span", { className: "h-[18px] w-[18px] animate-spin rounded-full border-2 border-current border-t-transparent", "aria-hidden": true }) : /* @__PURE__ */ jsx("svg", { className: "h-[18px] w-[18px]", fill: "none", stroke: "currentColor", strokeWidth: 2, viewBox: "0 0 24 24", "aria-hidden": true, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: SEARCH_ICON_PATH }) })
             }
           ),
@@ -108,14 +108,14 @@ function SearchFilterBar({
               onKeyDown: onInputKeyDown,
               onBlur: collapsible ? onInputBlur : void 0,
               placeholder,
-              className: "h-full min-w-0 flex-1 border-0 bg-transparent pr-2 text-[14px] leading-[22px] text-gray-900 outline-none placeholder:text-gray-400"
+              className: "h-full min-w-0 flex-1 border-0 bg-transparent pr-2 text-[14px] leading-[22px] text-[rgb(var(--ink))] outline-none placeholder:text-[rgb(var(--ink-faint))]"
             }
           ),
           filterControl
         ]
       }
     ) }),
-    countLabel ? /* @__PURE__ */ jsx("span", { className: "w-24 shrink-0 whitespace-nowrap text-right text-[12px] leading-[18px] tabular-nums text-gray-500", children: countLabel }) : null,
+    countLabel ? /* @__PURE__ */ jsx("span", { className: "w-24 shrink-0 whitespace-nowrap text-right text-[12px] leading-[18px] tabular-nums text-[rgb(var(--ink-muted))]", children: countLabel }) : null,
     /* @__PURE__ */ jsx("div", { ref: setChipsHost, className: "min-w-0 basis-full empty:hidden" })
   ] }) });
 }

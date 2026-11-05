@@ -2,11 +2,11 @@
 import { Fragment, jsx, jsxs } from "react/jsx-runtime";
 import { Modal } from "./Modal.js";
 const TONE_ICON = {
-  danger: "bg-rose-50 text-rose-600",
-  primary: "bg-blue-50 text-blue-600"
+  danger: "bg-[rgb(var(--danger-soft))] text-[rgb(var(--danger-ink))]",
+  primary: "bg-[rgb(var(--accent-soft))] text-[rgb(var(--accent-ink))]"
 };
 const TONE_CONFIRM_BUTTON = {
-  danger: "bg-rose-600 hover:bg-rose-700",
+  danger: "bg-[rgb(var(--danger-solid))] hover:bg-[rgb(var(--danger-solid)/0.9)]",
   primary: "bg-[var(--sb-accent-bg)] hover:bg-[var(--accent-hover)]"
 };
 function ConfirmDialog({
@@ -18,6 +18,7 @@ function ConfirmDialog({
   tone = "danger",
   busy = false,
   layer = "base",
+  closeOnBackdrop,
   overlayClassName,
   panelClassName,
   onConfirm,
@@ -33,6 +34,7 @@ function ConfirmDialog({
       layer,
       size: "md",
       dismissable: !busy,
+      closeOnBackdrop,
       bodyClassName: "p-5",
       overlayClassName,
       panelClassName,
@@ -44,7 +46,7 @@ function ConfirmDialog({
             "data-autofocus": true,
             onClick: onClose,
             disabled: busy,
-            className: "rounded-lg border border-gray-300 bg-white px-3.5 py-2 text-[14px] leading-[22px] font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:opacity-50",
+            className: "rounded-lg border border-[rgb(var(--line-strong))] bg-[rgb(var(--surface))] px-3.5 py-2 text-[14px] leading-[22px] font-medium text-[rgb(var(--ink))] transition-colors hover:bg-[rgb(var(--surface-subtle))] disabled:opacity-50",
             children: cancelLabel
           }
         ),
@@ -65,8 +67,8 @@ function ConfirmDialog({
       children: /* @__PURE__ */ jsxs("div", { className: "flex items-start gap-3", children: [
         /* @__PURE__ */ jsx("span", { className: `flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${TONE_ICON[tone]}`, children: /* @__PURE__ */ jsx("svg", { className: "h-5 w-5", fill: "none", stroke: "currentColor", strokeWidth: 1.8, viewBox: "0 0 24 24", "aria-hidden": "true", children: tone === "danger" ? /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M12 9v4m0 4h.01M10.3 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.7 3.86a2 2 0 0 0-3.4 0Z" }) : /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M11.25 11.25h1.5v5.25m-.75-9h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" }) }) }),
         /* @__PURE__ */ jsxs("div", { className: "min-w-0 flex-1", children: [
-          /* @__PURE__ */ jsx("h2", { className: "text-[14px] leading-[22px] font-semibold text-slate-900", children: title }),
-          lines.length > 0 && /* @__PURE__ */ jsx("ul", { className: "mt-2 space-y-1.5", children: lines.map((line) => /* @__PURE__ */ jsx("li", { className: "text-[12px] leading-5 text-slate-600", children: line }, line)) })
+          /* @__PURE__ */ jsx("h2", { className: "text-[14px] leading-[22px] font-semibold text-[rgb(var(--ink))]", children: title }),
+          lines.length > 0 && /* @__PURE__ */ jsx("ul", { className: "mt-2 space-y-1.5", children: lines.map((line) => /* @__PURE__ */ jsx("li", { className: "text-[12px] leading-5 text-[rgb(var(--ink-muted))]", children: line }, line)) })
         ] })
       ] })
     }

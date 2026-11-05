@@ -85,6 +85,7 @@ function FloatingGlassDock({
   /** 実際の FilterPopover/ShipmentFilterMenu を渡す（collapsed 表示で件数バッジ付きの
    *  じょうごトリガーになる）。呼び出し側の renderXxxFilter(true) をそのまま渡せばよい。 */
   filterControl,
+  viewControl,
   filterChips = [],
   processTrailing,
   showProcess = true,
@@ -169,7 +170,7 @@ function FloatingGlassDock({
           leading,
           /* @__PURE__ */ jsx("span", { className: "sb-glass-div", "aria-hidden": true })
         ] }),
-        /* @__PURE__ */ jsx("span", { className: "flex items-center text-gray-400", "aria-hidden": true, children: /* @__PURE__ */ jsx("svg", { width: 17, height: 17, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "m21 21-4.35-4.35M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z" }) }) }),
+        /* @__PURE__ */ jsx("span", { className: "flex items-center text-[rgb(var(--ink-muted))]", "aria-hidden": true, children: /* @__PURE__ */ jsx("svg", { width: 17, height: 17, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "m21 21-4.35-4.35M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z" }) }) }),
         /* @__PURE__ */ jsx(
           "input",
           {
@@ -184,6 +185,7 @@ function FloatingGlassDock({
             "aria-label": searchAriaLabel ?? searchPlaceholder
           }
         ),
+        viewControl,
         filterControl && /* @__PURE__ */ jsx(FilterChipsHostProvider, { host: null, children: /* @__PURE__ */ jsx(CollapsedFilterTriggerProvider, { collapsed: true, children: filterControl }) })
       ] })
     ] })

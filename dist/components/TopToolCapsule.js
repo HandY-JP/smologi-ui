@@ -43,7 +43,7 @@ function ToolTooltip({ text, triggerRef }) {
     document.body
   );
 }
-const TOOL_MENU_WIDTH_PX = 208;
+const TOOL_MENU_WIDTH_PX = 264;
 const TOOL_MENU_MARGIN_PX = 8;
 const TOOL_MENU_GAP_PX = 6;
 function ToolMenu({ items, onClose, triggerRef }) {
@@ -90,9 +90,9 @@ function ToolMenu({ items, onClose, triggerRef }) {
         ref: menuRef,
         role: "menu",
         style: { top: position.top, left: position.left, width: TOOL_MENU_WIDTH_PX },
-        className: "fixed z-[60] flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white p-1 shadow-xl",
+        className: "fixed z-[60] flex flex-col overflow-hidden rounded-xl border border-[rgb(var(--line))] bg-[rgb(var(--surface))] p-1 shadow-xl",
         children: items.map((mi, i) => /* @__PURE__ */ jsxs(Fragment2, { children: [
-          mi.separatorBefore && i > 0 && /* @__PURE__ */ jsx("span", { className: "my-1 block h-px bg-gray-100", "aria-hidden": true }),
+          mi.separatorBefore && i > 0 && /* @__PURE__ */ jsx("span", { className: "my-1 block h-px bg-[rgb(var(--surface-subtle))]", "aria-hidden": true }),
           /* @__PURE__ */ jsx(
             "button",
             {
@@ -103,7 +103,7 @@ function ToolMenu({ items, onClose, triggerRef }) {
                 mi.onClick();
                 onClose();
               },
-              className: "flex items-center rounded-lg px-3 py-2 text-left text-[14px] leading-[22px] text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:text-gray-300 disabled:hover:bg-transparent",
+              className: "flex items-center rounded-lg px-3 py-2 text-left text-[14px] leading-[22px] text-[rgb(var(--ink))] transition-colors hover:bg-[rgb(var(--surface-subtle))] disabled:cursor-not-allowed disabled:text-[rgb(var(--ink-faint))] disabled:hover:bg-transparent",
               children: mi.label
             }
           )
@@ -135,13 +135,13 @@ function buildToolListRows(items, expandedKey) {
 }
 function ToolListRowStatus({ item }) {
   if (item.status === "progress") {
-    return /* @__PURE__ */ jsx("span", { className: "flex-shrink-0 text-[11px] leading-[16px] font-medium text-gray-400", children: "\u51E6\u7406\u4E2D" });
+    return /* @__PURE__ */ jsx("span", { className: "flex-shrink-0 text-[11px] leading-[16px] font-medium text-[rgb(var(--ink-muted))]", children: "\u51E6\u7406\u4E2D" });
   }
   if (item.status === "done") {
-    return /* @__PURE__ */ jsx("span", { className: "flex-shrink-0 rounded-full bg-blue-50 px-2 py-0.5 text-[11px] leading-[16px] font-semibold text-blue-600", children: item.doneCount != null ? `${item.doneCount.toLocaleString()}\u4EF6 \u3067\u304D\u3042\u304C\u308A` : "\u3067\u304D\u3042\u304C\u308A" });
+    return /* @__PURE__ */ jsx("span", { className: "flex-shrink-0 rounded-full bg-[rgb(var(--accent-soft))] px-2 py-0.5 text-[11px] leading-[16px] font-semibold text-[rgb(var(--accent-ink))]", children: item.doneCount != null ? `${item.doneCount.toLocaleString()}\u4EF6 \u3067\u304D\u3042\u304C\u308A` : "\u3067\u304D\u3042\u304C\u308A" });
   }
   if (item.status === "failed") {
-    return /* @__PURE__ */ jsx("span", { className: "flex-shrink-0 text-[11px] leading-[16px] font-medium text-red-600", children: item.statusMessage ?? "\u5931\u6557\u3057\u307E\u3057\u305F" });
+    return /* @__PURE__ */ jsx("span", { className: "flex-shrink-0 text-[11px] leading-[16px] font-medium text-[rgb(var(--danger-ink))]", children: item.statusMessage ?? "\u5931\u6557\u3057\u307E\u3057\u305F" });
   }
   return null;
 }
@@ -207,7 +207,7 @@ function ToolListPanel({
         role: "menu",
         "aria-label": "\u9053\u5177\u306E\u4E00\u89A7",
         style: { top: position.top, left: position.left, width: TOOL_LIST_WIDTH_PX },
-        className: "fixed z-[60] flex max-h-[min(70vh,560px)] flex-col overflow-y-auto rounded-xl border border-gray-200 bg-white p-1.5 shadow-xl",
+        className: "fixed z-[60] flex max-h-[min(70vh,560px)] flex-col overflow-y-auto rounded-xl border border-[rgb(var(--line))] bg-[rgb(var(--surface))] p-1.5 shadow-xl",
         onKeyDown: (e) => {
           if (e.key !== "ArrowDown" && e.key !== "ArrowUp" && e.key !== "Home" && e.key !== "End") return;
           e.preventDefault();
@@ -223,7 +223,7 @@ function ToolListPanel({
             if (row.kind === "sub") {
               const { parent, sub: sub2 } = row;
               return /* @__PURE__ */ jsxs(Fragment2, { children: [
-                sub2.separatorBefore && /* @__PURE__ */ jsx("span", { className: "my-1 block h-px bg-gray-100", "aria-hidden": true }),
+                sub2.separatorBefore && /* @__PURE__ */ jsx("span", { className: "my-1 block h-px bg-[rgb(var(--surface-subtle))]", "aria-hidden": true }),
                 /* @__PURE__ */ jsxs(
                   "button",
                   {
@@ -236,12 +236,12 @@ function ToolListPanel({
                       sub2.onClick();
                       onClose();
                     },
-                    className: `flex w-full items-center gap-2.5 rounded-lg py-1.5 pl-9 pr-2.5 text-left transition-colors ${sub2.disabled ? "cursor-not-allowed opacity-40" : "hover:bg-gray-50 focus:bg-gray-50 focus:outline-none"}`,
+                    className: `flex w-full items-center gap-2.5 rounded-lg py-1.5 pl-9 pr-2.5 text-left transition-colors ${sub2.disabled ? "cursor-not-allowed opacity-40" : "hover:bg-[rgb(var(--surface-subtle))] focus:bg-[rgb(var(--surface-subtle))] focus:outline-none"}`,
                     children: [
-                      /* @__PURE__ */ jsx("span", { className: "flex h-4 w-4 flex-shrink-0 items-center justify-center text-gray-300 [&_svg]:h-4 [&_svg]:w-4", "aria-hidden": true, children: parent.icon }),
+                      /* @__PURE__ */ jsx("span", { className: "flex h-4 w-4 flex-shrink-0 items-center justify-center text-[rgb(var(--ink-faint))] [&_svg]:h-4 [&_svg]:w-4", "aria-hidden": true, children: parent.icon }),
                       /* @__PURE__ */ jsxs("span", { className: "min-w-0 flex-1", children: [
-                        /* @__PURE__ */ jsx("span", { className: "block truncate text-[13px] leading-[20px] font-medium text-gray-700", children: sub2.label }),
-                        sub2.description && /* @__PURE__ */ jsx("span", { className: "mt-0.5 block text-[11px] leading-snug text-gray-400", children: sub2.description })
+                        /* @__PURE__ */ jsx("span", { className: "block truncate text-[13px] leading-[20px] font-medium text-[rgb(var(--ink))]", children: sub2.label }),
+                        sub2.description && /* @__PURE__ */ jsx("span", { className: "mt-0.5 block text-[11px] leading-snug text-[rgb(var(--ink-muted))]", children: sub2.description })
                       ] })
                     ]
                   }
@@ -254,7 +254,7 @@ function ToolListPanel({
             const inert = !!item.disabled || item.status === "progress";
             const sub = inert && item.disabled && item.disabledReason ? item.disabledReason : item.description;
             return /* @__PURE__ */ jsxs(Fragment2, { children: [
-              row.separator && /* @__PURE__ */ jsx("span", { className: "my-1 block h-px bg-gray-100", "aria-hidden": true }),
+              row.separator && /* @__PURE__ */ jsx("span", { className: "my-1 block h-px bg-[rgb(var(--surface-subtle))]", "aria-hidden": true }),
               /* @__PURE__ */ jsxs(
                 "button",
                 {
@@ -272,25 +272,25 @@ function ToolListPanel({
                     item.onClick?.();
                     onClose();
                   },
-                  className: `flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left transition-colors ${inert ? "cursor-not-allowed opacity-45" : "hover:bg-gray-50 focus:bg-gray-50 focus:outline-none"}`,
+                  className: `flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left transition-colors ${inert ? "cursor-not-allowed opacity-45" : "hover:bg-[rgb(var(--surface-subtle))] focus:bg-[rgb(var(--surface-subtle))] focus:outline-none"}`,
                   children: [
                     /* @__PURE__ */ jsx(
                       "span",
                       {
-                        className: `flex h-5 w-5 flex-shrink-0 items-center justify-center [&_svg]:h-5 [&_svg]:w-5 ${item.primary ? "text-blue-600" : item.active ? "text-amber-500" : "text-gray-400"}`,
+                        className: `flex h-5 w-5 flex-shrink-0 items-center justify-center [&_svg]:h-5 [&_svg]:w-5 ${item.primary ? "text-[rgb(var(--accent-ink))]" : item.active ? "text-[rgb(var(--warning-ink))]" : "text-[rgb(var(--ink-muted))]"}`,
                         "aria-hidden": true,
                         children: item.icon
                       }
                     ),
                     /* @__PURE__ */ jsxs("span", { className: "min-w-0 flex-1", children: [
-                      /* @__PURE__ */ jsx("span", { className: "block truncate text-[14px] leading-[22px] font-semibold text-gray-800", children: item.label }),
-                      sub && /* @__PURE__ */ jsx("span", { className: "mt-0.5 block text-[12px] leading-snug text-gray-500", children: sub })
+                      /* @__PURE__ */ jsx("span", { className: "block truncate text-[14px] leading-[22px] font-semibold text-[rgb(var(--ink))]", children: item.label }),
+                      sub && /* @__PURE__ */ jsx("span", { className: "mt-0.5 block text-[12px] leading-snug text-[rgb(var(--ink-muted))]", children: sub })
                     ] }),
                     /* @__PURE__ */ jsx(ToolListRowStatus, { item }),
                     hasMenu && /* @__PURE__ */ jsx(
                       "span",
                       {
-                        className: `flex-shrink-0 text-gray-400 transition-transform [&_svg]:h-4 [&_svg]:w-4 ${expanded ? "rotate-180" : "-rotate-90"}`,
+                        className: `flex-shrink-0 text-[rgb(var(--ink-muted))] transition-transform [&_svg]:h-4 [&_svg]:w-4 ${expanded ? "rotate-180" : "-rotate-90"}`,
                         "aria-hidden": true,
                         children: CaretDownIcon
                       }
@@ -301,8 +301,8 @@ function ToolListPanel({
             ] }, row.key);
           }),
           settingsLinks && settingsLinks.length > 0 && /* @__PURE__ */ jsxs(Fragment, { children: [
-            /* @__PURE__ */ jsx("span", { className: "my-1 block h-px bg-gray-100", "aria-hidden": true }),
-            /* @__PURE__ */ jsx("div", { className: "px-2.5 pb-1 pt-1.5 text-[11px] leading-[16px] font-semibold uppercase tracking-wide text-gray-400", children: "\u95A2\u9023\u3059\u308B\u8A2D\u5B9A" }),
+            /* @__PURE__ */ jsx("span", { className: "my-1 block h-px bg-[rgb(var(--surface-subtle))]", "aria-hidden": true }),
+            /* @__PURE__ */ jsx("div", { className: "px-2.5 pb-1 pt-1.5 text-[11px] leading-[16px] font-semibold uppercase tracking-wide text-[rgb(var(--ink-muted))]", children: "\u95A2\u9023\u3059\u308B\u8A2D\u5B9A" }),
             settingsLinks.map((link) => /* @__PURE__ */ jsxs(
               "button",
               {
@@ -314,12 +314,12 @@ function ToolListPanel({
                   else if (link.href) window.location.assign(link.href);
                   onClose();
                 },
-                className: "flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left transition-colors hover:bg-gray-50 focus:bg-gray-50 focus:outline-none",
+                className: "flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left transition-colors hover:bg-[rgb(var(--surface-subtle))] focus:bg-[rgb(var(--surface-subtle))] focus:outline-none",
                 children: [
-                  /* @__PURE__ */ jsx("span", { className: "flex h-5 w-5 flex-shrink-0 items-center justify-center text-gray-400 [&_svg]:h-5 [&_svg]:w-5", "aria-hidden": true, children: SettingsGearIcon }),
+                  /* @__PURE__ */ jsx("span", { className: "flex h-5 w-5 flex-shrink-0 items-center justify-center text-[rgb(var(--ink-muted))] [&_svg]:h-5 [&_svg]:w-5", "aria-hidden": true, children: SettingsGearIcon }),
                   /* @__PURE__ */ jsxs("span", { className: "min-w-0 flex-1", children: [
-                    /* @__PURE__ */ jsx("span", { className: "block truncate text-[14px] leading-[22px] font-semibold text-gray-800", children: link.label }),
-                    link.description && /* @__PURE__ */ jsx("span", { className: "mt-0.5 block text-[12px] leading-snug text-gray-500", children: link.description })
+                    /* @__PURE__ */ jsx("span", { className: "block truncate text-[14px] leading-[22px] font-semibold text-[rgb(var(--ink))]", children: link.label }),
+                    link.description && /* @__PURE__ */ jsx("span", { className: "mt-0.5 block text-[12px] leading-snug text-[rgb(var(--ink-muted))]", children: link.description })
                   ] })
                 ]
               },
@@ -393,7 +393,8 @@ function ToolButton({ item, variant }) {
                   children: item.status === "done" ? item.doneCount != null ? Math.min(99, item.doneCount) : "" : "!"
                 },
                 item.status === "done" ? `done-${item.doneCount ?? 0}` : item.status
-              )
+              ),
+              !dot && item.extraDot && /* @__PURE__ */ jsx("span", { "aria-hidden": true, className: "absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-[rgb(var(--success-solid))]" })
             ]
           }
         ),

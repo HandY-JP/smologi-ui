@@ -50,7 +50,7 @@ function ProductThumb({
     };
   }, [open]);
   if (!src || failed) {
-    return /* @__PURE__ */ jsx("div", { className: `${sizeCls} rounded bg-gray-50 flex items-center justify-center flex-shrink-0 text-gray-300`, "aria-hidden": true, children: /* @__PURE__ */ jsx("svg", { className: "w-4 h-4", fill: "none", stroke: "currentColor", strokeWidth: 1.5, viewBox: "0 0 24 24", children: /* @__PURE__ */ jsx(
+    return /* @__PURE__ */ jsx("div", { className: `${sizeCls} rounded bg-[rgb(var(--surface-subtle))] flex items-center justify-center flex-shrink-0 text-[rgb(var(--ink-faint))]`, "aria-hidden": true, children: /* @__PURE__ */ jsx("svg", { className: "w-4 h-4", fill: "none", stroke: "currentColor", strokeWidth: 1.5, viewBox: "0 0 24 24", children: /* @__PURE__ */ jsx(
       "path",
       {
         strokeLinecap: "round",
@@ -79,7 +79,7 @@ function ProductThumb({
           if (generated) setThumbFailed(true);
           else setFailed(true);
         },
-        className: `${sizeCls} rounded object-contain flex-shrink-0 ${enlargeOnClick ? "cursor-zoom-in hover:ring-2 hover:ring-blue-300 transition" : ""}`
+        className: `${sizeCls} rounded object-contain flex-shrink-0 ${enlargeOnClick ? "cursor-zoom-in hover:ring-2 hover:ring-[rgb(var(--accent)/0.3)] transition" : ""}`
       }
     )
   );
@@ -127,7 +127,7 @@ function ProductThumb({
                 src,
                 alt,
                 onClick: (e) => e.stopPropagation(),
-                className: "max-h-[90vh] max-w-[90vw] object-contain rounded shadow-2xl bg-white"
+                className: "max-h-[90vh] max-w-[90vw] object-contain rounded shadow-2xl bg-[rgb(var(--surface))]"
               }
             ),
             alt && /* @__PURE__ */ jsx("div", { className: "absolute bottom-4 left-1/2 -translate-x-1/2 max-w-[80vw] text-center text-[12px] leading-[18px] text-white/80 bg-black/40 rounded-full px-3 py-1 truncate", children: alt })

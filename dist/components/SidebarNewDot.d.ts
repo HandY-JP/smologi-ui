@@ -25,7 +25,7 @@ export declare function SidebarNewDot({ placement, onAccent, muted, ringColor, l
     tone?: 'red' | 'blue';
     /**
      * 色クラスの差し替え（例 'bg-danger-solid'）。省略時は tone と onAccent で決まる既定色
-     * （red-500 / blue-500 / white）。意味名トークン（palette）で色を決めているアプリが、
+     * （danger-solid / accent / white）。意味名トークン（palette）で色を決めているアプリが、
      * 既存の見た目を変えずに使うための口。
      */
     colorClassName?: string;

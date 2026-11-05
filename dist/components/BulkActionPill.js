@@ -1,8 +1,8 @@
 "use client";
 import { Fragment, jsx, jsxs } from "react/jsx-runtime";
 import { useEffect, useId, useRef, useState } from "react";
-const MENU_CLASS = "absolute bottom-full z-[60] mb-2 w-80 max-w-[calc(100vw-2rem)] overflow-hidden rounded-xl border border-gray-200 bg-white p-1.5 text-left shadow-xl";
-const MENU_ITEM_CLASS = "flex w-full items-start justify-between gap-4 rounded-lg px-3 py-2.5 text-left text-[14px] leading-[22px] font-medium text-gray-700 transition-colors hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--sb-accent-bg)] disabled:cursor-not-allowed disabled:opacity-40";
+const MENU_CLASS = "absolute bottom-full z-[60] mb-2 w-80 max-w-[calc(100vw-2rem)] overflow-hidden rounded-xl border border-[rgb(var(--line))] bg-[rgb(var(--surface))] p-1.5 text-left shadow-xl";
+const MENU_ITEM_CLASS = "flex w-full items-start justify-between gap-4 rounded-lg px-3 py-2.5 text-left text-[14px] leading-[22px] font-medium text-[rgb(var(--ink))] transition-colors hover:bg-[rgb(var(--surface-subtle))] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--sb-accent-bg)] disabled:cursor-not-allowed disabled:opacity-40";
 function actionClass(tone) {
   if (tone === "primary") return "sb-bulk-primary";
   if (tone === "danger") return "sb-bulk-btn danger";
@@ -38,7 +38,7 @@ function BulkPillActionButton({
       role: "group",
       "aria-label": action.menuAriaLabel ?? action.label,
       children: action.menuItems.map((item) => /* @__PURE__ */ jsxs("div", { children: [
-        item.separatorBefore && /* @__PURE__ */ jsx("div", { className: "my-1 border-t border-gray-100", role: "separator" }),
+        item.separatorBefore && /* @__PURE__ */ jsx("div", { className: "my-1 border-t border-[rgb(var(--line))]", role: "separator" }),
         /* @__PURE__ */ jsx(WithReason, { reason: item.disabled ? item.disabledReason : void 0, children: /* @__PURE__ */ jsxs(
           "button",
           {
@@ -50,9 +50,9 @@ function BulkPillActionButton({
             children: [
               /* @__PURE__ */ jsxs("span", { className: "min-w-0", children: [
                 /* @__PURE__ */ jsx("span", { className: "block truncate", children: item.label }),
-                item.description && /* @__PURE__ */ jsx("span", { className: "mt-0.5 block truncate text-[11px] leading-[16px] font-normal text-gray-400", children: item.description })
+                item.description && /* @__PURE__ */ jsx("span", { className: "mt-0.5 block truncate text-[11px] leading-[16px] font-normal text-[rgb(var(--ink-muted))]", children: item.description })
               ] }),
-              typeof item.count === "number" && /* @__PURE__ */ jsxs("span", { className: "shrink-0 text-[12px] leading-[18px] tabular-nums text-gray-400", children: [
+              typeof item.count === "number" && /* @__PURE__ */ jsxs("span", { className: "shrink-0 text-[12px] leading-[18px] tabular-nums text-[rgb(var(--ink-muted))]", children: [
                 item.count.toLocaleString(),
                 "\u4EF6"
               ] })
@@ -136,8 +136,9 @@ function BulkPillActionButton({
 function BulkActionPill({
   ariaLabel,
   dataTour,
-  selectedCount,
+  selectedCount = 0,
   selectedLabel = "\u4EF6\u9078\u629E",
+  statusText,
   stats = [],
   leading,
   primary = [],
@@ -166,7 +167,7 @@ function BulkActionPill({
   }, [openMenuKey]);
   const toggleMenu = (key) => setOpenMenuKey((current) => current === key ? null : key);
   const closeMenu = () => setOpenMenuKey(null);
-  return /* @__PURE__ */ jsxs("div", { ref: pillRef, className: "sb-bulk-layer", children: [
+  return /* @__PURE__ */ jsxs("div", { ref: pillRef, "data-bottom-bar": true, className: "sb-bulk-layer", children: [
     /* @__PURE__ */ jsxs(
       "div",
       {
@@ -176,10 +177,7 @@ function BulkActionPill({
         className: "sb-bulk-bar flex flex-wrap items-center justify-center gap-x-3 gap-y-2 rounded-full px-5 py-2.5",
         children: [
           /* @__PURE__ */ jsxs("span", { className: "flex flex-wrap items-center gap-x-2 gap-y-0.5 whitespace-nowrap text-[14px] leading-[22px]", children: [
-            /* @__PURE__ */ jsxs("span", { className: "font-semibold tabular-nums", children: [
-              selectedCount.toLocaleString(),
-              selectedLabel
-            ] }),
+            /* @__PURE__ */ jsx("span", { className: "font-semibold tabular-nums", children: statusText ?? `${selectedCount.toLocaleString()}${selectedLabel}` }),
             stats.map((stat) => /* @__PURE__ */ jsxs("span", { className: "inline-flex items-center gap-1", title: stat.title, children: [
               /* @__PURE__ */ jsx("span", { className: "sb-bulk-stat-sep", "aria-hidden": "true", children: "\u30FB" }),
               /* @__PURE__ */ jsxs("span", { className: stat.tone === "warn" ? "sb-bulk-stat warn" : "sb-bulk-stat", children: [
@@ -219,7 +217,7 @@ function BulkActionPill({
         ]
       }
     ),
-    error && /* @__PURE__ */ jsx("p", { className: "max-w-[min(48rem,100%)] rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-[12px] leading-[18px] text-red-700 shadow-lg", role: "alert", children: error })
+    error && /* @__PURE__ */ jsx("p", { className: "max-w-[min(48rem,100%)] rounded-xl border border-[rgb(var(--danger-ink)/0.25)] bg-[rgb(var(--danger-soft))] px-3 py-2 text-[12px] leading-[18px] text-[rgb(var(--danger-ink))] shadow-lg", role: "alert", children: error })
   ] });
 }
 var BulkActionPill_default = BulkActionPill;

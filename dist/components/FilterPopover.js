@@ -3,13 +3,13 @@ import { Fragment, jsx, jsxs } from "react/jsx-runtime";
 import {
   createContext,
   useContext,
-  useEffect,
   useLayoutEffect,
   useRef,
   useState
 } from "react";
 import { createPortal } from "react-dom";
 import { filterDateRangeError } from "../lib/filter-controls.js";
+import { useDismiss } from "./Modal.js";
 function ActiveFilterChips({
   chips,
   onClearAll
@@ -21,7 +21,7 @@ function ActiveFilterChips({
       {
         className: "inline-flex items-center gap-1 rounded-full border border-[var(--sb-accent-bg)]/40 bg-[var(--sb-accent-bg)]/5 py-0.5 pl-2.5 pr-1 text-[12px] leading-[18px] text-[var(--sb-accent-bg)]",
         children: [
-          /* @__PURE__ */ jsxs("span", { className: "text-gray-500", children: [
+          /* @__PURE__ */ jsxs("span", { className: "text-[rgb(var(--ink-muted))]", children: [
             chip.label,
             ":"
           ] }),
@@ -45,7 +45,7 @@ function ActiveFilterChips({
       {
         type: "button",
         onClick: onClearAll,
-        className: "text-[12px] leading-[18px] text-gray-400 underline-offset-2 hover:text-gray-700 hover:underline",
+        className: "text-[12px] leading-[18px] text-[rgb(var(--ink-muted))] underline-offset-2 hover:text-[rgb(var(--ink))] hover:underline",
         children: "\u3059\u3079\u3066\u89E3\u9664"
       }
     )
@@ -65,7 +65,8 @@ function FilterTriggerButton({
   open,
   onToggle,
   title,
-  ariaControls
+  ariaControls,
+  iconBadge = "dot"
 }) {
   const iconOnly = useContext(CollapsedFilterTriggerContext);
   const triggerTitle = title ?? (activeCount > 0 ? `${label}\uFF08${activeCount}\u4EF6\u306E\u6761\u4EF6\u3092\u6307\u5B9A\u4E2D\uFF09` : label);
@@ -80,7 +81,7 @@ function FilterTriggerButton({
         "aria-controls": ariaControls,
         title: triggerTitle,
         "aria-label": triggerAriaLabel,
-        className: `relative flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--search-accent)] ${activeCount > 0 || open ? "text-[var(--search-accent)] hover:bg-[var(--search-accent-light)]" : "text-gray-500 hover:bg-gray-100 hover:text-gray-700"}`,
+        className: `relative flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--search-accent)] ${activeCount > 0 || open ? "text-[var(--search-accent)] hover:bg-[var(--search-accent-light)]" : "text-[rgb(var(--ink-muted))] hover:bg-[rgb(var(--surface-subtle))] hover:text-[rgb(var(--ink))]"}`,
         children: [
           /* @__PURE__ */ jsx("svg", { className: "h-[18px] w-[18px]", fill: "none", stroke: "currentColor", strokeWidth: 2, viewBox: "0 0 24 24", "aria-hidden": true, children: /* @__PURE__ */ jsx(
             "path",
@@ -90,10 +91,18 @@ function FilterTriggerButton({
               d: "M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z"
             }
           ) }),
-          activeCount > 0 && /* @__PURE__ */ jsx(
+          activeCount > 0 && iconBadge === "count" && /* @__PURE__ */ jsx(
             "span",
             {
-              className: "pointer-events-none absolute right-1 top-1 h-2 w-2 rounded-full bg-red-500 ring-2 ring-white",
+              className: "pointer-events-none absolute -right-0.5 -top-0.5 min-w-[1.125rem] rounded-full bg-[var(--search-accent)] px-1 text-center text-[11px] font-semibold leading-[1.125rem] text-[rgb(var(--on-accent))] ring-2 ring-[rgb(var(--surface))]",
+              "aria-hidden": true,
+              children: activeCount
+            }
+          ),
+          activeCount > 0 && iconBadge === "dot" && /* @__PURE__ */ jsx(
+            "span",
+            {
+              className: "pointer-events-none absolute right-1 top-1 h-2 w-2 rounded-full bg-[rgb(var(--danger-solid))] ring-2 ring-white",
               "aria-hidden": true
             }
           )
@@ -110,7 +119,7 @@ function FilterTriggerButton({
       "aria-controls": ariaControls,
       title: triggerTitle,
       "aria-label": triggerAriaLabel,
-      className: `relative mr-1.5 flex h-8 min-w-[7rem] items-center justify-center rounded-full px-7 text-[12px] font-semibold leading-none transition-colors ${activeCount > 0 || open ? "bg-[var(--search-accent-light)] text-[var(--search-accent)]" : "text-gray-500 hover:bg-gray-100 hover:text-gray-900"}`,
+      className: `relative mr-1.5 flex h-8 min-w-[7rem] items-center justify-center rounded-full px-7 text-[12px] font-semibold leading-none transition-colors ${activeCount > 0 || open ? "bg-[var(--search-accent-light)] text-[var(--search-accent)]" : "text-[rgb(var(--ink-muted))] hover:bg-[rgb(var(--surface-subtle))] hover:text-[rgb(var(--ink))]"}`,
       children: [
         label,
         activeCount > 0 && /* @__PURE__ */ jsx("span", { className: "absolute left-2 rounded-full bg-[var(--search-accent)] px-1.5 py-0.5 text-[11px] font-semibold leading-none text-white", children: activeCount }),
@@ -143,10 +152,12 @@ function FilterPopover({
   columns = 1,
   align = "right",
   triggerTitle,
-  panelPortal = false
+  panelPortal = false,
+  triggerBadge = "dot"
 }) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef(null);
+  const panelRef = useRef(null);
   const [panelNode, setPanelNode] = useState(null);
   const chipsHost = useContext(FilterChipsHostContext);
   const [panelPosition, setPanelPosition] = useState(null);
@@ -179,40 +190,27 @@ function FilterPopover({
       window.removeEventListener("scroll", update, true);
     };
   }, [open, panelPortal, align, panelNode]);
-  useEffect(() => {
-    if (!open) return;
-    const onPointerDown = (event) => {
-      const target = event.target;
-      if (rootRef.current?.contains(target)) return;
-      if (panelNode?.contains(target)) return;
-      setOpen(false);
-    };
-    const onKeyDown = (event) => {
-      if (event.key === "Escape") setOpen(false);
-    };
-    document.addEventListener("mousedown", onPointerDown);
-    document.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.removeEventListener("mousedown", onPointerDown);
-      document.removeEventListener("keydown", onKeyDown);
-    };
-  }, [open, panelNode]);
+  const dismiss = () => {
+    setOpen(false);
+    rootRef.current?.querySelector("button[aria-expanded]")?.focus({ preventScroll: true });
+  };
+  useDismiss(panelPortal ? panelRef : rootRef, dismiss, { enabled: open, ignore: rootRef });
   const clearDisabled = !onClearAll || activeCount === 0;
   const panelBody = /* @__PURE__ */ jsxs(Fragment, { children: [
-    tabs && /* @__PURE__ */ jsx("div", { className: "mb-3 flex gap-1 rounded-lg bg-gray-100 p-1", children: tabs.items.map((item) => /* @__PURE__ */ jsx(
+    tabs && /* @__PURE__ */ jsx("div", { className: "mb-3 flex gap-1 rounded-lg bg-[rgb(var(--surface-subtle))] p-1", children: tabs.items.map((item) => /* @__PURE__ */ jsx(
       "button",
       {
         type: "button",
         onClick: () => tabs.onChange(item.key),
-        className: `flex-1 rounded-md px-3 py-1.5 text-[14px] leading-[22px] font-medium ${tabs.active === item.key ? "bg-white text-[var(--sb-accent-bg)] shadow-sm" : "text-gray-500"}`,
+        className: `flex-1 rounded-md px-3 py-1.5 text-[14px] leading-[22px] font-medium ${tabs.active === item.key ? "bg-[rgb(var(--surface))] text-[var(--sb-accent-bg)] shadow-sm" : "text-[rgb(var(--ink-muted))]"}`,
         children: item.label
       },
       item.key
     )) }),
     /* @__PURE__ */ jsxs("div", { className: "flex items-start justify-between gap-2", children: [
       /* @__PURE__ */ jsxs("div", { className: "min-w-0", children: [
-        /* @__PURE__ */ jsx("span", { className: "text-[14px] leading-[22px] font-semibold text-gray-700", children: title }),
-        description && /* @__PURE__ */ jsx("p", { className: "mt-0.5 text-[12px] leading-[18px] text-gray-400", children: description })
+        /* @__PURE__ */ jsx("span", { className: "text-[14px] leading-[22px] font-semibold text-[rgb(var(--ink))]", children: title }),
+        description && /* @__PURE__ */ jsx("p", { className: "mt-0.5 text-[12px] leading-[18px] text-[rgb(var(--ink-muted))]", children: description })
       ] }),
       /* @__PURE__ */ jsx(
         "button",
@@ -220,16 +218,16 @@ function FilterPopover({
           type: "button",
           onClick: onClearAll,
           disabled: clearDisabled,
-          className: "shrink-0 text-[12px] leading-[18px] text-gray-400 hover:text-gray-700 disabled:opacity-40",
+          className: "shrink-0 text-[12px] leading-[18px] text-[rgb(var(--ink-muted))] hover:text-[rgb(var(--ink))] disabled:opacity-40",
           children: "\u3059\u3079\u3066\u30AF\u30EA\u30A2"
         }
       )
     ] }),
     /* @__PURE__ */ jsx("div", { className: columns === 2 ? "mt-3 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2" : "mt-3 space-y-3", children }),
-    footer && /* @__PURE__ */ jsx("div", { className: "mt-3 flex justify-end border-t border-gray-100 pt-3", children: footer })
+    footer && /* @__PURE__ */ jsx("div", { className: "mt-3 flex justify-end border-t border-[rgb(var(--line))] pt-3", children: footer })
   ] });
   const resolvedWidthClass = panelWidthClass ?? (columns === 2 ? "w-[44rem]" : "w-80");
-  const panelClass = `${resolvedWidthClass} max-w-[calc(100vw-3rem)] overflow-y-auto overscroll-contain rounded-lg border border-gray-200 bg-white p-4 shadow-xl`;
+  const panelClass = `${resolvedWidthClass} max-w-[calc(100vw-3rem)] overflow-y-auto overscroll-contain rounded-lg border border-[rgb(var(--line))] bg-[rgb(var(--surface))] p-4 shadow-xl`;
   return /* @__PURE__ */ jsxs(
     "div",
     {
@@ -246,7 +244,8 @@ function FilterPopover({
               setPanelPosition(null);
               setOpen((value) => !value);
             },
-            title: triggerTitle
+            title: triggerTitle,
+            iconBadge: triggerBadge
           }
         ),
         open && !panelPortal && /* @__PURE__ */ jsx(
@@ -261,7 +260,10 @@ function FilterPopover({
           /* @__PURE__ */ jsx(
             "div",
             {
-              ref: setPanelNode,
+              ref: (node) => {
+                panelRef.current = node;
+                setPanelNode(node);
+              },
               className: `fixed z-[80] ${panelClass}`,
               style: { top: panelPosition.top, left: panelPosition.left, maxHeight: panelPosition.maxHeight },
               children: panelBody
@@ -281,8 +283,8 @@ function FilterSection({
   columns = 1,
   children
 }) {
-  return /* @__PURE__ */ jsxs("section", { className: first ? "" : "border-t border-gray-100 pt-3", children: [
-    /* @__PURE__ */ jsxs("h3", { className: "mb-2 flex items-center gap-1.5 text-[11px] leading-[16px] font-semibold tracking-wide text-gray-400", children: [
+  return /* @__PURE__ */ jsxs("section", { className: first ? "" : "border-t border-[rgb(var(--line))] pt-3", children: [
+    /* @__PURE__ */ jsxs("h3", { className: "mb-2 flex items-center gap-1.5 text-[11px] leading-[16px] font-semibold tracking-wide text-[rgb(var(--ink-muted))]", children: [
       /* @__PURE__ */ jsx("span", { children: title }),
       active && /* @__PURE__ */ jsxs(Fragment, { children: [
         /* @__PURE__ */ jsx(
@@ -317,7 +319,7 @@ function FilterChipToggle({
       onClick: onToggle,
       "aria-pressed": pressed,
       title,
-      className: `inline-flex items-center whitespace-nowrap rounded-full border px-2.5 py-1 text-[12px] leading-[18px] font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--search-accent)] ${pressed ? "border-[var(--search-accent)] bg-[var(--search-accent)] text-white shadow-sm" : "border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-900"}`,
+      className: `inline-flex items-center whitespace-nowrap rounded-full border px-2.5 py-1 text-[12px] leading-[18px] font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--search-accent)] ${pressed ? "border-[var(--search-accent)] bg-[var(--search-accent)] text-white shadow-sm" : "border-[rgb(var(--line))] bg-[rgb(var(--surface))] text-[rgb(var(--ink-muted))] hover:border-[rgb(var(--line-strong))] hover:bg-[rgb(var(--surface-subtle))] hover:text-[rgb(var(--ink))]"}`,
       children: label
     }
   );
@@ -328,7 +330,7 @@ function FilterChipGroup({
   ariaLabel
 }) {
   return /* @__PURE__ */ jsxs("div", { children: [
-    label && /* @__PURE__ */ jsx("div", { className: "mb-1.5 text-[12px] leading-[18px] font-medium text-gray-600", children: label }),
+    label && /* @__PURE__ */ jsx("div", { className: "mb-1.5 text-[12px] leading-[18px] font-medium text-[rgb(var(--ink-muted))]", children: label }),
     /* @__PURE__ */ jsx("div", { className: "flex flex-wrap items-center gap-1.5", role: "group", "aria-label": ariaLabel ?? label, children })
   ] });
 }
@@ -339,12 +341,12 @@ function FilterField({
   span = 1
 }) {
   return /* @__PURE__ */ jsxs("div", { className: span === 2 ? "sm:col-span-2" : void 0, children: [
-    /* @__PURE__ */ jsx("span", { className: "mb-1 block text-[12px] leading-[18px] text-gray-500", children: label }),
+    /* @__PURE__ */ jsx("span", { className: "mb-1 block text-[12px] leading-[18px] text-[rgb(var(--ink-muted))]", children: label }),
     children,
-    hint && /* @__PURE__ */ jsx("p", { className: "mt-1 text-[11px] leading-[16px] text-gray-400", children: hint })
+    hint && /* @__PURE__ */ jsx("p", { className: "mt-1 text-[11px] leading-[16px] text-[rgb(var(--ink-muted))]", children: hint })
   ] });
 }
-const FILTER_INPUT_CLASS = "w-full rounded-md border border-gray-300 bg-white px-2 py-2 text-[14px] leading-[22px] text-gray-700 focus:outline-none focus:ring-1 focus:ring-[var(--sb-accent-bg)]";
+const FILTER_INPUT_CLASS = "w-full rounded-md border border-[rgb(var(--line-strong))] bg-[rgb(var(--surface))] px-2 py-2 text-[14px] leading-[22px] text-[rgb(var(--ink))] focus:outline-none focus:ring-1 focus:ring-[var(--sb-accent-bg)]";
 function FilterSelect({
   label,
   value,
@@ -352,7 +354,7 @@ function FilterSelect({
   options
 }) {
   return /* @__PURE__ */ jsxs("label", { className: "block", children: [
-    /* @__PURE__ */ jsx("span", { className: "mb-1 block text-[12px] leading-[18px] text-gray-500", children: label }),
+    /* @__PURE__ */ jsx("span", { className: "mb-1 block text-[12px] leading-[18px] text-[rgb(var(--ink-muted))]", children: label }),
     /* @__PURE__ */ jsx("select", { value, onChange: (event) => onChange(event.target.value), className: FILTER_INPUT_CLASS, children: options.map((option) => /* @__PURE__ */ jsx("option", { value: option.value, children: option.label }, option.value)) })
   ] });
 }
@@ -362,15 +364,15 @@ function FilterCheckbox({
   onChange,
   tone = "accent"
 }) {
-  const toneClass = tone === "rose" ? "text-rose-600 focus:ring-rose-500" : tone === "gray" ? "text-gray-600 focus:ring-gray-500" : "text-[var(--sb-accent-bg)] focus:ring-[var(--sb-accent-bg)]";
-  return /* @__PURE__ */ jsxs("label", { className: "flex cursor-pointer items-center gap-2 text-[12px] leading-[18px] text-gray-700", children: [
+  const toneClass = tone === "rose" ? "text-[rgb(var(--danger-ink))] focus:ring-[rgb(var(--danger-solid))]" : tone === "gray" ? "text-[rgb(var(--ink-muted))] focus:ring-gray-500" : "text-[var(--sb-accent-bg)] focus:ring-[var(--sb-accent-bg)]";
+  return /* @__PURE__ */ jsxs("label", { className: "flex cursor-pointer items-center gap-2 text-[12px] leading-[18px] text-[rgb(var(--ink))]", children: [
     /* @__PURE__ */ jsx(
       "input",
       {
         type: "checkbox",
         checked,
         onChange: (event) => onChange(event.target.checked),
-        className: `h-4 w-4 rounded border-gray-300 ${toneClass}`
+        className: `h-4 w-4 rounded border-[rgb(var(--line-strong))] ${toneClass}`
       }
     ),
     label
@@ -387,10 +389,10 @@ function FilterDateRange({
 }) {
   const error = filterDateRangeError(from, to);
   return /* @__PURE__ */ jsxs("div", { className: "sm:col-span-2", children: [
-    label && /* @__PURE__ */ jsx("p", { className: "mb-1 text-[12px] leading-[18px] font-semibold text-gray-600", children: label }),
+    label && /* @__PURE__ */ jsx("p", { className: "mb-1 text-[12px] leading-[18px] font-semibold text-[rgb(var(--ink-muted))]", children: label }),
     /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-2", children: [
       /* @__PURE__ */ jsxs("label", { children: [
-        /* @__PURE__ */ jsx("span", { className: "mb-1 block text-[12px] leading-[18px] text-gray-500", children: fromLabel }),
+        /* @__PURE__ */ jsx("span", { className: "mb-1 block text-[12px] leading-[18px] text-[rgb(var(--ink-muted))]", children: fromLabel }),
         /* @__PURE__ */ jsx(
           "input",
           {
@@ -404,7 +406,7 @@ function FilterDateRange({
         )
       ] }),
       /* @__PURE__ */ jsxs("label", { children: [
-        /* @__PURE__ */ jsx("span", { className: "mb-1 block text-[12px] leading-[18px] text-gray-500", children: toLabel }),
+        /* @__PURE__ */ jsx("span", { className: "mb-1 block text-[12px] leading-[18px] text-[rgb(var(--ink-muted))]", children: toLabel }),
         /* @__PURE__ */ jsx(
           "input",
           {
@@ -418,7 +420,7 @@ function FilterDateRange({
         )
       ] })
     ] }),
-    error && /* @__PURE__ */ jsx("p", { className: "mt-1 text-[12px] leading-[18px] text-red-600", children: error })
+    error && /* @__PURE__ */ jsx("p", { className: "mt-1 text-[12px] leading-[18px] text-[rgb(var(--danger-ink))]", children: error })
   ] });
 }
 export {

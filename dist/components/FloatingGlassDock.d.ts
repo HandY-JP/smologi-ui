@@ -15,7 +15,7 @@ toolsListPanel,
 toolsSettingsLinks, toolsAriaLabel, processAriaLabel, leadLabel, stages, currentStage, onSelectStage, historyLabel, onHistoryClick, historyActive, leading, searchValue, onSearchChange, onSearchSubmit, searchPlaceholder, searchAriaLabel, searchInputRef, 
 /** 実際の FilterPopover/ShipmentFilterMenu を渡す（collapsed 表示で件数バッジ付きの
  *  じょうごトリガーになる）。呼び出し側の renderXxxFilter(true) をそのまま渡せばよい。 */
-filterControl, filterChips, processTrailing, showProcess, showSearch, }: {
+filterControl, viewControl, filterChips, processTrailing, showProcess, showSearch, }: {
     visible: boolean;
     tools: TopToolItem[];
     toolsListPanel?: boolean;
@@ -43,6 +43,8 @@ filterControl, filterChips, processTrailing, showProcess, showSearch, }: {
     searchAriaLabel?: string;
     searchInputRef?: RefObject<HTMLInputElement | null>;
     filterControl?: ReactNode;
+    /** 検索カプセル右端、絞り込みの手前に置く保存ビューのブックマーク（TopbarSearchDock の viewControl と同じ）。 */
+    viewControl?: ReactNode;
     filterChips?: FloatingFilterChip[];
     /** 工程（セグメント）カプセルの中、ピル列の直後に置く追加要素（商品マスタの保存ビュー「▾」）。 */
     processTrailing?: ReactNode;

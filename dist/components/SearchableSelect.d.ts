@@ -3,6 +3,12 @@ export type SearchableOption = {
     label: string;
     /** 表示はしないが検索対象に含める副テキスト（例: お客様コード）。 */
     keywords?: string;
+    /**
+     * ホバー時に出す補足（例: 「きらら製作所（handy-009）」）。
+     * 幅の狭い inline（トップバーのピル）では label を末尾「…」で省略するので、
+     * 省略された分やコードはここで読めるようにする。省略時は label をそのまま使う。
+     */
+    title?: string;
 };
 export declare function SearchableSelect({ options, value, onChange, placeholder, searchPlaceholder, leadingOptions, emptyText, className, disabled, variant, ariaLabel, }: {
     options: SearchableOption[];

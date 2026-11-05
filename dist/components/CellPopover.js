@@ -114,7 +114,7 @@ function CellPopover({
           event.stopPropagation();
           setOpenKey(open ? null : popoverKey);
         },
-        className: triggerClassName ?? `block w-full cursor-pointer rounded-md px-1 py-0.5 transition-colors hover:bg-blue-50/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${open ? "bg-blue-50" : ""}`,
+        className: triggerClassName ?? `block w-full cursor-pointer rounded-md px-1 py-0.5 transition-colors hover:bg-[rgb(var(--accent-soft)/0.7)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(var(--accent))] ${open ? "bg-[rgb(var(--accent-soft))]" : ""}`,
         children
       }
     ),
@@ -131,12 +131,12 @@ function CellPopover({
             width: panelWidth,
             visibility: position ? "visible" : "hidden"
           },
-          className: "themed-popover-panel fixed z-[60] rounded-lg border border-gray-200 bg-white p-3 text-left shadow-xl",
+          className: "themed-popover-panel fixed z-[60] rounded-lg border border-[rgb(var(--line))] bg-[rgb(var(--surface))] p-3 text-left shadow-xl",
           onMouseDown: (event) => event.stopPropagation(),
           onClick: (event) => event.stopPropagation(),
           onDoubleClick: (event) => event.stopPropagation(),
           children: [
-            /* @__PURE__ */ jsx("p", { className: "mb-2 text-[11px] leading-[16px] font-semibold tracking-wide text-gray-500", children: panelLabel }),
+            /* @__PURE__ */ jsx("p", { className: "mb-2 text-[11px] leading-[16px] font-semibold tracking-wide text-[rgb(var(--ink-muted))]", children: panelLabel }),
             panel
           ]
         }

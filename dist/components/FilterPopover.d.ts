@@ -36,15 +36,20 @@ export interface FilterPopoverTabs {
  * （商品ピッカーのインライン詳細パネルなど）からも同じ見た目で使えるように公開する。
  * 畳んだ検索バーの中では、ピルではなく枠なしのじょうごアイコンになる。
  */
-export declare function FilterTriggerButton({ label, activeCount, open, onToggle, title, ariaControls, }: {
+export declare function FilterTriggerButton({ label, activeCount, open, onToggle, title, ariaControls, iconBadge, }: {
     label?: string;
     activeCount: number;
     open: boolean;
     onToggle: () => void;
     title?: string;
     ariaControls?: string;
+    /**
+     * 畳んだ検索バーの中（じょうごアイコンだけ）での適用中の示し方。既定は従来どおり赤いドット。
+     * 'count' は件数バッジ（作成モーダルの商品検索など、条件が多く件数を見せたい所だけ）。
+     */
+    iconBadge?: 'dot' | 'count';
 }): import("react").JSX.Element;
-export declare function FilterPopover({ activeCount, onClearAll, chips, children, footer, tabs, title, description, triggerLabel, panelWidthClass, columns, align, triggerTitle, panelPortal, }: {
+export declare function FilterPopover({ activeCount, onClearAll, chips, children, footer, tabs, title, description, triggerLabel, panelWidthClass, columns, align, triggerTitle, panelPortal, triggerBadge, }: {
     /** 適用中の条件数（検索語も含めること） */
     activeCount: number;
     onClearAll?: () => void;
@@ -76,6 +81,8 @@ export declare function FilterPopover({ activeCount, onClearAll, chips, children
      * トリガーを置くとき用。既定は false ＝従来どおりトリガーの直下に absolute 配置。
      */
     panelPortal?: boolean;
+    /** 畳んだ検索バーの中での適用中の示し方（FilterTriggerButton の iconBadge）。 */
+    triggerBadge?: 'dot' | 'count';
 }): import("react").JSX.Element;
 /**
  * パネル内の見出し付きグループ（「基本」「在庫・保管」など）。

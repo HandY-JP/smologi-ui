@@ -5,11 +5,11 @@ import { computeChipOverflow } from "../lib/topbar-compaction.js";
 function FilterChipPill({ c, chipRef }) {
   const full = c.field ? `${c.field}: ${c.label}` : c.label;
   return /* @__PURE__ */ jsxs("span", { ref: chipRef, className: "sb-group-chip", title: full, children: [
-    c.field && /* @__PURE__ */ jsxs("span", { className: "text-gray-500", children: [
+    c.field && /* @__PURE__ */ jsxs("span", { className: "text-[rgb(var(--ink-muted))]", children: [
       c.field,
       ": "
     ] }),
-    /* @__PURE__ */ jsx("span", { className: "text-gray-800", children: c.label }),
+    /* @__PURE__ */ jsx("span", { className: "text-[rgb(var(--ink))]", children: c.label }),
     c.onRemove && /* @__PURE__ */ jsx("button", { type: "button", onClick: c.onRemove, "aria-label": `${full}\u306E\u6761\u4EF6\u3092\u89E3\u9664`, className: "ml-0.5 opacity-70 hover:opacity-100", children: "\xD7" })
   ] });
 }
@@ -50,8 +50,8 @@ function FilterChipRow({ chips }) {
       /* @__PURE__ */ jsx("span", { ref: moreMeasureRef, className: "sb-group-chip sb-group-chip-more", children: "\uFF0B99" })
     ] }),
     /* @__PURE__ */ jsxs("span", { className: "flex shrink-0 items-center gap-1", "aria-hidden": true, children: [
-      /* @__PURE__ */ jsx("svg", { className: "h-3.5 w-3.5 text-gray-400", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M3.75 4.5h16.5l-6.6 7.7v4.55l-3.3 1.65v-6.2L3.75 4.5z" }) }),
-      /* @__PURE__ */ jsx("span", { className: "text-[12px] leading-[18px] text-gray-500", children: "\u7D5E\u308A\u8FBC\u307F" })
+      /* @__PURE__ */ jsx("svg", { className: "h-3.5 w-3.5 text-[rgb(var(--ink-muted))]", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M3.75 4.5h16.5l-6.6 7.7v4.55l-3.3 1.65v-6.2L3.75 4.5z" }) }),
+      /* @__PURE__ */ jsx("span", { className: "text-[12px] leading-[18px] text-[rgb(var(--ink-muted))]", children: "\u7D5E\u308A\u8FBC\u307F" })
     ] }),
     /* @__PURE__ */ jsxs("div", { ref: containerRef, className: "flex min-w-0 flex-1 flex-nowrap items-center gap-1.5 overflow-hidden", children: [
       visibleChips.map((c) => /* @__PURE__ */ jsx(FilterChipPill, { c }, c.id)),
@@ -64,7 +64,7 @@ function FilterChipRow({ chips }) {
         onClick: () => {
           for (const c of chips) c.onRemove?.();
         },
-        className: "shrink-0 text-[12px] leading-[18px] text-gray-500 underline-offset-2 hover:text-gray-700 hover:underline",
+        className: "shrink-0 text-[12px] leading-[18px] text-[rgb(var(--ink-muted))] underline-offset-2 hover:text-[rgb(var(--ink))] hover:underline",
         children: "\u3059\u3079\u3066\u89E3\u9664"
       }
     )

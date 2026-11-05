@@ -49,6 +49,7 @@ export * from "./components/SplitInbox.js";
 export * from "./components/DiscountTicket.js";
 export * from "./components/PeriodProgress.js";
 export * from "./lib/period.js";
+export * from "./lib/use-bottom-bar-height-var.js";
 export * from "./components/EmptyState.js";
 export * from "./components/integration/index.js";
 export * from "./components/ErrorBanner.js";
