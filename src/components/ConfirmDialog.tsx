@@ -7,6 +7,7 @@
 // シェル（オーバーレイ・重ね順・Escape・背景クリック）は Modal に委ねる。
 // 実行中（busy）は Escape・背景クリックで閉じない。
 
+import type { ReactNode } from 'react';
 import { Modal, type ModalLayer } from './Modal';
 
 export type ConfirmTone = 'danger' | 'primary';
@@ -34,6 +35,8 @@ export function ConfirmDialog({
   hideCancel = false,
   overlayClassName,
   panelClassName,
+  children,
+  confirmDisabled = false,
   onConfirm,
   onClose,
 }: {
@@ -56,6 +59,10 @@ export function ConfirmDialog({
   hideCancel?: boolean;
   overlayClassName?: string;
   panelClassName?: string;
+  /** 本文の下に置くもの（入力欄など。usePrompt が使う）。あるときは入力欄側が初期フォーカスを持つ（data-autofocus を付けること）。 */
+  children?: ReactNode;
+  /** 実行ボタンだけを押せなくする（入力が必須で空のとき）。 */
+  confirmDisabled?: boolean;
   onConfirm: () => void;
   onClose: () => void;
 }) {
@@ -77,7 +84,7 @@ export function ConfirmDialog({
           {!hideCancel && (
             <button
               type="button"
-              data-autofocus
+              data-autofocus={children ? undefined : true}
               onClick={onClose}
               disabled={busy}
               className="rounded-lg border border-[rgb(var(--line-strong))] bg-[rgb(var(--surface))] px-3.5 py-2 text-[14px] leading-[22px] font-medium text-[rgb(var(--ink))] transition-colors hover:bg-[rgb(var(--surface-subtle))] disabled:opacity-50"
@@ -89,7 +96,7 @@ export function ConfirmDialog({
             type="button"
             data-autofocus={hideCancel ? true : undefined}
             onClick={onConfirm}
-            disabled={busy}
+            disabled={busy || confirmDisabled}
             className={`inline-flex items-center gap-2 rounded-lg px-3.5 py-2 text-[14px] leading-[22px] font-medium text-white transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${TONE_CONFIRM_BUTTON[tone]}`}
           >
             {busy && <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/40 border-t-white" aria-hidden="true" />}
@@ -117,6 +124,7 @@ export function ConfirmDialog({
               ))}
             </ul>
           )}
+          {children}
         </div>
       </div>
     </Modal>
