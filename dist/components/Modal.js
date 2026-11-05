@@ -96,6 +96,8 @@ function Modal({
   overlayClassName = "",
   panelClassName = "",
   footer,
+  footerClassName,
+  mobileSheet = false,
   onSubmit,
   children
 }) {
@@ -122,6 +124,8 @@ function Modal({
       overlayClassName,
       panelClassName,
       footer,
+      footerClassName,
+      mobileSheet,
       onSubmit,
       children
     }
@@ -147,6 +151,8 @@ function ModalBody({
   overlayClassName,
   panelClassName,
   footer,
+  footerClassName = "flex justify-end gap-2",
+  mobileSheet = false,
   onSubmit,
   children
 }) {
@@ -204,7 +210,7 @@ function ModalBody({
               /* @__PURE__ */ jsx("h2", { id: titleId, className: `shrink-0 text-[15px] font-semibold text-[rgb(var(--ink))] ${compactHeader ? "leading-6" : "leading-[22px]"}`, children: title }),
               headerAside != null && /* @__PURE__ */ jsx("div", { className: "min-w-0 basis-full text-[14px] leading-[22px] text-[rgb(var(--ink-muted))] sm:basis-auto", children: headerAside })
             ] }),
-            subtitle != null && /* @__PURE__ */ jsx("p", { className: compactHeader ? "text-[12px] leading-4 text-[rgb(var(--ink-muted))]" : "mt-0.5 text-[12px] leading-[18px] text-[rgb(var(--ink-muted))]", children: subtitle })
+            subtitle != null && /* @__PURE__ */ jsx("div", { className: compactHeader ? "text-[12px] leading-4 text-[rgb(var(--ink-muted))]" : "mt-0.5 text-[12px] leading-[18px] text-[rgb(var(--ink-muted))]", children: subtitle })
           ] }),
           headerRight != null && /* @__PURE__ */ jsx("div", { className: `flex shrink-0 items-center gap-2${compactHeader ? "" : " self-center"}`, children: headerRight }),
           withCloseButton && /* @__PURE__ */ jsx(
@@ -244,12 +250,12 @@ function ModalBody({
         )
       ] })
     ] }),
-    footer != null && /* @__PURE__ */ jsx("div", { className: "flex shrink-0 justify-end gap-2 border-t border-[rgb(var(--line))] px-5 py-3", children: footer })
+    footer != null && /* @__PURE__ */ jsx("div", { className: `shrink-0 border-t border-[rgb(var(--line))] px-5 py-3 ${footerClassName}`, children: footer })
   ] });
   const body = /* @__PURE__ */ jsx(
     "div",
     {
-      className: `fixed inset-0 flex items-center justify-center bg-black/40 p-4 ${LAYER_Z[layer ?? "base"]} ${overlayClassName}`,
+      className: `fixed inset-0 flex ${mobileSheet ? "items-end sm:items-center" : "items-center"} justify-center bg-black/40 p-4 ${LAYER_Z[layer ?? "base"]} ${overlayClassName}`,
       style: { paddingLeft: "calc(1rem + min(var(--app-content-left, 0px), max(0px, 100vw - 22rem)))" },
       role: "presentation",
       onMouseDown: (event) => {

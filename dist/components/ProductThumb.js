@@ -28,7 +28,8 @@ function ProductThumb({
   fill = false,
   boxClassName,
   boxPixels,
-  placeholder = "image"
+  placeholder = "image",
+  framed = false
 }) {
   const [failed, setFailed] = useState(false);
   const [thumbFailed, setThumbFailed] = useState(false);
@@ -50,7 +51,7 @@ function ProductThumb({
     };
   }, [open]);
   if (!src || failed) {
-    return /* @__PURE__ */ jsx("div", { className: `${sizeCls} rounded bg-[rgb(var(--surface-subtle))] flex items-center justify-center flex-shrink-0 text-[rgb(var(--ink-faint))]`, "aria-hidden": true, children: /* @__PURE__ */ jsx("svg", { className: "w-4 h-4", fill: "none", stroke: "currentColor", strokeWidth: 1.5, viewBox: "0 0 24 24", children: /* @__PURE__ */ jsx(
+    return /* @__PURE__ */ jsx("div", { className: `${sizeCls} rounded bg-[rgb(var(--surface-subtle))] ${framed ? "border border-[rgb(var(--line))] " : ""}flex items-center justify-center flex-shrink-0 text-[rgb(var(--ink-faint))]`, "aria-hidden": true, children: /* @__PURE__ */ jsx("svg", { className: "w-4 h-4", fill: "none", stroke: "currentColor", strokeWidth: 1.5, viewBox: "0 0 24 24", children: /* @__PURE__ */ jsx(
       "path",
       {
         strokeLinecap: "round",
@@ -79,7 +80,7 @@ function ProductThumb({
           if (generated) setThumbFailed(true);
           else setFailed(true);
         },
-        className: `${sizeCls} rounded object-contain flex-shrink-0 ${enlargeOnClick ? "cursor-zoom-in hover:ring-2 hover:ring-[rgb(var(--accent)/0.3)] transition" : ""}`
+        className: `${sizeCls} rounded object-contain flex-shrink-0 ${framed ? "border border-[rgb(var(--line))] bg-[rgb(var(--surface))] " : ""}${enlargeOnClick ? "cursor-zoom-in hover:ring-2 hover:ring-[rgb(var(--accent)/0.3)] transition" : ""}`
       }
     )
   );

@@ -13,7 +13,7 @@ type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'header';
  * なぜサムネを持つのか（性能棚卸し #549 の改善 #1）:
  * 一覧が原寸の外部画像をそのまま出していて、100 行スクロールで 10〜100MB 落ちていた。
  */
-export declare function ProductThumb({ src, thumbnailUrl, alt, size, enlargeOnClick, fill, boxClassName, boxPixels, placeholder, }: {
+export declare function ProductThumb({ src, thumbnailUrl, alt, size, enlargeOnClick, fill, boxClassName, boxPixels, placeholder, framed, }: {
     src: string | null | undefined;
     /** 生成済みサムネ（96px webp）のURL。空 / 未指定なら src にフォールバックする */
     thumbnailUrl?: string | null;
@@ -32,6 +32,8 @@ export declare function ProductThumb({ src, thumbnailUrl, alt, size, enlargeOnCl
     boxPixels?: number;
     /** プレースホルダーの絵柄。'box' は入荷・出荷の一覧で使っている箱アイコン。 */
     placeholder?: 'image' | 'box';
+    /** 画像とプレースホルダーに細い枠線と白地を付ける（既定 false＝囲いなし）。 */
+    framed?: boolean;
 }): import("react").JSX.Element;
 export {};
 //# sourceMappingURL=ProductThumb.d.ts.map

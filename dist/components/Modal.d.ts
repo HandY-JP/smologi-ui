@@ -70,9 +70,18 @@ export interface ModalProps {
     panelClassName?: string;
     /** 下部に固定するボタン列。渡すと区切り線付きのフッターになる。 */
     footer?: ReactNode;
+    /**
+     * フッターの並べ方。既定は 'flex justify-end gap-2'（ボタンを右寄せ）。
+     * 左に補足・右にボタン、のように中身で幅いっぱいに組むときは 'block' を渡す。
+     */
+    footerClassName?: string;
+    /**
+     * 狭い画面（sm 未満）で画面の下端に寄せて出す（ボトムシート風）。sm 以上は従来どおり中央。既定 false。
+     */
+    mobileSheet?: boolean;
     /** 渡すとパネルが <form> になる（Enter 送信を効かせたいフォームモーダル向け）。 */
     onSubmit?: (event: React.FormEvent) => void;
     children?: ReactNode;
 }
-export declare function Modal({ open, onClose, title, subtitle, headerRight, headerAside, ariaLabel, layer, size, dismissable, closeOnBackdrop, dirty, compactHeader, panelMaxHeightClassName, showCloseButton, role, bodyClassName, overlayClassName, panelClassName, footer, onSubmit, children, }: ModalProps): import("react").JSX.Element | null;
+export declare function Modal({ open, onClose, title, subtitle, headerRight, headerAside, ariaLabel, layer, size, dismissable, closeOnBackdrop, dirty, compactHeader, panelMaxHeightClassName, showCloseButton, role, bodyClassName, overlayClassName, panelClassName, footer, footerClassName, mobileSheet, onSubmit, children, }: ModalProps): import("react").JSX.Element | null;
 //# sourceMappingURL=Modal.d.ts.map
