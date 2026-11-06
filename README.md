@@ -272,7 +272,7 @@ import { ColumnHeaderCell, singleEnumValue, singleEnumFromValues } from '@handy-
   `columnFilterSummary` / `normalizeColumnNumberInput` / `singleEnumValue` ほか。
 - smologi 本体の同名部品と props 互換（smologi は import 先を差し替えるだけで載せ替えられる）。
 
-### 列幅のドラッグ変更（v0.19.0）
+### 列幅のドラッグ変更（v0.20.0）
 
 見出しの境目をマウスでドラッグして列幅を変える部品。幅は端末ごとに localStorage へ**黙って**保存する（保存通知は出さない）。
 `useColumnWidths(storageKey, specs)` が状態と保存、`ColumnResizeGrip` が見出し右端のつまみ、

@@ -1190,7 +1190,7 @@ html.theme-dark .sb-store-panel {
   --sb-popover-current-ink: rgb(var(--accent-ink, 150 180 255));
 }
 
-/* ===== 列幅のドラッグ変更（ColumnResizeGrip / ColumnWidthResetPill、v0.19.0） =====
+/* ===== 列幅のドラッグ変更（ColumnResizeGrip / ColumnWidthResetPill、v0.20.0） =====
    つまみ: <th>（position:relative）の右端をまたぐ約 9px の当たり判定。線は ::after。
    見出し行にホバー中は細い 1px、つまみ（とキーボードフォーカス・ドラッグ中）は 2px のアクセント色。
    色は --sb-accent-bg と ink/line トークンだけ（ダークはトークン側で切り替わる）。 */
