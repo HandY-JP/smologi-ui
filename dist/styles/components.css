@@ -1333,3 +1333,9 @@ html.theme-dark .suzy-launcher {
   .suzy-launcher, .suzy-launcher__star, .suzy-launcher-wrap, .suzy-pane-pad, .suzy-pane { transition: none !important; }
   .suzy-launcher:hover, .suzy-launcher:active { transform: none; }
 }
+
+/* 印刷ではスージー（起動ボタン・右ペイン）を出さず、本文の右マージンも取らない */
+@media print {
+  .suzy-launcher-wrap, .suzy-pane { display: none !important; }
+  .suzy-pane-pad { margin-right: 0 !important; }
+}
