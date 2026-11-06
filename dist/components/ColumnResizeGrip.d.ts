@@ -7,7 +7,9 @@ export interface ColumnResizeGripProps {
     onReset: () => void;
     /** 列名（読み上げ用）。例: 「商品名」 */
     label: string;
+    /** ドラッグ（キーボード操作を含む）の開始時、自分の <th> 幅を測る前に同期で呼ぶ。auto レイアウトの表を seedWidths で固定化する用。 */
+    onDragStart?: () => void;
 }
-export declare function ColumnResizeGrip({ width, minWidth, onResize, onReset, label }: ColumnResizeGripProps): import("react").JSX.Element;
+export declare function ColumnResizeGrip({ width, minWidth, onResize, onReset, label, onDragStart }: ColumnResizeGripProps): import("react").JSX.Element;
 export default ColumnResizeGrip;
 //# sourceMappingURL=ColumnResizeGrip.d.ts.map

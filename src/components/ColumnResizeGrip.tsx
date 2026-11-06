@@ -19,9 +19,11 @@ export interface ColumnResizeGripProps {
   onReset: () => void;
   /** 列名（読み上げ用）。例: 「商品名」 */
   label: string;
+  /** ドラッグ（キーボード操作を含む）の開始時、自分の <th> 幅を測る前に同期で呼ぶ。auto レイアウトの表を seedWidths で固定化する用。 */
+  onDragStart?: () => void;
 }
 
-export function ColumnResizeGrip({ width, minWidth = COLUMN_WIDTH_DEFAULT_MIN, onResize, onReset, label }: ColumnResizeGripProps) {
+export function ColumnResizeGrip({ width, minWidth = COLUMN_WIDTH_DEFAULT_MIN, onResize, onReset, label, onDragStart }: ColumnResizeGripProps) {
   const ref = useRef<HTMLSpanElement | null>(null);
   const drag = useRef<{ startX: number; startW: number } | null>(null);
   const [tip, setTip] = useState<{ x: number; y: number; w: number } | null>(null);
@@ -33,13 +35,18 @@ export function ColumnResizeGrip({ width, minWidth = COLUMN_WIDTH_DEFAULT_MIN, o
   }, []);
   useEffect(() => () => document.body.classList.remove(BODY_CLASS), []);
 
-  const measure = () => width ?? ref.current?.parentElement?.getBoundingClientRect().width ?? minWidth;
+  // onDragStart があるとき（auto レイアウトの表）は、既定幅ではなく <th> の実寸を起点にする。
+  const measure = () => {
+    const actual = ref.current?.parentElement?.getBoundingClientRect().width;
+    return (onDragStart ? actual ?? width : width ?? actual) ?? minWidth;
+  };
 
   const onPointerDown = (e: PointerEvent<HTMLSpanElement>) => {
     e.stopPropagation();
     if (e.button !== 0) return;
     e.preventDefault();
     e.currentTarget.setPointerCapture(e.pointerId);
+    onDragStart?.();
     drag.current = { startX: e.clientX, startW: measure() };
     document.body.classList.add(BODY_CLASS);
     setTip({ x: e.clientX, y: e.clientY, w: Math.round(drag.current.startW) });
@@ -60,6 +67,7 @@ export function ColumnResizeGrip({ width, minWidth = COLUMN_WIDTH_DEFAULT_MIN, o
     if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
     e.preventDefault();
     e.stopPropagation();
+    onDragStart?.();
     onResize(clampColumnWidth(measure() + (e.key === 'ArrowRight' ? KEY_STEP_PX : -KEY_STEP_PX), minWidth));
   };
   const swallow = (e: { stopPropagation: () => void }) => e.stopPropagation();

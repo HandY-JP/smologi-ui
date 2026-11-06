@@ -303,6 +303,35 @@ const cw = useColumnWidths('seller.listing.columnWidths.v1', SPECS);
 <ColumnWidthResetPill customized={cw.isCustomized} onReset={cw.resetAll} suppress={selectedCount > 0} />
 ```
 
+#### auto レイアウトの表を「最初のドラッグで固定化」する（`seedWidths` / `measureColumnWidths`）
+
+もともと `table-layout: auto` の表は、ドラッグするまで今の見た目のままにしたい。`<table>` を auto のままにしておき、
+最初のドラッグ（キーボードの ←→ も含む）の瞬間に全列の実寸を測って `seedWidths` で固定化する。
+`ColumnResizeGrip` の `onDragStart` は自分の `<th>` を測る前に同期で呼ばれ、このとき grip は `<th>` の実寸を起点にする。
+
+```tsx
+const ref = useRef<HTMLTableElement>(null);
+const cw = useColumnWidths('app.page.columnWidths.v1', SPECS);
+
+<table ref={ref} className={cw.isCustomized ? 'table-fixed' : undefined}>
+  {cw.isCustomized && (
+    <colgroup>{SPECS.map((s) => <col key={s.key} style={cw.widthOf(s.key) ? { width: cw.widthOf(s.key)! } : undefined} />)}</colgroup>
+  )}
+  <thead><tr>
+    <th data-col-key="name" className="relative">
+      …
+      <ColumnResizeGrip label="商品名" width={cw.widthOf('name')} onResize={(px) => cw.setWidth('name', px)}
+        onReset={() => cw.resetColumn('name')}
+        onDragStart={() => { if (!cw.isCustomized) cw.seedWidths(measureColumnWidths(ref.current)); }} />
+    </th>
+  </tr></thead>
+</table>
+```
+
+- `measureColumnWidths(table, attr = 'data-col-key')` は thead の最初の行の `th[attr]` を `getBoundingClientRect().width` の四捨五入で返す（table が null なら `{}`）。
+- `seedWidths({ key: px })` は渡した全列を一度に上書き（各列の最小幅へ丸め、`setWidth` と同様に保存）。
+- `resetAll`（または最後に変えた列を戻す）で `isCustomized` が false になり、表は auto レイアウトへ戻る。
+
 ### 最小パレット（意味名トークン・複数テーマ、v0.2.0）
 
 `tokens/palette.css` は、アプリの画面（表・バッジ・入力欄）を生の Tailwind 色（gray/slate/blue-50…）ではなく
