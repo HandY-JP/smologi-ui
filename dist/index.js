@@ -83,4 +83,8 @@ export * from "./components/DashboardAppRow.js";
 export * from "./components/AppBrandIcon.js";
 export * from "./dashboard-kit/index.js";
 export * from "./components/StoreAccountSwitcher.js";
+export * from "./components/SuzySparkle.js";
+export * from "./components/SuzyOrb.js";
+export * from "./components/SuzyLauncher.js";
+export * from "./lib/suzy-pane.js";
 //# sourceMappingURL=index.js.map

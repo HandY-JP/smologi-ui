@@ -7,8 +7,9 @@ import { useEffect } from 'react';
 
 const BAR_GAP = 8;
 
-export function useBottomBarHeightVar(): void {
+export function useBottomBarHeightVar(enabled = true): void {
   useEffect(() => {
+    if (!enabled) return undefined;
     const root = document.documentElement;
     let frame = 0;
     const measure = () => {
@@ -42,5 +43,5 @@ export function useBottomBarHeightVar(): void {
       if (frame) window.cancelAnimationFrame(frame);
       root.style.removeProperty('--bottom-bar-h');
     };
-  }, []);
+  }, [enabled]);
 }

@@ -83,4 +83,8 @@ export * from './components/DashboardAppRow';
 export * from './components/AppBrandIcon';
 export * from './dashboard-kit/index';
 export * from './components/StoreAccountSwitcher';
+export * from './components/SuzySparkle';
+export * from './components/SuzyOrb';
+export * from './components/SuzyLauncher';
+export * from './lib/suzy-pane';
 //# sourceMappingURL=index.d.ts.map

@@ -1225,3 +1225,111 @@ body.sb-col-resizing, body.sb-col-resizing * { cursor: col-resize !important; us
 }
 .sb-colw-pill-btn:hover { background: rgb(var(--surface-subtle, 243 244 248)); }
 .sb-colw-pill-btn:focus-visible { outline: 2px solid var(--sb-accent-bg); outline-offset: 1px; }
+
+/* ===== スージー（AI サポートチャット）の共通部品（v0.21.0） =====
+   SuzySparkle / SuzyOrb / SuzyLauncher / 右ペイン（useSuzyPane）。色は意味名トークン
+   （--accent → --cat-5-solid → --cat-1-solid、--surface / --ink）。動きは state ごとに別クラスで、
+   idle は完全に静止。prefers-reduced-motion では全部止める。 */
+.suzy-sparkle { display: block; flex: none; overflow: visible; }
+.suzy-sparkle--night { opacity: 0.55; }
+@keyframes suzy-twinkle {
+  0%, 70%, 100% { opacity: 1; transform: scale(1); }
+  80% { opacity: 0.25; transform: scale(0.4); }
+  90% { opacity: 1; transform: scale(1.15); }
+}
+@keyframes suzy-glint {
+  0%, 78% { transform: translateX(-14px); }
+  92%, 100% { transform: translateX(14px); }
+}
+@keyframes suzy-glint-fast {
+  0% { transform: translateX(-14px); }
+  100% { transform: translateX(14px); }
+}
+@keyframes suzy-spin { to { transform: rotate(360deg); } }
+@keyframes suzy-bounce-once {
+  0%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-8px); }
+  60% { transform: translateY(0); }
+  80% { transform: translateY(-3px); }
+}
+.suzy-sparkle--notice .suzy-twinkle { animation: suzy-twinkle 2.5s ease-in-out infinite; }
+.suzy-sparkle--notice .suzy-glint { animation: suzy-glint 2.5s ease-in-out infinite; }
+.suzy-sparkle--thinking .suzy-glint { animation: suzy-glint-fast 1.1s ease-in-out infinite; }
+
+/* 考え中の輪（丸の外側 3px にはみ出す細い色の線が回る） */
+.suzy-ring {
+  position: absolute; inset: -3px; border-radius: 50%; pointer-events: none;
+  background: conic-gradient(from 0deg, transparent 0 55%, rgb(var(--accent, 234 88 12)) 75%, rgb(var(--cat-5-solid, 139 92 246)) 88%, rgb(var(--cat-1-solid, 59 130 246)));
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 2px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 2px));
+  animation: suzy-spin 1.1s linear infinite;
+}
+
+/* 見出しの丸 */
+.suzy-orb {
+  position: relative; display: inline-flex; flex: none; align-items: center; justify-content: center; border-radius: 50%;
+  background: linear-gradient(135deg, rgb(var(--accent, 234 88 12)), rgb(var(--cat-5-solid, 139 92 246)) 55%, rgb(var(--cat-1-solid, 59 130 246)));
+}
+
+/* 起動ボタン */
+.suzy-launcher-wrap {
+  position: fixed; right: 1rem; bottom: calc(1rem + var(--bottom-bar-h, 0px)); z-index: var(--suzy-launcher-z, 45);
+  transition: bottom 200ms, opacity 200ms;
+}
+@media (min-width: 640px) {
+  .suzy-launcher-wrap { right: 1.5rem; bottom: calc(1.5rem + var(--bottom-bar-h, 0px)); }
+}
+.suzy-launcher-wrap[data-hidden="true"] { pointer-events: none; visibility: hidden; opacity: 0; }
+.suzy-launcher {
+  --suzy-hi: rgb(var(--surface, 255 255 255) / 0.95);
+  position: relative; display: inline-flex; align-items: center; justify-content: center; flex: none;
+  box-sizing: border-box; width: 44px; height: 44px; padding: 0; border-radius: 999px; cursor: pointer;
+  color: rgb(var(--ink, 38 35 31)); font: inherit; font-size: 14px; font-weight: 700; line-height: 1;
+  border: 1px solid rgb(var(--ink, 38 35 31) / 0.10);
+  background-color: rgb(var(--surface, 255 255 255) / 0.30);
+  background-image: linear-gradient(180deg, rgb(var(--surface, 255 255 255) / 0.92) 0%, rgb(var(--surface, 255 255 255) / 0.62) 100%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%); backdrop-filter: blur(18px) saturate(180%);
+  box-shadow: inset 0 1px 0 var(--suzy-hi), 0 0 0 1px rgb(var(--ink, 38 35 31) / 0.10), 0 2px 5px rgb(var(--ink, 38 35 31) / 0.14), 0 10px 28px rgb(var(--ink, 38 35 31) / 0.16);
+  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+html.theme-dark .suzy-launcher {
+  --suzy-hi: rgb(var(--ink, 240 236 230) / 0.22);
+  border-color: rgb(var(--ink, 240 236 230) / 0.14);
+  box-shadow: inset 0 1px 0 var(--suzy-hi), 0 0 0 1px rgb(var(--ink, 240 236 230) / 0.16), 0 2px 5px rgb(0 0 0 / 0.40), 0 10px 28px rgb(0 0 0 / 0.45);
+}
+.suzy-launcher:hover { transform: scale(1.04); }
+.suzy-launcher:active { transform: scale(0.96); transition-duration: 90ms; }
+.suzy-launcher:focus-visible { outline: 2px solid rgb(var(--accent, 234 88 12)); outline-offset: 2px; }
+.suzy-launcher--label { width: auto; gap: 8px; padding: 0 16px 0 11px; white-space: nowrap; }
+.suzy-launcher__star { transition: transform 300ms; }
+.suzy-launcher.is-open .suzy-launcher__star { transform: rotate(90deg) scale(0.9); }
+.suzy-launcher--bounce { animation: suzy-bounce-once 0.8s ease-out 1; }
+.suzy-launcher__badge {
+  position: absolute; top: -4px; right: -4px; box-sizing: border-box; display: flex; align-items: center; justify-content: center;
+  min-width: 18px; height: 18px; padding: 0 4px; border-radius: 999px; font-size: 11px; font-weight: 600; line-height: 1;
+  color: rgb(var(--on-accent, 255 255 255)); background: rgb(var(--danger-solid, 239 68 68));
+  box-shadow: 0 0 0 2px rgb(var(--surface, 255 255 255));
+}
+.suzy-launcher__bubble {
+  position: absolute; right: calc(100% + 8px); top: 50%; transform: translateY(-50%); pointer-events: none; white-space: nowrap;
+  padding: 6px 12px; border-radius: 999px; font-size: 12px; line-height: 18px; font-weight: 500;
+  color: rgb(var(--ink, 38 35 31)); background: rgb(var(--surface, 255 255 255));
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.12), 0 0 0 1px rgb(var(--line, 229 232 238));
+}
+
+/* 右ペイン（>= 1440px）。本文側は .suzy-pane-pad、チャット側は .suzy-pane。
+   --suzy-pane-top で上端（アプリのトップバーの下）を、--suzy-pane-z で重なりを調整できる。 */
+.suzy-pane-pad { margin-right: var(--suzy-pane-w, 0px); transition: margin-right 200ms ease; }
+.suzy-pane {
+  position: fixed; top: var(--suzy-pane-top, 0px); right: 0; bottom: 0; z-index: var(--suzy-pane-z, 46);
+  box-sizing: border-box; width: var(--suzy-pane-width, 380px); display: flex; flex-direction: column; overflow: hidden;
+  background: rgb(var(--surface, 255 255 255)); border-left: 1px solid rgb(var(--line, 229 232 238));
+  transition: transform 200ms ease, visibility 200ms;
+}
+.suzy-pane[data-open="false"] { transform: translateX(100%); visibility: hidden; pointer-events: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .suzy-sparkle .suzy-twinkle, .suzy-sparkle .suzy-glint, .suzy-ring, .suzy-launcher--bounce { animation: none !important; }
+  .suzy-launcher, .suzy-launcher__star, .suzy-launcher-wrap, .suzy-pane-pad, .suzy-pane { transition: none !important; }
+  .suzy-launcher:hover, .suzy-launcher:active { transform: none; }
+}

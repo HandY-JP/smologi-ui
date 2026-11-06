@@ -113,3 +113,9 @@ export * from './components/AppBrandIcon';
 // ---- ダッシュボード編集キット（ロジックと型だけ。UI はサブパス '@handy-jp/smologi-ui/dashboard-kit'） ----
 export * from './dashboard-kit/index';
 export * from './components/StoreAccountSwitcher';
+
+// ---- スージー（AI サポートチャット）の共通部品（v0.21.0。星・起動ボタン・見出しの丸・右ペイン） ----
+export * from './components/SuzySparkle';
+export * from './components/SuzyOrb';
+export * from './components/SuzyLauncher';
+export * from './lib/suzy-pane';

@@ -221,6 +221,40 @@ Web Seller の「質のいいガラス」を全アプリへ一本化する（202
 `theme-contrast` は透かさず不透明＋濃い縁。影色は**中立のスレート `15,23,42`**: スマホはモードごとにアクセントが変わり
 テーマも 7 色なので、暖色（Seller）・寒色（Logistic）のどちらかに寄せると他テーマで濁るため。既存 `.glass-chip` の影と同値。
 
+### スージー（AI サポートチャット）の共通部品（v0.21.0）
+
+Seller・スモロジ・モバイルのスージー（起動ボタン・見出しの丸・質問候補の印）はここの部品を使う。**アプリで星の SVG・月アイコン・起動ボタンの見た目を手書きしない**（過去に 3 アプリへ複製して直しが漏れたため）。スタイルは `@handy-jp/smologi-ui/styles.css`（`.suzy-*`）。
+
+| 部品 | 役割 |
+| --- | --- |
+| `SuzySparkle` | 星アイコン。`size`、`tone: 'color' \| 'white'`、`state: 'idle' \| 'notice' \| 'thinking' \| 'night'`。`size <= 13` は面を省いた簡略形に自動で切り替わる。SVG の id は `useId` で一意 |
+| `SuzyLauncher` | 右下の起動ボタン（44px の丸＋星 22px）。`state`、`badge`（文字列）、`showLabel`（「スージーに質問」のピルにする）、`open`、`hidden`、`bubble`、`bounce`、`placement: 'fixed' \| 'inline'`。`fixed` は従来どおり下部バー（`data-bottom-bar`）をよける。`inline` はボタンだけを返す（モバイルのように置き場所を自前で持つ場合。`className` はボタンに付く） |
+| `SuzyOrb` | チャット見出しの丸（32px・白い星 16px）。`thinking` で縁の輪が回る |
+| `useSuzyPane` / `useSuzyPaneActive` | 右ペインの開閉（下記） |
+
+動き: `idle` は完全に静止。`notice` は大きな星に光が走り小さな星がまたたく（約 2.5 秒周期。「スージーから伝えたいことがある」合図）。`thinking` は光が速く走り、丸のふちを色の線が回る（約 1.1 秒）。`night` は少し暗く（opacity 0.55）止まる。月マークは出さない。`prefers-reduced-motion` では全部止まる。旧「初回だけ光る輪」は廃止。
+
+大きさの約束: 起動ボタン 44px／星 22px、見出しの丸 32px／星 16px、ウェルカム表示の星 56px（`<SuzySparkle size={56} />`）、質問候補の印 12px（`<SuzySparkle size={12} />`）。
+
+```tsx
+<SuzyLauncher
+  state={sending ? 'thinking' : night ? 'night' : pendingCount > 0 ? 'notice' : 'idle'}
+  showLabel={!hasAsked}        // まだスージーに質問したことのない人だけ。アカウント単位で決める
+  badge={badgeText}
+  open={open}
+  hidden={open}
+  onClick={toggle}
+/>
+```
+
+**右ペイン（1440px 以上）**: 広い画面ではチャットを本文に重ねず、右に 380px の固定ペインとして開き、本文を縮める。1440px 未満・スマホは従来のポップオーバー／シート。アプリ側は次の 3 点だけ。
+
+1. チャット本体で `const { isPane } = useSuzyPane({ open })`。`isPane`（画面が 1440px 以上）のとき、外枠を `className="suzy-pane" data-open={open}` にしてポップオーバーの位置指定をやめる（上端は `--suzy-pane-top` で調整、既定 0）。`useSuzyPane` は開いている間だけ `<html>` に `--suzy-pane-w: 380px` と `data-suzy-pane="open"` を立てる（閉じたら `0px`）
+2. 本文を包む要素（サイドバーの右の領域）に `className="suzy-pane-pad"`（= `margin-right: var(--suzy-pane-w, 0px)`、200ms の transition。Tailwind の `px-*` と競合しないよう padding ではなく margin。既に `transition-[margin-left]` のような transition を持つ要素は `transition-[margin-left,margin-right]` にする）
+3. 商品詳細など「右ペインを持つ画面」は `useSuzyPaneActive()` を見て、true になったら自分の右ペインを閉じる（二重に並べない）
+
+しきい値と幅は `useSuzyPane({ open, breakpoint, width })` で変えられる（既定 `SUZY_PANE_BREAKPOINT = 1440`、`SUZY_PANE_WIDTH = 380`。CSS 側の幅は `--suzy-pane-width`）。
+
 ### ダーク互換層の配色（`--dc-*`、v0.1.9）
 
 `dark-compat.css`（= `dark-compat-fields.css` 入力欄 → `dark-compat-core.css` ユーティリティ・自前クラス の連結）の色は、
