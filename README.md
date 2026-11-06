@@ -272,6 +272,37 @@ import { ColumnHeaderCell, singleEnumValue, singleEnumFromValues } from '@handy-
   `columnFilterSummary` / `normalizeColumnNumberInput` / `singleEnumValue` ほか。
 - smologi 本体の同名部品と props 互換（smologi は import 先を差し替えるだけで載せ替えられる）。
 
+### 列幅のドラッグ変更（v0.19.0）
+
+見出しの境目をマウスでドラッグして列幅を変える部品。幅は端末ごとに localStorage へ**黙って**保存する（保存通知は出さない）。
+`useColumnWidths(storageKey, specs)` が状態と保存、`ColumnResizeGrip` が見出し右端のつまみ、
+`ColumnWidthResetPill` が「列幅を変えています ／ 元に戻す」の下中央ピル。純関数は `lib/column-widths.ts`。
+`ColumnHeaderCell` には任意の `onResetWidth`（メニューに「列幅を元に戻す」）を足した。PC 専用（`pointer: coarse` ではつまみを隠す）。
+
+```tsx
+const SPECS = [
+  { key: 'asin', defaultWidth: 160, minWidth: 100 },
+  { key: 'name', defaultWidth: null, minWidth: 160 },   // null＝残りを取る伸縮列
+];
+const cw = useColumnWidths('seller.listing.columnWidths.v1', SPECS);
+
+<table style={{ tableLayout: 'fixed' }}>
+  <colgroup>
+    <col style={cw.widthOf('asin') ? { width: cw.widthOf('asin')! } : undefined} />
+    <col />
+  </colgroup>
+  <thead><tr>
+    <th className="relative">
+      <ColumnHeaderCell label="ASIN・SKU" labelText="ASIN・SKU" onResetWidth={() => cw.resetColumn('asin')} />
+      <ColumnResizeGrip label="ASIN・SKU" width={cw.widthOf('asin')} minWidth={100}
+        onResize={(px) => cw.setWidth('asin', px)} onReset={() => cw.resetColumn('asin')} />
+    </th>
+    …
+  </tr></thead>
+</table>
+<ColumnWidthResetPill customized={cw.isCustomized} onReset={cw.resetAll} suppress={selectedCount > 0} />
+```
+
 ### 最小パレット（意味名トークン・複数テーマ、v0.2.0）
 
 `tokens/palette.css` は、アプリの画面（表・バッジ・入力欄）を生の Tailwind 色（gray/slate/blue-50…）ではなく

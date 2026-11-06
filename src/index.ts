@@ -44,6 +44,10 @@ export * from './components/ListFooter';
 export * from './components/Pagination';
 export * from './lib/column-header';
 export * from './components/ColumnHeaderMenu';
+export * from './lib/column-widths';
+export * from './components/useColumnWidths';
+export * from './components/ColumnResizeGrip';
+export * from './components/ColumnWidthResetPill';
 
 // ---- 設定画面（区画・フォーム行・検索） ----
 export * from './lib/settings-search-store';

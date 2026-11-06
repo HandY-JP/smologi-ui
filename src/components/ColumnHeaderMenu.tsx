@@ -78,6 +78,8 @@ export interface ColumnHeaderCellProps {
   onHide?: () => void;
   /** 「表示設定…」（列の ON/OFF・並び順の一括編集）。 */
   onOpenDisplaySettings?: () => void;
+  /** 「列幅を元に戻す」（ドラッグで変えた列幅をこの列だけ既定へ）。渡したときだけメニューに出る。 */
+  onResetWidth?: () => void;
   align?: 'left' | 'center' | 'right';
   /** 見出しセルのツールチップ（列の説明）。 */
   title?: string;
@@ -129,6 +131,7 @@ export function ColumnHeaderCell({
   move,
   onHide,
   onOpenDisplaySettings,
+  onResetWidth,
   align = 'center',
   title,
 }: ColumnHeaderCellProps) {
@@ -137,7 +140,7 @@ export function ColumnHeaderCell({
   const panelId = useId();
   const hasFilters = Boolean(filters && filters.length > 0);
   const hasMenu = Boolean(
-    sort || sortUnavailableReason || variant || hasFilters || move || onHide || onOpenDisplaySettings
+    sort || sortUnavailableReason || variant || hasFilters || move || onHide || onOpenDisplaySettings || onResetWidth
     || (presets && presets.length > 0),
   );
   const activeLabel = activeColumnSortLabel(sort);
@@ -216,6 +219,7 @@ export function ColumnHeaderCell({
           move={move}
           onHide={onHide}
           onOpenDisplaySettings={onOpenDisplaySettings}
+          onResetWidth={onResetWidth}
           onClose={() => {
             setOpen(false);
             triggerRef.current?.focus({ preventScroll: true });
@@ -260,6 +264,7 @@ function ColumnHeaderMenuPanel({
   move,
   onHide,
   onOpenDisplaySettings,
+  onResetWidth,
   onClose,
 }: {
   id: string;
@@ -273,6 +278,7 @@ function ColumnHeaderMenuPanel({
   move?: ColumnHeaderMoveSpec;
   onHide?: () => void;
   onOpenDisplaySettings?: () => void;
+  onResetWidth?: () => void;
   onClose: () => void;
 }) {
   const [panel, setPanel] = useState<HTMLDivElement | null>(null);
@@ -477,7 +483,7 @@ function ColumnHeaderMenuPanel({
         </>
       )}
 
-      {(onHide || onOpenDisplaySettings) && (
+      {(onHide || onOpenDisplaySettings || onResetWidth) && (
         <>
           {separator()}
           {onHide && (
@@ -490,6 +496,12 @@ function ColumnHeaderMenuPanel({
             <button type="button" role="menuitem" className={MENU_ITEM_CLASS} onClick={run(onOpenDisplaySettings)}>
               <MenuCheck checked={false} />
               <span className="truncate">表示設定…</span>
+            </button>
+          )}
+          {onResetWidth && (
+            <button type="button" role="menuitem" className={MENU_ITEM_CLASS} onClick={run(onResetWidth)}>
+              <MenuCheck checked={false} />
+              <span className="truncate">列幅を元に戻す</span>
             </button>
           )}
         </>
