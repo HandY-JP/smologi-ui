@@ -1189,3 +1189,39 @@ html.theme-dark .sb-store-panel {
   --sb-popover-current-bg: rgb(var(--accent-soft, 27 39 71));
   --sb-popover-current-ink: rgb(var(--accent-ink, 150 180 255));
 }
+
+/* ===== 列幅のドラッグ変更（ColumnResizeGrip / ColumnWidthResetPill、v0.19.0） =====
+   つまみ: <th>（position:relative）の右端をまたぐ約 9px の当たり判定。線は ::after。
+   見出し行にホバー中は細い 1px、つまみ（とキーボードフォーカス・ドラッグ中）は 2px のアクセント色。
+   色は --sb-accent-bg と ink/line トークンだけ（ダークはトークン側で切り替わる）。 */
+.sb-col-grip {
+  position: absolute; top: 0; bottom: 0; right: -5px; width: 9px; z-index: 2;
+  cursor: col-resize; touch-action: none; user-select: none;
+}
+.sb-col-grip::after {
+  content: ''; position: absolute; top: 0; bottom: 0; left: 4px; width: 1px;
+  background: rgb(var(--line-strong, 203 210 220)); opacity: 0; transition: opacity 120ms ease;
+}
+thead:hover .sb-col-grip::after, tr:hover > th > .sb-col-grip::after { opacity: 0.6; }
+.sb-col-grip:hover::after, .sb-col-grip:focus-visible::after, .sb-col-grip[data-dragging='true']::after {
+  left: 3px; width: 2px; background: var(--sb-accent-bg); opacity: 1;
+}
+.sb-col-grip:focus { outline: none; }
+@media (pointer: coarse) { .sb-col-grip { display: none; } }
+body.sb-col-resizing, body.sb-col-resizing * { cursor: col-resize !important; user-select: none !important; }
+.sb-col-grip-tip {
+  position: fixed; z-index: 70; pointer-events: none; white-space: nowrap;
+  padding: 2px 8px; border-radius: 6px; font-size: 12px; line-height: 18px; font-variant-numeric: tabular-nums;
+  background: rgb(var(--ink, 31 41 55)); color: rgb(var(--surface, 255 255 255));
+}
+.sb-colw-pill {
+  display: flex; align-items: center; gap: 12px; border-radius: 9999px; padding: 8px 8px 8px 18px;
+  color: rgb(var(--ink, 31 41 55));
+}
+.sb-colw-pill-text { white-space: nowrap; font-size: 13px; line-height: 20px; }
+.sb-colw-pill-btn {
+  white-space: nowrap; border-radius: 9999px; padding: 4px 12px; font-size: 13px; line-height: 20px; font-weight: 500;
+  color: var(--sb-accent-bg); transition: background-color 120ms ease;
+}
+.sb-colw-pill-btn:hover { background: rgb(var(--surface-subtle, 243 244 248)); }
+.sb-colw-pill-btn:focus-visible { outline: 2px solid var(--sb-accent-bg); outline-offset: 1px; }

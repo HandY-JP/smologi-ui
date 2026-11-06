@@ -23,9 +23,11 @@ export interface ColumnHeaderCellProps {
     onHide?: () => void;
     /** 「表示設定…」（列の ON/OFF・並び順の一括編集）。 */
     onOpenDisplaySettings?: () => void;
+    /** 「列幅を元に戻す」（ドラッグで変えた列幅をこの列だけ既定へ）。渡したときだけメニューに出る。 */
+    onResetWidth?: () => void;
     align?: 'left' | 'center' | 'right';
     /** 見出しセルのツールチップ（列の説明）。 */
     title?: string;
 }
-export declare function ColumnHeaderCell({ label, labelText, labelExtra, sort, sortUnavailableReason, presets, variant, filters, move, onHide, onOpenDisplaySettings, align, title, }: ColumnHeaderCellProps): import("react").JSX.Element;
+export declare function ColumnHeaderCell({ label, labelText, labelExtra, sort, sortUnavailableReason, presets, variant, filters, move, onHide, onOpenDisplaySettings, onResetWidth, align, title, }: ColumnHeaderCellProps): import("react").JSX.Element;
 //# sourceMappingURL=ColumnHeaderMenu.d.ts.map

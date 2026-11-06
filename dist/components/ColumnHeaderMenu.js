@@ -54,6 +54,7 @@ function ColumnHeaderCell({
   move,
   onHide,
   onOpenDisplaySettings,
+  onResetWidth,
   align = "center",
   title
 }) {
@@ -62,7 +63,7 @@ function ColumnHeaderCell({
   const panelId = useId();
   const hasFilters = Boolean(filters && filters.length > 0);
   const hasMenu = Boolean(
-    sort || sortUnavailableReason || variant || hasFilters || move || onHide || onOpenDisplaySettings || presets && presets.length > 0
+    sort || sortUnavailableReason || variant || hasFilters || move || onHide || onOpenDisplaySettings || onResetWidth || presets && presets.length > 0
   );
   const activeLabel = activeColumnSortLabel(sort);
   const filterActive = anyColumnFilterActive(filters);
@@ -127,6 +128,7 @@ function ColumnHeaderCell({
         move,
         onHide,
         onOpenDisplaySettings,
+        onResetWidth,
         onClose: () => {
           setOpen(false);
           triggerRef.current?.focus({ preventScroll: true });
@@ -155,6 +157,7 @@ function ColumnHeaderMenuPanel({
   move,
   onHide,
   onOpenDisplaySettings,
+  onResetWidth,
   onClose
 }) {
   const [panel, setPanel] = useState(null);
@@ -323,7 +326,7 @@ function ColumnHeaderMenuPanel({
               /* @__PURE__ */ jsx("span", { className: "truncate", children: "\u53F3\u3078\u79FB\u52D5" })
             ] })
           ] }),
-          (onHide || onOpenDisplaySettings) && /* @__PURE__ */ jsxs(Fragment, { children: [
+          (onHide || onOpenDisplaySettings || onResetWidth) && /* @__PURE__ */ jsxs(Fragment, { children: [
             separator(),
             onHide && /* @__PURE__ */ jsxs("button", { type: "button", role: "menuitem", className: MENU_ITEM_CLASS, onClick: run(onHide), children: [
               /* @__PURE__ */ jsx(MenuCheck, { checked: false }),
@@ -332,6 +335,10 @@ function ColumnHeaderMenuPanel({
             onOpenDisplaySettings && /* @__PURE__ */ jsxs("button", { type: "button", role: "menuitem", className: MENU_ITEM_CLASS, onClick: run(onOpenDisplaySettings), children: [
               /* @__PURE__ */ jsx(MenuCheck, { checked: false }),
               /* @__PURE__ */ jsx("span", { className: "truncate", children: "\u8868\u793A\u8A2D\u5B9A\u2026" })
+            ] }),
+            onResetWidth && /* @__PURE__ */ jsxs("button", { type: "button", role: "menuitem", className: MENU_ITEM_CLASS, onClick: run(onResetWidth), children: [
+              /* @__PURE__ */ jsx(MenuCheck, { checked: false }),
+              /* @__PURE__ */ jsx("span", { className: "truncate", children: "\u5217\u5E45\u3092\u5143\u306B\u623B\u3059" })
             ] })
           ] })
         ]
