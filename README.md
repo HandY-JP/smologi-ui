@@ -720,6 +720,17 @@ import { AppSidebar, AppSidebarAccountMenu, SIDEBAR_MENU_ICONS, StoreAccountSwit
 
 ---
 
+## 商品ラベル（FBA 商品ラベル印刷。`product-label`）
+
+倉庫（smologi）と Seller が同じ印刷設定・同じ PDF・同じダイアログを使うための共有部品。
+
+- `@handy-jp/smologi-ui/product-label`: 純粋なコア（Code128・用紙定義・レイアウト・設定の正規化・`parseLabelDocMetadata` / `decideLabelMode` / `toPreviewItem`）。サーバ・ブラウザ両用
+- `@handy-jp/smologi-ui/product-label/pdf`: サーバ専用の PDF 生成（`buildProductLabelPdf` / `buildFacesPdf` / `createTextMeasurer`）。フォントは `{regular, bold}` のパスで渡す。`@react-pdf/renderer` / `pdf-lib` / `fontkit` / `sharp` は optional peerDependencies（使うアプリが入れる）
+- `@handy-jp/smologi-ui/product-label/ui`: クライアント UI（`ProductLabelPrintDialog` ほか）。アダプタ（`loadContext` / `createPdf` / `saveDefault` / `faces` / `printer`）でアプリ固有の API をつなぐ
+- `@handy-jp/smologi-ui/product-label.css`: 用紙プレビュー用の `--label-*` 変数。アプリの layout で 1 回 import する
+- Tailwind の `content` に `node_modules/@handy-jp/smologi-ui/dist/**/*.js` が含まれていること（他の部品と同じ）
+- Next.js では `serverExternalPackages: ['@react-pdf/renderer', 'fontkit']` と、フォント・sharp の `outputFileTracingIncludes` をアプリ側で設定する
+
 ## 入っていないもの（アプリ側に残す）
 
 | 部品 | 残す理由 |

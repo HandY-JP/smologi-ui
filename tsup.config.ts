@@ -14,7 +14,7 @@ import { defineConfig } from 'tsup';
  * （dts はバンドルを伴うため 1 の制約と噛み合わない）。
  */
 export default defineConfig({
-  entry: ['src/**/*.ts', 'src/**/*.tsx'],
+  entry: ['src/**/*.ts', 'src/**/*.tsx', '!src/**/*.d.ts'],
   outDir: 'dist',
   format: ['esm'],
   bundle: false,

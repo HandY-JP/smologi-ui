@@ -1,0 +1,13 @@
+/* 商品ラベルの紙面プレビュー（画面だけ。印刷する PDF はサーバーが作る）の紙と文字の色。
+   元の Tailwind white / neutral-900 / neutral-500 / neutral-400 と同値。
+   共通の surface / ink 系は値が異なり、テーマでも変わるため専用変数にする。 */
+:root {
+  --label-paper: #fff;
+  --label-ink: #171717;
+  --label-ink-muted: #737373;
+  --label-position-ink: #a3a3a3;
+}
+/* 元の bg-white に掛かっていた dark-compat.css の html.theme-dark .bg-white と同じ値。 */
+html.theme-dark {
+  --label-paper: var(--dc-bg-white, #1e293b);
+}
