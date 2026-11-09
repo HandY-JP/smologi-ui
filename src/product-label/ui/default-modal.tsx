@@ -12,6 +12,8 @@ export interface LabelModalProps {
   headerAside?: ReactNode;
   headerRight?: ReactNode;
   showCloseButton?: boolean;
+  /** 見出しを低くする（Smologi の印刷画面と同じ）。 */
+  compactHeader?: boolean;
   size?: ModalSize;
   ariaLabel?: string;
   panelClassName?: string;

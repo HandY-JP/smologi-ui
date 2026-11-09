@@ -178,6 +178,7 @@ function ProductLabelPrintDialog({
   return /* @__PURE__ */ jsx(
     Modal,
     {
+      compactHeader: true,
       open: true,
       onClose,
       title: "\u5546\u54C1\u30E9\u30D9\u30EB\u3092\u5370\u5237",

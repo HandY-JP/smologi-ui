@@ -270,6 +270,7 @@ export function ProductLabelPrintDialog({
 
   return (
     <Modal
+      compactHeader
       open
       onClose={onClose}
       title="商品ラベルを印刷"
