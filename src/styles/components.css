@@ -249,7 +249,7 @@ html.theme-dark .sb-tool-btn:hover:not(:disabled) { background: rgba(255, 255, 2
 .sb-tool-btn.primary { background: var(--sb-accent-bg, #2563eb); color: #fff; box-shadow: 0 4px 10px -3px rgba(37, 99, 235, 0.55); }
 .sb-tool-btn.primary:hover:not(:disabled) { background: var(--accent-hover, #1d4ed8); color: #fff; }
 .sb-tool-btn.primary svg { width: 18px; height: 18px; stroke-width: 2; }
-/* 帯の右端の「▾」ハンドル（押すと全ツールの縦一覧が開く。2026-09-22 ユーザー決定「案A」）。
+/* 帯の右端の「▾」ハンドル（押すと帯に出ていない道具の縦一覧が開く。2026-09-22「案A」、11-12 から帯の道具は一覧に重ねない）。
    道具そのものではないので、道具ボタンより一回り細く・薄くして主張させない。 */
 .sb-tool-btn.sb-tool-caret { width: 22px; color: rgba(43, 38, 33, 0.42); }
 .sb-glass-btn.sb-tool-caret { width: 20px; color: rgba(43, 38, 33, 0.45); }

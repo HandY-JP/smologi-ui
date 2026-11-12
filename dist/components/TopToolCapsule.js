@@ -481,6 +481,7 @@ function TopToolCapsule({
   const barKeys = selectBarItemKeys(orderedItems, showListPanel ? maxBarItems : Number.POSITIVE_INFINITY);
   const barItems = showListPanel ? orderedItems.filter((item) => barKeys.has(item.key)) : orderedItems;
   const hiddenItems = orderedItems.filter((item) => !barKeys.has(item.key));
+  const showListHandle = showListPanel && (hiddenItems.length > 0 || (settingsLinks?.length ?? 0) > 0);
   const hiddenFailed = hiddenItems.some((item) => item.status === "failed");
   const hiddenDoneCount = hiddenItems.filter((item) => item.status === "done").reduce((sum, item) => sum + (item.doneCount ?? 0), 0);
   const hiddenDone = hiddenItems.some((item) => item.status === "done");
@@ -500,12 +501,12 @@ function TopToolCapsule({
       item.separatorBefore && i > 0 && /* @__PURE__ */ jsx("span", { className: sepClass, "aria-hidden": true }),
       /* @__PURE__ */ jsx(ToolButton, { item, variant })
     ] }, item.key)),
-    showListPanel && /* @__PURE__ */ jsxs(Fragment, { children: [
+    showListHandle && /* @__PURE__ */ jsxs(Fragment, { children: [
       barItems.length > 0 && /* @__PURE__ */ jsx("span", { className: sepClass, "aria-hidden": true }),
       /* @__PURE__ */ jsx(
         ToolListHandle,
         {
-          items: orderedItems,
+          items: hiddenItems,
           settingsLinks,
           variant,
           hiddenStatus

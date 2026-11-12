@@ -67,7 +67,8 @@ export interface TopToolItem {
   /**
    * 2026-09-22 ユーザー決定: 帯（カプセル）にワンクリックで出す道具は「新規（primary の ＋）」
    * 「更新」＋あと最大3個まで。それ以外は帯に出さず、右端の「▾」で開く一覧
-   * パネルからだけ実行する。'list' を指定した道具は帯に描画しない（一覧には常に全部出る）。
+   * パネルからだけ実行する。'list' を指定した道具は帯に描画しない。
+   * 2026-11-12 ユーザー決定: 一覧には帯に出ていない道具だけを出す（帯と一覧で同じ道具を重ねない）。
    * 2026-09-23 ユーザー決定: 帯・一覧の並びは常に「＋新規→更新→その他」（orderToolItems）。
    */
   placement?: TopToolPlacement;
@@ -255,7 +256,8 @@ const SettingsGearIcon = (
 
 // ── 道具の一覧パネル（2026-09-22 ユーザー決定「案A」） ──────────────────────────
 // 帯（42px のカプセル）はアイコンだけなので、初めて見た人には何のボタンか分からない。
-// 帯の右端に小さな「▾」ハンドルを足し、押すと**全ツールが縦一覧**で開く。
+// 帯の右端に小さな「▾」ハンドルを足し、押すと**帯に出ていない道具**が縦一覧で開く
+// （2026-11-12 までは全ツールを出していたが、帯と重なるのでやめた。帯の道具は名前をツールチップで出す）。
 // 各行は「アイコン ＋ 名前 ＋ 一言説明」。menuItems を持つ道具（CSV▾ など）は行の右端の「›」で
 // その場にインライン展開する（同時に開くのは1つ）。
 // 配置の作り方は ToolMenu と同じ（body へ createPortal＋position:fixed）。祖先の
@@ -594,7 +596,7 @@ function ToolButton({ item, variant }: { item: TopToolItem; variant: 'normal' | 
 }
 
 /**
- * 帯の右端の「▾」ハンドル。押すと全ツールの縦一覧（ToolListPanel）が開く。
+ * 帯の右端の「▾」ハンドル。押すと帯に出ていない道具の縦一覧（ToolListPanel）が開く。
  * アイコンだけの帯では何のボタンか分からないので、名前と一言説明を読める場所を必ず1つ用意する。
  */
 function ToolListHandle({
@@ -686,7 +688,7 @@ export function TopToolCapsule({
   settingsLinks?: TopToolSettingsLink[];
   variant?: 'normal' | 'compact';
   dataTour?: string;
-  /** 帯の右端に「▾」（全ツールの縦一覧）を出すか。既定 true。 */
+  /** 帯の右端に「▾」（帯に出ていない道具の縦一覧）を出すか。既定 true。一覧に出すものが無ければ出さない。 */
   listPanel?: boolean;
   /** 帯に出す道具の上限。既定 5（新規＋更新＋3）。超えた分は一覧パネルのみへ回す。 */
   maxBarItems?: number;
@@ -703,6 +705,8 @@ export function TopToolCapsule({
   const barItems = showListPanel ? orderedItems.filter((item) => barKeys.has(item.key)) : orderedItems;
   // 帯に出ていない道具の done/failed は帯では見えないので、ハンドルの点でまとめて知らせる。
   const hiddenItems = orderedItems.filter((item) => !barKeys.has(item.key));
+  // 一覧は帯に出ていない道具と「関連する設定」だけ。どちらも無ければ「▾」自体を出さない。
+  const showListHandle = showListPanel && (hiddenItems.length > 0 || (settingsLinks?.length ?? 0) > 0);
   const hiddenFailed = hiddenItems.some((item) => item.status === 'failed');
   const hiddenDoneCount = hiddenItems
     .filter((item) => item.status === 'done')
@@ -735,11 +739,11 @@ export function TopToolCapsule({
             <ToolButton item={item} variant={variant} />
           </span>
         ))}
-        {showListPanel && (
+        {showListHandle && (
           <>
             {barItems.length > 0 && <span className={sepClass} aria-hidden />}
             <ToolListHandle
-              items={orderedItems}
+              items={hiddenItems}
               settingsLinks={settingsLinks}
               variant={variant}
               hiddenStatus={hiddenStatus}

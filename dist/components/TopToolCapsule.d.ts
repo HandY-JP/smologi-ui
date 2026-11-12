@@ -47,7 +47,8 @@ export interface TopToolItem {
     /**
      * 2026-09-22 ユーザー決定: 帯（カプセル）にワンクリックで出す道具は「新規（primary の ＋）」
      * 「更新」＋あと最大3個まで。それ以外は帯に出さず、右端の「▾」で開く一覧
-     * パネルからだけ実行する。'list' を指定した道具は帯に描画しない（一覧には常に全部出る）。
+     * パネルからだけ実行する。'list' を指定した道具は帯に描画しない。
+     * 2026-11-12 ユーザー決定: 一覧には帯に出ていない道具だけを出す（帯と一覧で同じ道具を重ねない）。
      * 2026-09-23 ユーザー決定: 帯・一覧の並びは常に「＋新規→更新→その他」（orderToolItems）。
      */
     placement?: TopToolPlacement;
@@ -90,7 +91,7 @@ export declare function TopToolCapsule({ ariaLabel, items, settingsLinks, varian
     settingsLinks?: TopToolSettingsLink[];
     variant?: 'normal' | 'compact';
     dataTour?: string;
-    /** 帯の右端に「▾」（全ツールの縦一覧）を出すか。既定 true。 */
+    /** 帯の右端に「▾」（帯に出ていない道具の縦一覧）を出すか。既定 true。一覧に出すものが無ければ出さない。 */
     listPanel?: boolean;
     /** 帯に出す道具の上限。既定 5（新規＋更新＋3）。超えた分は一覧パネルのみへ回す。 */
     maxBarItems?: number;

@@ -9,7 +9,7 @@ export interface FloatingFilterChip {
     onRemove?: () => void;
 }
 export declare function FloatingGlassDock({ visible, tools, 
-/** 道具カプセル末尾の「▾」（全ツール一覧）を出すか。設定モードは項目が少ないので出さない。 */
+/** 道具カプセル末尾の「▾」（帯に出ていない道具の一覧）を出すか。設定モードは項目が少ないので出さない。 */
 toolsListPanel, 
 /** 道具の「▾」一覧の末尾に出す「関連する設定」。通常時（TopToolCapsule）と同じものを渡す。 */
 toolsSettingsLinks, toolsAriaLabel, processAriaLabel, leadLabel, stages, currentStage, onSelectStage, historyLabel, onHistoryClick, historyActive, leading, searchValue, onSearchChange, onSearchSubmit, searchPlaceholder, searchAriaLabel, searchInputRef, 
