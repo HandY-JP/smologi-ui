@@ -16,3 +16,14 @@ test('integration.css が dist にあり exports と components.css から参照
   assert.match(readFileSync(new URL('../dist/styles/components.css', import.meta.url), 'utf8'), /@import '\.\/integration\.css'/);
   assert.match(readFileSync(new URL('../dist/styles/integration.css', import.meta.url), 'utf8'), /\.sb-int-tile--bad/);
 });
+
+test('suzy.css が dist にあり exports と components.css から参照される', () => {
+  assert.ok(existsSync(new URL('../dist/styles/suzy.css', import.meta.url)));
+  const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
+  assert.equal(pkg.exports['./suzy.css'], './dist/styles/suzy.css');
+  const components = readFileSync(new URL('../dist/styles/components.css', import.meta.url), 'utf8');
+  assert.match(components, /@import '\.\/suzy\.css'/);
+  // 二重に持たない（直しが片方に漏れるのを防ぐ）
+  assert.doesNotMatch(components, /\.suzy-launcher\s*\{/);
+  assert.match(readFileSync(new URL('../dist/styles/suzy.css', import.meta.url), 'utf8'), /\.suzy-launcher\s*\{/);
+});

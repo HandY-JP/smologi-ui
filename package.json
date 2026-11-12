@@ -1,6 +1,6 @@
 {
   "name": "@handy-jp/smologi-ui",
-  "version": "0.23.0",
+  "version": "0.23.1",
   "description": "スモロジ系列アプリ（Logistic / Seller / ポータル / B2B）で共有する UI 部品とデザイントークン",
   "license": "UNLICENSED",
   "private": false,
@@ -45,6 +45,7 @@
     },
     "./styles.css": "./dist/styles/components.css",
     "./integration.css": "./dist/styles/integration.css",
+    "./suzy.css": "./dist/styles/suzy.css",
     "./dark-compat.css": "./dist/styles/dark-compat.css",
     "./dark-compat-core.css": "./dist/styles/dark-compat-core.css",
     "./dark-compat-fields.css": "./dist/styles/dark-compat-fields.css",
